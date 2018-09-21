@@ -18,6 +18,14 @@ const int bpin = 10; //attach B servo to pin 10
 Servo Aservo;
 const int apin = 9; //attach A servo to pin 9
 
+// Servo max and min values for software e-stop
+const int amin = 0;
+const int amax = 180;
+const int bmin = 40;
+const int bmax = 180;
+const int cmin = 0;
+const int cmax = 130;
+
 String state = "stop ";   //create a string for the state of the robot
 int new_pos[] = {90, 90, 90}; //for user input to move the servo around
 String which_servo = "a"; //variable for determining which servo to move
@@ -84,12 +92,33 @@ void robotPlay() {
     Serial.println(new_pos[i]);
   }
   Serial.println("Moving to position.");
-  Aservo.write(new_pos[0]);
-  delay(100);
-  Bservo.write(new_pos[1]);
-  delay(100);
-  Cservo.write(new_pos[2]);
-  delay(100);
+  if(new_pos[0] >= amin && new_pos[0] <= amax) {
+    Aservo.write(new_pos[0]);
+    delay(100);
+  } else {
+    Serial.print("Servo A out of bounds: please enter a value between ");
+    Serial.print(amin);
+    Serial.print(" and ");
+    Serial.println(amax);
+  }
+  if(new_pos[1] >= bmin && new_pos[1] <= bmax) {
+    Bservo.write(new_pos[1]);
+    delay(100);
+  } else {
+    Serial.print("Servo B out of bounds: please enter a value between ");
+    Serial.print(bmin);
+    Serial.print(" and ");
+    Serial.println(bmax);
+  }
+  if(new_pos[2] >= cmin && new_pos[2] <= cmax) {
+    Cservo.write(new_pos[2]);
+    delay(100);
+  } else {
+    Serial.print("Servo C out of bounds: please enter a value between ");
+    Serial.print(cmin);
+    Serial.print(" and ");
+    Serial.println(cmax);
+  }
 }
 
 
