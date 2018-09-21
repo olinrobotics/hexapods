@@ -27,7 +27,7 @@ const int cmin = 0;
 const int cmax = 130;
 
 String state = "stop ";   //create a string for the state of the robot
-int new_pos[] = {90, 90, 90}; //for user input to move the servo around
+int new_pos[] = {-999, 90, 90}; //for user input to move the servo around
 String which_servo = "a"; //variable for determining which servo to move
 boolean realTimeStop = true; //real time control loop flag
 
@@ -63,10 +63,12 @@ void loop() {
       realTimeStop = true;
     }
     else if (state == "test") {
-      Serial.println("Testing Robot!");
-      delay(100);
-      robotPlay();
-      realTimeStop = true;
+      if(new_pos[0] != -999) {
+        Serial.println("Testing Robot!");
+        delay(100);
+        robotPlay();
+        realTimeStop = true;
+      }
     }
     else {
       Serial.println("Nope, that's not a state! Please try again.");
