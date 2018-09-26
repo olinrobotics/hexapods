@@ -11,23 +11,18 @@
 
 #include <Servo.h>
 
-Servo Cservo;
-const int cpin = 11; //attach C servo to pin 11
-Servo Bservo;
-const int bpin = 10; //attach B servo to pin 10
-Servo Aservo;
-const int apin = 9; //attach A servo to pin 9
+int pins[] = {9, 10, 11};
+String labels[] = {"A", "B", "C"};
+const int N = 3; // number of servos
+
+Servo servos[N];
 
 // Servo max and min values for software e-stop
-const int amin = 0;
-const int amax = 180;
-const int bmin = 40;
-const int bmax = 180;
-const int cmin = 0;
-const int cmax = 130;
+const int minLimits[] = {0, 40, 0};
+const int maxLimits[] = {180, 180, 130};
 
 String state = "stop ";   //create a string for the state of the robot
-int new_pos[] = {-999, 90, 90}; //for user input to move the servo around
+int new_pos[] = {-1, -1, -1}; //for user input to move the servo around
 String which_servo = "a"; //variable for determining which servo to move
 boolean realTimeStop = true; //real time control loop flag
 
@@ -35,9 +30,9 @@ void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
   Serial.println("Starting up!");
-  Aservo.attach(apin);
-  Bservo.attach(bpin);
-  Cservo.attach(cpin);
+  for(int i=0; i<N; i++) {
+    servos[i].attach(pins[i]);
+  }
 }
 
 void loop() {
@@ -63,12 +58,10 @@ void loop() {
       realTimeStop = true;
     }
     else if (state == "test") {
-      if(new_pos[0] != -999) {
-        Serial.println("Testing Robot!");
-        delay(100);
-        robotPlay();
-        realTimeStop = true;
-      }
+      Serial.println("Testing Robot!");
+      delay(100);
+      robotPlay();
+      realTimeStop = true;
     }
     else {
       Serial.println("Nope, that's not a state! Please try again.");
@@ -93,36 +86,26 @@ void robotPlay() {
     Serial.print("You entered ... ");
     Serial.println(new_pos[i]);
   }
-  Serial.println("Moving to position.");
-  if(new_pos[0] >= amin && new_pos[0] <= amax) {
-    Aservo.write(new_pos[0]);
-    delay(100);
-  } else {
-    Serial.print("Servo A out of bounds: please enter a value between ");
-    Serial.print(amin);
-    Serial.print(" and ");
-    Serial.println(amax);
-  }
-  if(new_pos[1] >= bmin && new_pos[1] <= bmax) {
-    Bservo.write(new_pos[1]);
-    delay(100);
-  } else {
-    Serial.print("Servo B out of bounds: please enter a value between ");
-    Serial.print(bmin);
-    Serial.print(" and ");
-    Serial.println(bmax);
-  }
-  if(new_pos[2] >= cmin && new_pos[2] <= cmax) {
-    Cservo.write(new_pos[2]);
-    delay(100);
-  } else {
-    Serial.print("Servo C out of bounds: please enter a value between ");
-    Serial.print(cmin);
-    Serial.print(" and ");
-    Serial.println(cmax);
+  for (i = 0; i < 3; i++) {
+    moveServo(i, new_pos[i]);
   }
 }
 
+void moveServo(int servo, int value) {
+  // Move a servo to the given position
+  if(value >= minLimits[servo] && value <= maxLimits[servo]) {
+    Serial.println("Moving to position.");
+    servos[servo].write(value);
+    delay(100);
+  } else if(value!=-1) {
+    Serial.print("Servo ");
+    Serial.print(labels[servo]);
+    Serial.print(" out of bounds: please enter a value between ");
+    Serial.print(minLimits[servo]);
+    Serial.print(" and ");
+    Serial.println(maxLimits[servo]);
+  }
+}
 
 // -------------------------------- OCU FUNCTIONS ----------------------------------------
 
