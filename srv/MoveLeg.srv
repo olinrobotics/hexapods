@@ -1,0 +1,4 @@
+LegPos msg
+---
+bool success
+string message

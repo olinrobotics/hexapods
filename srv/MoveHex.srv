@@ -1,0 +1,4 @@
+HexPos msg
+---
+bool success
+string message
