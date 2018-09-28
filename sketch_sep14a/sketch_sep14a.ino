@@ -1,7 +1,14 @@
 /*
  * Code to test the functionality and limits of the Hexapod servos.
  * 
- * Last Updated 9/19/18 by Hannah Kolano
+ * In test mode:
+ * Enter 3 integers separated by spaces to move to a specific position
+ * a = min servo A position, x = max servo A position
+ * b = min servo B position, y = max servo B position
+ * c = min servo C position, z = max servo C position
+ * o = neutral position for all 3 servos
+ * 
+ * Last Updated 9/28/18
  * Hannah.kolano@students.olin.edu
  */
 
@@ -20,11 +27,22 @@ Servo servos[N];
 // Servo max and min values for software e-stop
 const int minLimits[] = {0, 40, 0};
 const int maxLimits[] = {180, 180, 130};
+const int centers[] = {90, 80, 90};
 
+// State variables
 String state = "stop ";   //create a string for the state of the robot
 int new_pos[] = {-1, -1, -1}; //for user input to move the servo around
 String which_servo = "a"; //variable for determining which servo to move
 boolean realTimeStop = true; //real time control loop flag
+
+// Preprogrammed states for quick testing
+const int A_low[] = {minLimits[0], centers[1], centers[2]};
+const int A_high[] = {maxLimits[0], centers[1], centers[2]};
+const int B_low[] = {centers[0], minLimits[1], centers[2]};
+const int B_high[] = {centers[0], maxLimits[1], centers[2]};
+const int C_low[] = {centers[0], centers[1], minLimits[2]};
+const int C_high[] = {centers[0], centers[1], maxLimits[2]};
+const int centered[] = {centers[0], centers[1], centers[2]};
 
 void setup() {
   // put your setup code here, to run once:
@@ -82,6 +100,16 @@ void robotPlay() {
   for (i = 0; i < 3; i++) {
     Serial.println("Please enter the next position.");
     while (Serial.available() == 0) {};
+    
+    switch(Serial.peek()) {
+      case 'a': moveServos(A_low); Serial.readString(); return;
+      case 'b': moveServos(B_low); Serial.readString(); return;
+      case 'c': moveServos(C_low); Serial.readString(); return;
+      case 'x': moveServos(A_high); Serial.readString(); return;
+      case 'y': moveServos(B_high); Serial.readString(); return;
+      case 'z': moveServos(C_high); Serial.readString(); return;
+      case 'o': moveServos(centers); Serial.readString(); return;
+    }
     new_pos[i] = Serial.parseInt();
     Serial.print("You entered ... ");
     Serial.println(new_pos[i]);
@@ -91,8 +119,21 @@ void robotPlay() {
   }
 }
 
+void moveServos(int *positions) {
+  // Move all 3 servos to a new position
+  Serial.print("Moving to ");
+  Serial.print(positions[0]);
+  Serial.print(", ");
+  Serial.print(positions[1]);
+  Serial.print(", ");
+  Serial.println(positions[2]);
+  for(int i=0; i<3; i++) {
+    moveServo(i, positions[i]);
+  }
+}
+
 void moveServo(int servo, int value) {
-  // Move a servo to the given position
+  // Move a specified servo to the given position
   if(value >= minLimits[servo] && value <= maxLimits[servo]) {
     Serial.println("Moving to position.");
     servos[servo].write(value);
