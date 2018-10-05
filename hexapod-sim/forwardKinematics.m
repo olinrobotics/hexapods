@@ -21,8 +21,8 @@ title('X-Y coordinates generated for all theta1 and theta2 combinations using fo
 
 % Calculate the X, Y positions given angles of the arm in degrees.
 alpha1 = 20;
-alpha2 = -90;
-alphaRot = 45 % The angle that the leg is rotated about the Z axis
+alpha2 = 20;
+alphaRot = 45; % The angle that the leg is rotated about the Z axis
 % Convert to radians
 alpha1 = alpha1*(pi/180);
 alpha2 = alpha2*(pi/180);
