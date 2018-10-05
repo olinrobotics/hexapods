@@ -1,4 +1,4 @@
-LegPos msg
+string msg
 ---
 bool success
 string message
