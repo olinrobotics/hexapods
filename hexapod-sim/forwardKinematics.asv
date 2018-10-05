@@ -21,8 +21,8 @@ title('X-Y coordinates generated for all theta1 and theta2 combinations using fo
 
 % Calculate the X, Y positions given angles of the arm in degrees.
 alpha1 = -10;
-alpha2 = -70;
-alphaRot = 0; % The angle that the leg is rotated about the Z axis
+alpha2 = -10;
+alphaRot = 45 % The angle that the leg is rotated about the Z axis
 % Convert to radians
 alpha1 = alpha1*(pi/180);
 alpha2 = alpha2*(pi/180);
@@ -30,33 +30,38 @@ alphaRot = alphaRot*(pi/180);
 % Origin of the arm
 Xorigin = 0;
 Yorigin = 0;
+Zorigin = 0;
 % Position of the first joint of the arm
 Xjoint = l1*cos(alpha1);
-Yjoint = l1*sin(alpha1);
+Zjoint = l1*sin(alpha1);
 % Position of the end effector
 Xend = l1*cos(alpha1) + l2*cos(alpha1 + alpha2);
-Yend = l1*sin(alpha1) + l2*sin(alpha1 + alpha2);
+Zend = l1*sin(alpha1) + l2*sin(alpha1 + alpha2);
 Xpos = [Xorigin, Xjoint, Xend];
-Ypos = [Yorigin, Yjoint, Yend];
+Zpos = [Zorigin, Zjoint, Zend];
 
 % Calculate the joint point in 3D using a rotation matrix
 R = eul2rotm([alphaRot 0 0]); % generates a rotation matrix about the rotated axis.
                               % Parameters are ZYX in radians
-newJoint = R*[Xjoint; Yjoint; 0];
+newJoint = R*[Xjoint; 0; Zjoint];
 
 % Calculate the end point in 3D using a rotation matrix
 R = eul2rotm([alphaRot 0 0]); % generates a rotation matrix about the rotated axis.
                               % Parameters are ZYX in radians
-newEnd = R*[Xend; Yend; 0];
+newEnd = R*[Xend; 0; Zend];
 
-newXPos = [newJoint(1), newEnd(1)];
-newYPos = [newJoint(2), newEnd(2)];
-newZpos = 
+newXpos = [Xorigin, newJoint(1), newEnd(1)];
+newYpos = [Yorigin, newJoint(2), newEnd(2)];
+newZpos = [Zorigin, newJoint(3), newEnd(3)];
 
 figure
-plot3(newEnd(1), newEnd(2), newEnd(3))
+plot3(newXpos, newYpos, newZpos)
+xlabel("X")
+ylabel("Y")
+zlabel("Z")
 grid on;
 xticks(-30:30);
 yticks(-30:30);
+zticks(-30:30);
 daspect([1 1 1])
 

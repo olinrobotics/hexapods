@@ -20,9 +20,9 @@ ylabel('Y','fontsize',10)
 title('X-Y coordinates generated for all theta1 and theta2 combinations using forward kinematics formula','fontsize',10)
 
 % Calculate the X, Y positions given angles of the arm in degrees.
-alpha1 = 0;
-alpha2 = 0;
-alphaRot = 30; % The angle that the leg is rotated about the Z axis
+alpha1 = 20;
+alpha2 = -90;
+alphaRot = 45 % The angle that the leg is rotated about the Z axis
 % Convert to radians
 alpha1 = alpha1*(pi/180);
 alpha2 = alpha2*(pi/180);
@@ -33,22 +33,22 @@ Yorigin = 0;
 Zorigin = 0;
 % Position of the first joint of the arm
 Xjoint = l1*cos(alpha1);
-Yjoint = l1*sin(alpha1);
+Zjoint = l1*sin(alpha1);
 % Position of the end effector
 Xend = l1*cos(alpha1) + l2*cos(alpha1 + alpha2);
-Yend = l1*sin(alpha1) + l2*sin(alpha1 + alpha2);
+Zend = l1*sin(alpha1) + l2*sin(alpha1 + alpha2);
 Xpos = [Xorigin, Xjoint, Xend];
-Ypos = [Yorigin, Yjoint, Yend];
+Zpos = [Zorigin, Zjoint, Zend];
 
 % Calculate the joint point in 3D using a rotation matrix
 R = eul2rotm([alphaRot 0 0]); % generates a rotation matrix about the rotated axis.
                               % Parameters are ZYX in radians
-newJoint = R*[Xjoint; Yjoint; 0];
+newJoint = R*[Xjoint; 0; Zjoint];
 
 % Calculate the end point in 3D using a rotation matrix
 R = eul2rotm([alphaRot 0 0]); % generates a rotation matrix about the rotated axis.
                               % Parameters are ZYX in radians
-newEnd = R*[Xend; Yend; 0];
+newEnd = R*[Xend; 0; Zend];
 
 newXpos = [Xorigin, newJoint(1), newEnd(1)];
 newYpos = [Yorigin, newJoint(2), newEnd(2)];
