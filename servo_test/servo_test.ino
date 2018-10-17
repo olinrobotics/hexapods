@@ -16,12 +16,6 @@
  * Written by Limor Fried/Ladyada for Adafruit Industries.  
  * BSD license, all text above must be included in any redistribution
  ****************************************************/
- 
- /*
- Example of how to use servos with the adafruit servo shield. Requires the library:
- "Adafruit_PWMServoDriver"
- Found at: https://github.com/adafruit/Adafruit-PWM-Servo-Driver-Library
- */
 
 #include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>
@@ -43,6 +37,9 @@ Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 // our servo # counter
 uint8_t servonum = 1;
 
+// the pin of our relay
+int Relay = 22;
+
 int findPulseLength(int degrees, int minDeg, int maxDeg) {
   int pulseLength = map(degrees, minDeg, maxDeg, SERVOMIN, SERVOMAX);
   return pulseLength;
@@ -53,9 +50,12 @@ void setup() {
   Serial.println("8 channel Servo test!");
 
   pwm.begin();
+  
+  pinMode(Relay, OUTPUT);
+  digitalWrite(Relay, HIGH);
 
   pwm.setPWMFreq(60);  // Analog servos run at ~60 Hz updates
-
+  
   delay(10);
 }
 
