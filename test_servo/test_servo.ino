@@ -5,7 +5,6 @@ Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 
 // Pins
 int relay = 22;
-int servo = 10;
 
 // State variables
 String state = "stop ";   //create a string for the state of the robot
@@ -72,16 +71,19 @@ void robotPlay() {
   int i;
   Serial.println("Please enter the next position.");
   while (Serial.available() == 0) {};
+  int pin = Serial.parseInt();
   new_pos = Serial.parseInt();
   Serial.print("You entered ... ");
+  Serial.print(pin);
+  Serial.print(", ");
   Serial.println(new_pos);
-  moveServo(new_pos);
+  moveServo(pin, new_pos);
 }
 
-void moveServo(int value) {
+void moveServo(int pin, int value) {
   // Move a specified servo to the given position
   Serial.println("Moving to position.");
-  pwm.setPWM(servo, 0, pulseLength(value));
+  pwm.setPWM(pin, 0, pulseLength(value));
   delay(100);
 }
 

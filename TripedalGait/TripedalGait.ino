@@ -4,22 +4,32 @@
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 
 // Gait parameters
-int ground = -4; // Height of ground relative to body (in)
+int ground = -5; // Height of ground relative to body (in)
 int clearance = 2; // Height of raised leg relative to body (in)
 int dx = 2.5; // Half of the total step distance (in)
 int yoffset = 5; // Horizontal distance of feet from body (in)
-int stepDuration = 500; // Time duration of a step in (ms)
+int stepDuration = 250; // Time duration of a step in (ms)
 
 // Pins
 int relay = 22;
-int servos[6][3] = {{9, 10, 11},{9, 10, 11}}; // [leg 1-6][servo A-C]
+int servos[6][3] = {{9, 10, 11},
+                    {0, 1, 2},
+                    {3, 4, 5},
+                    {3, 4, 5},
+                    {3, 4, 5},
+                    {3, 4, 5}}; // [leg 1-6][servo A-C]
 
 // Servo properties
 String labels[] = {"A", "B", "C"};
 const int N = 3; // number of servos
 const int minLimits[] = {0, 40, 0};
 const int maxLimits[] = {180, 180, 120};
-const int centers[] = {90, 90, 90};
+const int offsets[6][3] = {{0, -3, -1},
+                           {10, 20, 15},
+                           {10, 5, 8},
+                           {5, 3, 2},
+                           {11, 12, 0},
+                           {5, 2, 4}}; // (actual - desired) servo angle
 
 // Servo PWM to angle conversion factors
 const int ANGLEMIN = 0; // minimum servo angle in degrees
@@ -34,13 +44,13 @@ const float L2 = 2.24; // Distance from Servo B to Servo C (in)
 const float L3 = 4.84; // Distance from Servo C to end effector (in)
 
 // State variables
-int stepStartTime = 0;
+long stepStartTime = 0;
 int counter = 0;
 bool enabled = false;
 
 void setup() {
   Serial.begin(9600);
-  Serial.println("Starting up!");
+  Serial.println("Starting up! Type \"walk\" to begin walking.");
   pwm.begin();  
   pinMode(relay, OUTPUT);
   digitalWrite(relay, HIGH);
@@ -52,18 +62,17 @@ void loop() {
   // Parse input
   if (Serial.available() > 0) {
     String input = Serial.readString();
-    if(input == "stop") {
-      enabled = false;
-    } else if(input == "walk") {
+    if(input == "walk") {
+      Serial.println("Entering walk mode");
       enabled = true;
     } else {
       enabled = false;
-      Serial.println("Command not found. Did you mean \"stop\" or \"walk?\"");
+      Serial.println("Stopping");
     }
   }
   
   // Walk
-  if(enabled && millis() - stepStartTime > stepDuration) {
+  if(enabled && (millis() - stepStartTime > stepDuration)) {
     stepStartTime = millis();
     counter++;
     stepForward(counter);
@@ -107,7 +116,9 @@ void getLegPosition(int leg, int state, float* output) {
     else if (state == 3) { // leg forward
         pos[0] += dx;
     }
-    output = pos;
+    for(int i=0; i<3; i++) {
+      output[i] = pos[i];
+    }
 }
 
 // Move all 3 servos of a leg to position the end effector
@@ -154,17 +165,10 @@ int getAngles(float x, float y, float z, int leg) {
     }
     b = -atan2(z1, r1);
     c = -atan2(z-z1, r-r1) - b;
-    Serial.println(a);
-    Serial.println(b);
-    Serial.println(c);
     a = 180/M_PI*a + 90;
     b = -180/M_PI*b + 90;
     c = 180/M_PI*c;
-    Serial.println(a);
-    Serial.println(b);
-    Serial.println(c);
     int angles[] = {round(a), round(b), round(c)};
-    Serial.println(angles[0]);
     for(int i=0; i<3; i++) {
       if (angles[i] > maxLimits[i] || angles[i] < minLimits[i]) {
         Serial.print("Requested configuration outside servo range: Servo ");
@@ -178,8 +182,8 @@ int getAngles(float x, float y, float z, int leg) {
 // Move all 3 servos of a leg to a given state
 void moveLeg(int *angles, int leg) {
   Serial.print("Leg ");
-  Serial.print(leg+1);
-  Serial.print("moving to ");
+  Serial.print(leg);
+  Serial.print(" moving to ");
   Serial.print(angles[0]);
   Serial.print(", ");
   Serial.print(angles[1]);
@@ -193,8 +197,8 @@ void moveLeg(int *angles, int leg) {
 // Move a specified servo to a given angle in degrees
 void moveServo(int value, int leg, int servo) {
   if(value >= minLimits[servo] && value <= maxLimits[servo]) {
-    Serial.println("Moving to position.");
-    pwm.setPWM(servos[leg-1][servo], 0, pulseLength(value, leg, servo));
+    int pulse = pulseLength(value - offsets[leg-1][servo], leg, servo);
+    pwm.setPWM(servos[leg-1][servo], 0, pulse);
   } else if(value!=-1) {
     Serial.print("Servo ");
     Serial.print(labels[servo]);
