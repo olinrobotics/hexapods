@@ -12,12 +12,12 @@ int stepDuration = 250; // Time duration of a step in (ms)
 
 // Pins
 int relay = 22;
-int servos[6][3] = {{9, 10, 11},
-                    {0, 1, 2},
+int servos[6][3] = {{0, 1, 2},
                     {3, 4, 5},
-                    {3, 4, 5},
-                    {3, 4, 5},
-                    {3, 4, 5}}; // [leg 1-6][servo A-C]
+                    {6, 7, 8},
+                    {9, 10, 11},
+                    {12, 13, 14},
+                    {15, 16, 17}}; // [leg 1-6][servo A-C]
 
 // Servo properties
 String labels[] = {"A", "B", "C"};
