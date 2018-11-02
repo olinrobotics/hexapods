@@ -1,7 +1,8 @@
 #include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>
 
-Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
+Adafruit_PWMServoDriver pwm1 = Adafruit_PWMServoDriver();
+Adafruit_PWMServoDriver pwm2 = Adafruit_PWMServoDriver(0x41);
 
 // Gait parameters
 int ground = -5; // Height of ground relative to body (in)
@@ -15,9 +16,9 @@ int relay = 22;
 int servos[6][3] = {{0, 1, 2},
                     {3, 4, 5},
                     {6, 7, 8},
-                    {9, 10, 11},
-                    {12, 13, 14},
-                    {15, 16, 17}}; // [leg 1-6][servo A-C]
+                    {16, 17, 18},
+                    {19, 20, 21},
+                    {22, 23, 24}}; // [leg 1-6][servo A-C]
 
 // Servo properties
 String labels[] = {"A", "B", "C"};
@@ -51,10 +52,12 @@ bool enabled = false;
 void setup() {
   Serial.begin(9600);
   Serial.println("Starting up! Type \"walk\" to begin walking.");
-  pwm.begin();  
+  pwm1.begin();  
+  pwm2.begin();  
   pinMode(relay, OUTPUT);
   digitalWrite(relay, HIGH);
-  pwm.setPWMFreq(60);  // Analog servos run at ~60 Hz updates
+  pwm1.setPWMFreq(60);
+  pwm2.setPWMFreq(60);  // Analog servos run at ~60 Hz updates
   delay(10);
 }
 
@@ -198,7 +201,11 @@ void moveLeg(int *angles, int leg) {
 void moveServo(int value, int leg, int servo) {
   if(value >= minLimits[servo] && value <= maxLimits[servo]) {
     int pulse = pulseLength(value - offsets[leg-1][servo], leg, servo);
-    pwm.setPWM(servos[leg-1][servo], 0, pulse);
+    if(servos[leg-1][servo] < 16) {
+      pwm1.setPWM(servos[leg-1][servo], 0, pulse);
+    } else {
+      pwm2.setPWM(servos[leg-1][servo]-16, 0, pulse);
+    }
   } else if(value!=-1) {
     Serial.print("Servo ");
     Serial.print(labels[servo]);
