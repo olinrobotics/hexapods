@@ -1,7 +1,8 @@
 #include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>
 
-Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver(0x41);
+Adafruit_PWMServoDriver pwm1 = Adafruit_PWMServoDriver();
+Adafruit_PWMServoDriver pwm2 = Adafruit_PWMServoDriver(0x41);
 
 // Pins
 int relay = 22;
@@ -20,10 +21,12 @@ const int SERVOMAX = 520; // maximum pwm pulse length count (out of 4096)
 void setup() {
   Serial.begin(9600);
   Serial.println("Starting up!");
-  pwm.begin();  
+  pwm1.begin();
+  pwm2.begin();
   pinMode(relay, OUTPUT);
   digitalWrite(relay, HIGH);
-  pwm.setPWMFreq(60);  // Analog servos run at ~60 Hz updates
+  pwm1.setPWMFreq(60);
+  pwm2.setPWMFreq(60);  // Analog servos run at ~60 Hz updates
   delay(10);
 }
 
@@ -83,7 +86,11 @@ void robotPlay() {
 void moveServo(int pin, int value) {
   // Move a specified servo to the given position
   Serial.println("Moving to position.");
-  pwm.setPWM(pin, 0, pulseLength(value));
+  if(pin < 18) {
+    pwm1.setPWM(pin, 0, pulseLength(value));
+  } else {
+    pwm2.setPWM(pin-18, 0, pulseLength(value));
+  }
   delay(100);
 }
 
@@ -96,7 +103,6 @@ int pulseLength(int angle) {
 // -------------------------------- OCU FUNCTIONS ----------------------------------------
 
 String getOperatorInput(){
-  //
   Serial.print("Current state of the robot is ");
   Serial.println(state);
   Serial.println("Please enter new state.");
