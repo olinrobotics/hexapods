@@ -5,11 +5,11 @@ Adafruit_PWMServoDriver pwm1 = Adafruit_PWMServoDriver();
 Adafruit_PWMServoDriver pwm2 = Adafruit_PWMServoDriver(0x41);
 
 // Gait parameters
-float ground = -5; // Height of ground relative to body (in)
-float clearance = 2; // Height of raised leg relative to body (in)
-float dx = 2.5; // Half of the total step distance (in)
-float yoffset = 5; // Horizontal distance of feet from body (in)
-int stepDuration = 250; // Time duration of a step in (ms)
+float ground = -6; // Height of ground relative to body (in)
+float clearance = 2; // Height of raised leg relative to ground (in)
+float dx = 1.5; // Half of the total step distance (in)
+float yoffset = 3; // Horizontal distance of feet from body (in)
+int stepDuration = 500; // Time duration of a step in (ms)
 
 // Pins
 int relay = 22;
@@ -29,7 +29,7 @@ const int offsets[6][3] = {{0, -3, -1},
                            {10, 20, 15},
                            {10, 5, 8},
                            {5, 3, 2},
-                           {11, 12, 0},
+                           {11, 0, 0},
                            {5, 2, 4}}; // (actual - desired) servo angle
 
 // Servo PWM to angle conversion factors
