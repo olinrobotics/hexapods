@@ -7,7 +7,8 @@ Adafruit_PWMServoDriver pwm2 = Adafruit_PWMServoDriver(0x41);
 // Gait parameters
 float ground = -6; // Height of ground relative to body (in)
 float clearance = 2; // Height of raised leg relative to ground (in)
-float dx = 1.5; // Half of the total step distance (in)
+float dx = 1.5; // Half of the linear step distance (in)
+float dtheta = M_PI/12; // Half of the angular step angle (rad)
 float yoffset = 3; // Horizontal distance of feet from body (in)
 int stepDuration = 500; // Time duration of a step in (ms)
 
@@ -48,10 +49,12 @@ const float L3 = 4.84; // Distance from Servo C to end effector (in)
 long stepStartTime = 0;
 int counter = 0;
 bool enabled = false;
+float forward = 0;
+float turn = 0;
 
 void setup() {
   Serial.begin(9600);
-  Serial.println("Starting up! Type \"walk\" to begin walking.");
+  Serial.println("Starting up! Please enter desired linear and angular velocities.");
   pwm1.begin();  
   pwm2.begin();  
   pinMode(relay, OUTPUT);
@@ -63,14 +66,24 @@ void setup() {
 
 void loop() {
   // Parse input
-  if (Serial.available() > 0) {
-    String input = Serial.readString();
-    if(input == "walk") {
-      Serial.println("Entering walk mode");
-      enabled = true;
-    } else {
+  if(Serial.available() > 0) {
+    if(Serial.peek() == ' ') { // Stop
       enabled = false;
-      Serial.println("Stopping");
+      Serial.println("Stop");
+      Serial.read();
+    } else {
+      forward = Serial.parseFloat();
+      turn = Serial.parseFloat();
+      if(abs(forward)+abs(turn) <= 1) { // Walk
+        Serial.print("Entering walk mode: ");
+        Serial.print(forward);
+        Serial.print(", ");
+        Serial.println(turn);
+        enabled = true;
+      } else { // Invalid input
+        enabled = false;
+        Serial.println("Invalid velocity");
+      }
     }
   }
   
@@ -78,32 +91,34 @@ void loop() {
   if(enabled && (millis() - stepStartTime > stepDuration)) {
     stepStartTime = millis();
     counter++;
-    stepForward(counter);
+    walk(forward, turn, counter);
   }
 }
 
 // Move legs into the next configuration of a foward walking gait
-void stepForward(int counter) {
+void walk(float forward, float turn, int counter) {
   for(int leg=1; leg<7; leg++) {
     if(leg%2==0) { // right side
-      moveLegToState(leg, counter%4);
+      moveLegToState(leg, counter%4, forward, turn);
     } else {
-      moveLegToState(leg, (counter+2)%4);
+      moveLegToState(leg, (counter+2)%4, forward, turn);
     }
   }
 }
 
 // Move a leg to a predefined state of the gait
-void moveLegToState(int leg, int state) {
+void moveLegToState(int leg, int state, float forward, float turn) {
   float pos[3];
-  getLegPosition(leg, state, pos);
+  getLegPosition(leg, state, forward, turn, pos);
   moveLegToPosition(pos[0], pos[1], pos[2], leg);
 }
 
 // Generate a position vector for a given state of a leg
 // Legs numbered 1-6 CCW from front left
 // States numbered 1-4 back-up-forward-down
-void getLegPosition(int leg, int state, float* output) {
+// forward and turn specify movement direction between -1 and 1
+// Resulting position is stored in output
+void getLegPosition(int leg, int state, float forward, float turn, float* output) {
   float pos[] = {R*cos(leg*M_PI/3-M_PI/6),R*sin(leg*M_PI/3-M_PI/6),ground};
   if(state == 2) { // leg lifted
     pos[2] += clearance;
@@ -113,12 +128,21 @@ void getLegPosition(int leg, int state, float* output) {
   } else {
     pos[1] -= yoffset;
   }
+  float w = 0;
   if (state == 1) { // leg back
-    pos[0] -= dx;
+    pos[0] -= dx*forward;
+    w = -turn*dtheta;
   }
   else if (state == 3) { // leg forward
-    pos[0] += dx;
+    pos[0] += dx*forward;
+    w = turn*dtheta;
   }
+  // turn
+  Serial.println(w);
+  float x = pos[0]*cos(w) - pos[1]*sin(w);
+  float y = pos[0]*sin(w) + pos[1]*cos(w);
+  pos[0] = x;
+  pos[1] = y;
   for(int i=0; i<3; i++) {
     output[i] = pos[i];
   }
