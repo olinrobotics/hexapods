@@ -21,6 +21,7 @@ class HexMover(object):
 		leg = int(legPos.msg[0:3],2)
 		motor = int(legPos.msg[3:5],2)
 		angle = int(legPos.msg[5::],2)
+		print("Moving leg %d, servo %d, to position %d" % (leg, motor, angle))
 		self.move_servo(self.map_leg_to_servoID(leg, motor), angle)
 		return True, ""
 
