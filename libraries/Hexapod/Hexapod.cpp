@@ -1,107 +1,18 @@
+#include "Arduino.h"
+#include "Hexapod.h"
 #include <Wire.h>
-#include <Adafruit_PWMServoDriver.h>
 
-Adafruit_PWMServoDriver pwm1 = Adafruit_PWMServoDriver();
-Adafruit_PWMServoDriver pwm2 = Adafruit_PWMServoDriver(0x41);
-
-// Gait parameters
-float ground = -6; // Height of ground relative to body (in)
-float clearance = 2; // Height of raised leg relative to ground (in)
-float dx = 1.5; // Half of the linear step distance (in)
-float dtheta = M_PI/12; // Half of the angular step angle (rad)
-float yoffset = 3; // Horizontal distance of feet from body (in)
-int stepDuration = 500; // Time duration of a step in (ms)
-
-// Pins
-int relay = 22;
-int servos[6][3] = {{0, 1, 2},
-                    {3, 4, 5},
-                    {6, 7, 8},
-                    {16, 17, 18},
-                    {19, 20, 21},
-                    {22, 23, 24}}; // [leg 1-6][servo A-C]
-
-// Servo properties
-String labels[] = {"A", "B", "C"};
-const int N = 3; // number of servos
-const int minLimits[] = {0, 40, 0};
-const int maxLimits[] = {180, 180, 120};
-const int offsets[6][3] = {{0, -3, -1},
-                           {10, 20, 15},
-                           {10, 5, 8},
-                           {5, 3, 2},
-                           {11, 0, 0},
-                           {5, 2, 4}}; // (actual - desired) servo angle
-
-// Servo PWM to angle conversion factors
-const int ANGLEMIN = 0; // minimum servo angle in degrees
-const int ANGLEMAX = 180; // maximum servo angle in degrees
-const int SERVOMIN = 140; // minimum pwm pulse length count (out of 4096)
-const int SERVOMAX = 520; // maximum pwm pulse length count (out of 4096)
-
-// Frame geometry
-const float R = 5.35; // Distance from center to Servo A (in)
-const float L1 = 1.12; // Distance from Servo A to Servo B (in)
-const float L2 = 2.24; // Distance from Servo B to Servo C (in)
-const float L3 = 4.84; // Distance from Servo C to end effector (in)
-
-// State variables
-long stepStartTime = 0;
-int counter = 0;
-bool enabled = false;
-float forward = 0;
-float turn = 0;
-
-void setup() {
-  Serial.begin(9600);
-  Serial.println("Starting up! Please enter desired linear and angular velocities.");
+Hexapod::Hexapod() {
   pwm1.begin();
   pwm2.begin();
   pinMode(relay, OUTPUT);
   digitalWrite(relay, HIGH);
   pwm1.setPWMFreq(60);
   pwm2.setPWMFreq(60);  // Analog servos run at ~60 Hz updates
-  delay(10);
-}
-
-void loop() {
-  // Parse input
-  if(Serial.available() > 0) {
-    if(Serial.peek() == ' ') { // Stop
-      enabled = false;
-      Serial.println("Stop");
-      Serial.read();
-    } else if(Serial.peek() == 'd') { // Stop
-      sit();
-      enabled = false;
-      Serial.println("Sit");
-      Serial.read();
-    } else {
-      forward = Serial.parseFloat();
-      turn = Serial.parseFloat();
-      if(abs(forward)+abs(turn) <= 1) { // Walk
-        Serial.print("Entering walk mode: ");
-        Serial.print(forward);
-        Serial.print(", ");
-        Serial.println(turn);
-        enabled = true;
-      } else { // Invalid input
-        enabled = false;
-        Serial.println("Invalid velocity");
-      }
-    }
-  }
-  
-  // Walk
-  if(enabled && (millis() - stepStartTime > stepDuration)) {
-    stepStartTime = millis();
-    counter++;
-    walk(forward, turn, counter);
-  }
 }
 
 // Move legs into the next configuration of a foward walking gait
-void walk(float forward, float turn, int counter) {
+void Hexapod::walk(float forward, float turn, int counter) {
   for(int leg=1; leg<7; leg++) {
     if(leg%2==0) { // right side
       moveLegToState(leg, counter%4, forward, turn);
@@ -111,18 +22,8 @@ void walk(float forward, float turn, int counter) {
   }
 }
 
-// Lower the hexapod to the ground
-void sit() {
-  for(int leg=1; leg<7; leg++) {
-    float dR = 5.3;
-    float z0 = -0.6;
-    float pos[3] = {(R+dR)*cos(leg*M_PI/3-M_PI/6),(R+dR)*sin(leg*M_PI/3-M_PI/6),z0};
-    moveLegToPosition(pos[0], pos[1], pos[2], leg);
-  }    
-}
-
 // Move a leg to a predefined state of the gait
-void moveLegToState(int leg, int state, float forward, float turn) {
+void Hexapod::moveLegToState(int leg, int state, float forward, float turn) {
   float pos[3];
   getLegPosition(leg, state, forward, turn, pos);
   moveLegToPosition(pos[0], pos[1], pos[2], leg);
@@ -133,7 +34,7 @@ void moveLegToState(int leg, int state, float forward, float turn) {
 // States numbered 1-4 back-up-forward-down
 // forward and turn specify movement direction between -1 and 1
 // Resulting position is stored in output
-void getLegPosition(int leg, int state, float forward, float turn, float* output) {
+void Hexapod::getLegPosition(int leg, int state, float forward, float turn, float* output) {
   float pos[] = {R*cos(leg*M_PI/3-M_PI/6),R*sin(leg*M_PI/3-M_PI/6),ground};
   if(state == 2) { // leg lifted
     pos[2] += clearance;
@@ -153,6 +54,7 @@ void getLegPosition(int leg, int state, float forward, float turn, float* output
     w = turn*dtheta;
   }
   // turn
+  Serial.println(w);
   float x = pos[0]*cos(w) - pos[1]*sin(w);
   float y = pos[0]*sin(w) + pos[1]*cos(w);
   pos[0] = x;
@@ -163,7 +65,7 @@ void getLegPosition(int leg, int state, float forward, float turn, float* output
 }
 
 // Move all 3 servos of a leg to position the end effector
-void moveLegToPosition(float x, float y, float z, int leg) {
+void Hexapod::moveLegToPosition(float x, float y, float z, int leg) {
   int angles[3];
   getAngles(x, y, z, leg, angles);
   if(angles[0] != -1) {
@@ -173,7 +75,7 @@ void moveLegToPosition(float x, float y, float z, int leg) {
 
 // Determine servo angles (deg) from position relative to hexapod center (in)
 // x: forward, y: left, z: up, leg: CCW starting with front left leg
-void getAngles(float x, float y, float z, int leg, int* angles) {
+void Hexapod::getAngles(float x, float y, float z, int leg, int* angles) {
   float a = 0;
   float b = 0;
   float c = 0;
@@ -214,9 +116,7 @@ void getAngles(float x, float y, float z, int leg, int* angles) {
   for(int i=0; i<3; i++) {
     if (angles[i] > maxLimits[i] || angles[i] < minLimits[i]) {
       Serial.print("Requested configuration outside servo range: Servo ");
-      Serial.print(i);
-      Serial.print(", Value ");
-      Serial.println(angles[i]);
+      Serial.println(i);
       angles[0] = angles[1] = angles[2] = -1;
       return;
     }
@@ -224,7 +124,7 @@ void getAngles(float x, float y, float z, int leg, int* angles) {
 }
 
 // Move all 3 servos of a leg to a given state
-void moveLeg(int *angles, int leg) {
+void Hexapod::moveLeg(int *angles, int leg) {
   Serial.print("Leg ");
   Serial.print(leg);
   Serial.print(" moving to ");
@@ -239,7 +139,7 @@ void moveLeg(int *angles, int leg) {
 }
 
 // Move a specified servo to a given angle in degrees
-void moveServo(int value, int leg, int servo) {
+void Hexapod::moveServo(int value, int leg, int servo) {
   if(value >= minLimits[servo] && value <= maxLimits[servo]) {
     int pulse = pulseLength(value - offsets[leg-1][servo], leg, servo);
     if(servos[leg-1][servo] < 16) {
@@ -258,7 +158,7 @@ void moveServo(int value, int leg, int servo) {
 }
 
 // Convert angle in degrees to PWM pulse length
-int pulseLength(int angle, int leg, int servo) {
+int Hexapod::pulseLength(int angle, int leg, int servo) {
   int len = map(angle, ANGLEMIN, ANGLEMAX, SERVOMIN, SERVOMAX);
   if(leg > 3 && servo > 0) {
     len = map(180-angle, ANGLEMIN, ANGLEMAX, SERVOMIN, SERVOMAX);
