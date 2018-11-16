@@ -45,10 +45,12 @@ const float L1 = 1.12; // Distance from Servo A to Servo B (in)
 const float L2 = 2.24; // Distance from Servo B to Servo C (in)
 const float L3 = 4.84; // Distance from Servo C to end effector (in)
 
+enum State {NONE, STAND, SIT, WALK};
+
 // State variables
 long stepStartTime = 0;
 int counter = 0;
-bool enabled = false;
+State state = NONE;
 float forward = 0;
 float turn = 0;
 
@@ -65,16 +67,17 @@ void setup() {
 }
 
 void loop() {
-  // Parse input
+  // Operator input
   if(Serial.available() > 0) {
     if(Serial.peek() == ' ') { // Stop
-      enabled = false;
-      Serial.println("Stop");
-      Serial.read();
-    } else if(Serial.peek() == 'd') { // Stop
-      sit();
-      enabled = false;
-      Serial.println("Sit");
+      if(state==STAND) {
+        state = SIT;
+        Serial.println("Sit");
+      } else {
+        state = STAND;
+        Serial.println("Stand");
+      }
+      counter = 0;
       Serial.read();
     } else {
       forward = Serial.parseFloat();
@@ -84,19 +87,22 @@ void loop() {
         Serial.print(forward);
         Serial.print(", ");
         Serial.println(turn);
-        enabled = true;
+        state = WALK;
       } else { // Invalid input
-        enabled = false;
         Serial.println("Invalid velocity");
       }
     }
   }
   
-  // Walk
-  if(enabled && (millis() - stepStartTime > stepDuration)) {
+  // Act
+  if(state==WALK && (millis() - stepStartTime > stepDuration)) {
     stepStartTime = millis();
-    counter++;
     walk(forward, turn, counter);
+    counter++;
+  } else if(state==STAND) {
+    stand();
+  } else if(state==SIT) {
+    sit();
   }
 }
 
@@ -119,6 +125,13 @@ void sit() {
     float pos[3] = {(R+dR)*cos(leg*M_PI/3-M_PI/6),(R+dR)*sin(leg*M_PI/3-M_PI/6),z0};
     moveLegToPosition(pos[0], pos[1], pos[2], leg);
   }    
+}
+
+// Stand with all 6 legs on the ground
+void stand() {
+  for(int leg=1; leg<7; leg++) {
+    moveLegToState(leg, 0, 0, 0);
+  }
 }
 
 // Move a leg to a predefined state of the gait
