@@ -1,6 +1,9 @@
 #ifndef Constants_h
 #define Constants_h
 
+// Settings
+const bool VERBOSE = false; // Whether to print each new leg position
+
 // Gait parameters
 const float ground = -6; // Height of ground relative to body (in)
 const float clearance = 2; // Height of raised leg relative to ground (in)
@@ -12,11 +15,11 @@ const int stepDuration = 500; // Time duration of a step in (ms)
 // Pins
 const int relay = 22;
 const int servos[6][3] = {{0, 1, 2},
-                    {3, 4, 5},
-                    {6, 7, 8},
-                    {16, 17, 18},
-                    {19, 20, 21},
-                    {22, 23, 24}}; // [leg 1-6][servo A-C]
+                          {3, 4, 5},
+                          {6, 7, 8},
+                          {16, 17, 18},
+                          {19, 20, 21},
+                          {22, 23, 24}}; // [leg 1-6][servo A-C]
 
 // Servo properties
 const String labels[] = {"A", "B", "C"};

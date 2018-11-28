@@ -2,7 +2,8 @@
 #include "Hexapod.h"
 #include <Wire.h>
 
-Hexapod::Hexapod() {
+// Initialize pin modes and servo shield
+void Hexapod::init() {
   pwm1.begin();
   pwm2.begin();
   pinMode(relay, OUTPUT);
@@ -19,6 +20,23 @@ void Hexapod::walk(float forward, float turn, int counter) {
     } else {
       moveLegToState(leg, (counter+2)%4, forward, turn);
     }
+  }
+}
+
+// Lower the hexapod to the ground
+void Hexapod::sit() {
+  for(int leg=1; leg<7; leg++) {
+    float dR = 5.3;
+    float z0 = -0.6;
+    float pos[3] = {(R+dR)*cos(leg*M_PI/3-M_PI/6),(R+dR)*sin(leg*M_PI/3-M_PI/6),z0};
+    moveLegToPosition(pos[0], pos[1], pos[2], leg);
+  }    
+}
+
+// Stand with all 6 legs on the ground
+void Hexapod::stand() {
+  for(int leg=1; leg<7; leg++) {
+    moveLegToState(leg, 0, 0, 0);
   }
 }
 
@@ -54,7 +72,6 @@ void Hexapod::getLegPosition(int leg, int state, float forward, float turn, floa
     w = turn*dtheta;
   }
   // turn
-  Serial.println(w);
   float x = pos[0]*cos(w) - pos[1]*sin(w);
   float y = pos[0]*sin(w) + pos[1]*cos(w);
   pos[0] = x;
@@ -125,14 +142,16 @@ void Hexapod::getAngles(float x, float y, float z, int leg, int* angles) {
 
 // Move all 3 servos of a leg to a given state
 void Hexapod::moveLeg(int *angles, int leg) {
-  Serial.print("Leg ");
-  Serial.print(leg);
-  Serial.print(" moving to ");
-  Serial.print(angles[0]);
-  Serial.print(", ");
-  Serial.print(angles[1]);
-  Serial.print(", ");
-  Serial.println(angles[2]);
+  if(VERBOSE) {
+    Serial.print("Leg ");
+    Serial.print(leg);
+    Serial.print(" moving to ");
+    Serial.print(angles[0]);
+    Serial.print(", ");
+    Serial.print(angles[1]);
+    Serial.print(", ");
+    Serial.println(angles[2]);
+  }
   for(int i=0; i<3; i++) {
     moveServo(angles[i], leg, i);
   }
