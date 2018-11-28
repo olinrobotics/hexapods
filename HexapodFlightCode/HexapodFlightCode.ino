@@ -1,9 +1,7 @@
 #include "Hexapod.h"
 
 Hexapod hex = Hexapod();
-enum State {NONE, STAND, SIT, WALK};
-long stepStartTime = 0;
-int counter = 0;
+enum State {NONE, STAND, SIT, WALK, TEST};
 State state = NONE;
 float forward = 0;
 float turn = 0;
@@ -26,13 +24,16 @@ void loop() {
         state = STAND;
         Serial.println("Stand");
       }
-      counter = 0;
+      Serial.read();
+    } else if (Serial.peek() == 't') { // Test calibration
+      state = TEST;
+      Serial.println("Test");
       Serial.read();
     } else {
       forward = Serial.parseFloat();
       turn = Serial.parseFloat();
       if (abs(forward) + abs(turn) <= 1) { // Walk
-        Serial.print("Entering walk mode: ");
+        Serial.print("Walk: ");
         Serial.print(forward);
         Serial.print(", ");
         Serial.println(turn);
@@ -44,14 +45,14 @@ void loop() {
   }
 
   // Act
-  if (state == WALK && (millis() - stepStartTime > stepDuration)) {
-    stepStartTime = millis();
-    hex.walk(forward, turn, counter);
-    counter++;
+  if (state == WALK) {
+    hex.walk(forward, turn);
   } else if (state == STAND) {
     hex.stand();
   } else if (state == SIT) {
     hex.sit();
+  } else if (state == TEST) {
+    hex.testCalibration();
   }
   delay(1);
 }

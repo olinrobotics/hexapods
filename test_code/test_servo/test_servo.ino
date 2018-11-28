@@ -86,10 +86,10 @@ void robotPlay() {
 void moveServo(int pin, int value) {
   // Move a specified servo to the given position
   Serial.println("Moving to position.");
-  if(pin < 18) {
+  if(pin < 16) {
     pwm1.setPWM(pin, 0, pulseLength(value));
   } else {
-    pwm2.setPWM(pin-18, 0, pulseLength(value));
+    pwm2.setPWM(pin-16, 0, pulseLength(value));
   }
   delay(100);
 }

@@ -9,15 +9,21 @@ class Hexapod {
   public:
     // Initialize pin modes and servo shield
     void init();
+
+    // Called iteratively to walk with given linear and angular velocities
+    void walk(float forward, float turn);
     
-    // Move legs into the next configuration of a foward walking gait
-    void walk(float forward, float turn, int counter);
+    // Move legs into the next configuration of a walking gait
+    void step(float forward, float turn, int counter);
     
     // Lower the hexapod to the ground
     void sit();
     
     // Stand with all 6 legs on the ground
     void stand();
+
+    // Move all servos to 90 degrees
+    void testCalibration();
     
     // Move a leg to a predefined state of the gait
     void moveLegToState(int leg, int state, float forward, float turn);

@@ -27,11 +27,11 @@ const int N = 3; // number of servos
 const int minLimits[] = {0, 40, 0};
 const int maxLimits[] = {180, 180, 120};
 const int offsets[6][3] = {{0, -3, -1},
-                           {10, 20, 15},
+                           {10, 20, 13},
                            {10, 5, 8},
-                           {5, 3, 2},
-                           {11, 0, 0},
-                           {5, 2, 4}}; // (actual - desired) servo angle
+                           {-5, 10, 9},
+                           {0, 0, 10},
+                           {-2, 8, 6}}; // (actual - desired) servo angle
 
 // Servo PWM to angle conversion factors
 const int ANGLEMIN = 0; // minimum servo angle in degrees

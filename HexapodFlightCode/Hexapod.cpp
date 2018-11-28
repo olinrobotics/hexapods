@@ -2,6 +2,9 @@
 #include "Hexapod.h"
 #include <Wire.h>
 
+long stepStartTime = 0;
+int counter = 0;
+
 // Initialize pin modes and servo shield
 void Hexapod::init() {
   pwm1.begin();
@@ -12,8 +15,17 @@ void Hexapod::init() {
   pwm2.setPWMFreq(60);  // Analog servos run at ~60 Hz updates
 }
 
-// Move legs into the next configuration of a foward walking gait
-void Hexapod::walk(float forward, float turn, int counter) {
+// Called iteratively to walk with given linear and angular velocities
+void Hexapod::walk(float forward, float turn) {
+  if (millis() - stepStartTime > stepDuration) {
+    stepStartTime = millis();
+    step(forward, turn, counter);
+    counter++;
+  }
+}
+
+// Move legs into the next configuration of a walking gait
+void Hexapod::step(float forward, float turn, int counter) {
   for(int leg=1; leg<7; leg++) {
     if(leg%2==0) { // right side
       moveLegToState(leg, counter%4, forward, turn);
@@ -30,7 +42,8 @@ void Hexapod::sit() {
     float z0 = -0.6;
     float pos[3] = {(R+dR)*cos(leg*M_PI/3-M_PI/6),(R+dR)*sin(leg*M_PI/3-M_PI/6),z0};
     moveLegToPosition(pos[0], pos[1], pos[2], leg);
-  }    
+  }
+  counter = 0;
 }
 
 // Stand with all 6 legs on the ground
@@ -38,6 +51,17 @@ void Hexapod::stand() {
   for(int leg=1; leg<7; leg++) {
     moveLegToState(leg, 0, 0, 0);
   }
+  counter = 0;
+}
+
+// Move all servos to 90 degrees
+void Hexapod::testCalibration() {
+  int angles[] = {90, 90, 90};
+  Serial.println(angles[0]);
+  for(int leg=1; leg<7; leg++) {
+    moveLeg(angles, leg);
+  }
+  counter = 0;
 }
 
 // Move a leg to a predefined state of the gait
