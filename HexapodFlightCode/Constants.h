@@ -10,7 +10,12 @@ const float clearance = 2; // Height of raised leg relative to ground (in)
 const float dx = 1.5; // Half of the linear step distance (in)
 const float dtheta = M_PI/12; // Half of the angular step angle (rad)
 const float yoffset = 3; // Horizontal distance of feet from body (in)
-const int stepDuration = 500; // Time duration of a step in (ms)
+const int stepDuration = 1000; // Time duration of a step (ms)
+const int TILT_THRESHOLD = 2; // Max allowed horizontal acceleration (m/s^2)
+
+// Derived gait parameters
+const float linSpeed = dx*500/stepDuration; // Max linear speed (in/s)
+const float angSpeed = dtheta*500/stepDuration; // Max angular speed (rad/s)
 
 // Pins
 const int relay = 22;
@@ -20,6 +25,10 @@ const int servos[6][3] = {{0, 1, 2},
                           {16, 17, 18},
                           {19, 20, 21},
                           {22, 23, 24}}; // [leg 1-6][servo A-C]
+const int LIS3DH_CLK = 13;
+const int LIS3DH_MISO = 12;
+const int LIS3DH_MOSI = 11;
+const int LIS3DH_CS = 10;
 
 // Servo properties
 const String labels[] = {"A", "B", "C"};

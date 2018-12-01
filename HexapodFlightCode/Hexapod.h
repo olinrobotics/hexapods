@@ -4,6 +4,10 @@
 #include "Arduino.h"
 #include "Constants.h"
 #include <Adafruit_PWMServoDriver.h>
+#include <Adafruit_LIS3DH.h>
+#include <Adafruit_Sensor.h>
+#include <Wire.h>
+#include <SPI.h>
 
 class Hexapod {
   public:
@@ -11,7 +15,7 @@ class Hexapod {
     void init();
 
     // Called iteratively to walk with given linear and angular velocities
-    void walk(float forward, float turn);
+    bool walk(float forward, float turn);
     
     // Move legs into the next configuration of a walking gait
     void step(float forward, float turn, int counter);
@@ -46,8 +50,12 @@ class Hexapod {
     // Convert angle in degrees to PWM pulse length
     int pulseLength(int angle, int leg, int servo);
 
+    // Determine {x,y,z} acceleration in m/s^2
+    void Hexapod::getAccel(float *acceleration);
+
     Adafruit_PWMServoDriver pwm1 = Adafruit_PWMServoDriver();
     Adafruit_PWMServoDriver pwm2 = Adafruit_PWMServoDriver(0x41);
+    Adafruit_LIS3DH accel = Adafruit_LIS3DH(LIS3DH_CS, LIS3DH_MOSI, LIS3DH_MISO, LIS3DH_CLK);
 };
 
 #endif

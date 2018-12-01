@@ -9,6 +9,11 @@ float turn = 0;
 void setup() {
   Serial.begin(9600);
   Serial.println("Starting up! Please enter desired linear and angular velocities.");
+  Serial.print("Max linear speed: ");
+  Serial.println(linSpeed);
+  Serial.print("Max angular speed: ");
+  Serial.println(angSpeed);
+  Serial.println("Input values are scaled between -1 and 1");
   delay(10);
   hex.init();
 }
@@ -46,7 +51,10 @@ void loop() {
 
   // Act
   if (state == WALK) {
-    hex.walk(forward, turn);
+    if(!hex.walk(forward, turn)) {
+//      state = NONE;
+      Serial.println("Tipped");
+    }
   } else if (state == STAND) {
     hex.stand();
   } else if (state == SIT) {
