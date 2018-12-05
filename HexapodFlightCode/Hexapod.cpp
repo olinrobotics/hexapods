@@ -91,6 +91,10 @@ bool Hexapod::walk(float forward, float turn) {
 //      step(forward, turn, counter-2);
 //      return false;
 //    }
+    int obj_dist = sampleIR();
+      if (obj_dist < 28) {
+        return false;
+      }
   }
   if (millis() - stepStartTime > stepDuration) {
     stepStartTime = millis();

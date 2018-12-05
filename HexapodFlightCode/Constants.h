@@ -13,6 +13,7 @@ const float yoffset = 3; // Horizontal distance of feet from body (in)
 const int stepDuration = 1000; // Time duration of a step (ms)
 const int TILT_THRESHOLD = 3; // Max allowed horizontal acceleration (m/s^2)
 const int FILTER_LENGTH = 10; // Number of accelerometer values to average
+const int IR_THRESHOLD = 28; // Distance seen by IR sensor to make it stop (cm)
 
 // Derived gait parameters
 const float linSpeed = dx*1000/stepDuration; // Max linear speed (in/s)
