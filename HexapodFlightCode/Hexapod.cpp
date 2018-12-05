@@ -312,3 +312,21 @@ void Hexapod::getAccel(float *acceleration) {
 //  Serial.println(acceleration[2]);
 //  Serial.println("---");
 }
+
+
+//================================================================================== SENSE FUNCTIONS =====================================================================//
+
+//Read the distance from the IR sensor
+int Hexapod::sampleIR() {
+  for (int i=0; i<5; i++) {           //sample five times
+    int goodvaluecount = 0;
+    int goodvaluesum = 0;
+    int distR = IR_r.getDistance();    //read right IR sensor
+    if (distR < 31 && distR > 4) {    //if within the readable range
+      goodvaluesum += distR;
+      goodvaluecount++;
+    }
+    int avgRval = goodvaluesum/goodvaluecount; //average the good values
+  }
+   
+}

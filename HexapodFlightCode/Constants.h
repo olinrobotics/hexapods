@@ -26,10 +26,12 @@ const int servos[6][3] = {{0, 1, 2},
                           {16, 17, 18},
                           {19, 20, 21},
                           {22, 23, 24}}; // [leg 1-6][servo A-C]
+
 const int LIS3DH_CLK = 13;
 const int LIS3DH_MISO = 12;
 const int LIS3DH_MOSI = 11;
 const int LIS3DH_CS = 10;
+const int irRpin = A15;
 
 // Servo properties
 const String labels[] = {"A", "B", "C"};
