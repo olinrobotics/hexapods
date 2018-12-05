@@ -14,6 +14,18 @@ class Hexapod {
     // Initialize pin modes and servo shield
     void init();
 
+    // Add a new desired waypoint to the end of the list
+    int addWaypoint(float x, float y);
+
+    // Remove all waypoints
+    void clearWaypoints();
+
+    // Walk toward the next waypoint
+    bool followWaypoint();
+    
+    // Set current position to new origin
+    void resetPosition();
+    
     // Called iteratively to walk with given linear and angular velocities
     bool walk(float forward, float turn);
     
@@ -52,6 +64,9 @@ class Hexapod {
 
     // Determine {x,y,z} acceleration in m/s^2
     void Hexapod::getAccel(float *acceleration);
+
+    // Hexapod coordinates foward (in), left(in), and CCW (rad)
+    float x = 0, y = 0, theta = 0;
 
     Adafruit_PWMServoDriver pwm1 = Adafruit_PWMServoDriver();
     Adafruit_PWMServoDriver pwm2 = Adafruit_PWMServoDriver(0x41);

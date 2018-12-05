@@ -1,7 +1,7 @@
 #include "Hexapod.h"
 
 Hexapod hex = Hexapod();
-enum State {NONE, STAND, SIT, WALK, TEST};
+enum State {NONE, STAND, SIT, WALK, TEST, PACE};
 State state = NONE;
 float forward = 0;
 float turn = 0;
@@ -34,6 +34,14 @@ void loop() {
       state = TEST;
       Serial.println("Test");
       Serial.read();
+    } else if (Serial.peek() == 'p') { // Pace back and forth
+      state = PACE;
+      hex.addWaypoint(12, 0);
+      Serial.println("Pace");
+      Serial.read();
+    } else if (Serial.peek() == 'r') { // Reset position
+      hex.resetPosition();
+      Serial.read();
     } else {
       forward = Serial.parseFloat();
       turn = Serial.parseFloat();
@@ -52,11 +60,14 @@ void loop() {
   // Act
   if (state == WALK) {
     if(!hex.walk(forward, turn)) {
-//      state = NONE;
       Serial.println("Tipped");
     }
   } else if (state == STAND) {
     hex.stand();
+  } else if (state == PACE) {
+    if(hex.followWaypoint()) {
+      hex.addWaypoint(12-hex.x, 0);
+    }
   } else if (state == SIT) {
     hex.sit();
   } else if (state == TEST) {

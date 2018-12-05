@@ -11,11 +11,12 @@ const float dx = 1.5; // Half of the linear step distance (in)
 const float dtheta = M_PI/12; // Half of the angular step angle (rad)
 const float yoffset = 3; // Horizontal distance of feet from body (in)
 const int stepDuration = 1000; // Time duration of a step (ms)
-const int TILT_THRESHOLD = 2; // Max allowed horizontal acceleration (m/s^2)
+const int TILT_THRESHOLD = 3; // Max allowed horizontal acceleration (m/s^2)
+const int FILTER_LENGTH = 10; // Number of accelerometer values to average
 
 // Derived gait parameters
-const float linSpeed = dx*500/stepDuration; // Max linear speed (in/s)
-const float angSpeed = dtheta*500/stepDuration; // Max angular speed (rad/s)
+const float linSpeed = dx*1000/stepDuration; // Max linear speed (in/s)
+const float angSpeed = dtheta*1000/stepDuration; // Max angular speed (rad/s)
 
 // Pins
 const int relay = 22;

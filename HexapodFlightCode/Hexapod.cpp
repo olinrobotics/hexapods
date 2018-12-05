@@ -4,6 +4,11 @@
 long stepStartTime = 0;
 int counter = 0;
 bool accelPresent = false;
+float pastAccel[FILTER_LENGTH][3];
+float *waypointsX;
+float *waypointsY;
+int waypointLen = 0;
+int waypointIndex = 0;
 
 // Initialize pin modes and servo shield
 void Hexapod::init() {
@@ -19,15 +24,73 @@ void Hexapod::init() {
   pwm2.setPWMFreq(60);  // Analog servos run at ~60 Hz updates
 }
 
+// Add a new desired waypoint to the end of the list
+int Hexapod::addWaypoint(float targetX, float targetY) {
+  float *tempX = malloc(sizeof(float)*(waypointLen+1));
+  float *tempY = malloc(sizeof(float)*(waypointLen+1));  
+  for(int i=1; i<=waypointLen; i++) {
+    tempX[i] = waypointsX[i-1];
+    tempY[i] = waypointsY[i-1];
+  }
+  tempX[waypointLen] = targetX;
+  tempY[waypointLen] = targetY;
+  waypointLen++;
+  free(waypointsX);
+  free(waypointsY);
+  waypointsX = tempX;
+  waypointsY = tempY;
+  Serial.println(waypointLen);
+  Serial.println(waypointIndex);
+  return(waypointLen);
+}
+
+// Remove all waypoints
+void Hexapod::clearWaypoints() {
+  waypointLen = 0;
+  waypointIndex = 0;
+}
+
+// Set current position to new origin
+void Hexapod::resetPosition() {
+  x = 0;
+  y = 0;
+  theta = 0;
+}
+
+// Walk toward the next waypoint
+bool Hexapod::followWaypoint() {
+  if(waypointIndex >= waypointLen) {
+    return true;
+  }
+  float deltaX = waypointsX[waypointIndex]-x;
+  float deltaY = waypointsY[waypointIndex]-y;
+  float deltaTheta = fmod(atan2(deltaY, deltaX)-theta+M_PI, 2*M_PI)-M_PI;
+  if(abs(sqrt(deltaX*deltaX+deltaY*deltaY))<=dx/2) {
+    waypointIndex++;
+    return true;
+  }
+  if(abs(deltaTheta) >= dtheta/2) {
+    walk(0, deltaTheta>0 ? 1:-1);
+  } else {
+    walk(1, 0);
+  }
+  Serial.print(x);
+  Serial.print(", ");
+  Serial.print(y);
+  Serial.print(", ");
+  Serial.println(theta);
+  return false;
+}
+
 // Called iteratively to walk with given linear and angular velocities
 bool Hexapod::walk(float forward, float turn) {
   if (accelPresent) {
     float a[3];
     getAccel(a);
-    if (sqrt(a[0]*a[0]+a[1]*a[1]) > TILT_THRESHOLD) {
-      step(forward, turn, counter-2);
-      return false;
-    }
+//    if (sqrt(a[0]*a[0]+a[1]*a[1]) > TILT_THRESHOLD) {
+//      step(forward, turn, counter-2);
+//      return false;
+//    }
   }
   if (millis() - stepStartTime > stepDuration) {
     stepStartTime = millis();
@@ -39,6 +102,9 @@ bool Hexapod::walk(float forward, float turn) {
 
 // Move legs into the next configuration of a walking gait
 void Hexapod::step(float forward, float turn, int counter) {
+  x += forward*dx*cos(theta);
+  y += forward*dx*sin(theta);
+  theta += turn*dtheta;
   for (int leg = 1; leg < 7; leg++) {
     if (leg % 2 == 0) { // right side
       moveLegToState(leg, counter % 4, forward, turn);
@@ -230,9 +296,19 @@ void Hexapod::getAccel(float *acceleration) {
   acceleration[0] = event.acceleration.x;
   acceleration[1] = event.acceleration.y;
   acceleration[2] = event.acceleration.z;
-  Serial.print(acceleration[0]);
-  Serial.print(", ");
-  Serial.print(acceleration[1]);
-  Serial.print(", ");
-  Serial.println(acceleration[2]);
+  float avg_accel[] = {0,0,0};
+  for(int i=0; i<3; i++) {
+    for(int j=FILTER_LENGTH-1; j>=0; j--) {
+      avg_accel[i] += pastAccel[j][i];
+      if(j>0) pastAccel[j][i] = pastAccel[j-1][i];
+      else pastAccel[0][i] = acceleration[i];
+    }
+    acceleration[i] = (avg_accel[i]+acceleration[i])/(FILTER_LENGTH+1);
+  }
+//  Serial.print(acceleration[0]);
+//  Serial.print(", ");
+//  Serial.print(acceleration[1]);
+//  Serial.print(", ");
+//  Serial.println(acceleration[2]);
+//  Serial.println("---");
 }
