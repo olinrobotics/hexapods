@@ -4,6 +4,7 @@
 #include "Arduino.h"
 #include "Constants.h"
 #include <Adafruit_PWMServoDriver.h>
+#include <SharpIR.h>
 
 class Hexapod {
   public:
@@ -46,8 +47,12 @@ class Hexapod {
     // Convert angle in degrees to PWM pulse length
     int pulseLength(int angle, int leg, int servo);
 
+    //sample IR sensors
+    int sampleIR();
+
     Adafruit_PWMServoDriver pwm1 = Adafruit_PWMServoDriver();
     Adafruit_PWMServoDriver pwm2 = Adafruit_PWMServoDriver(0x41);
+    SharpIR IR_r = SharpIR(SharpIR::GP2Y0A41SK0F, irRpin);
 };
 
 #endif
