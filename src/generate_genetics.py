@@ -18,6 +18,8 @@ class GenerateGenetics(object):
 		self.move_leg = rospy.ServiceProxy("move_leg", MoveLeg)
 		self.saveLoc = saveLoc
 		self.mutation_liklihood = 15
+		self.step_len = 21
+		self.
 		if fileLoc is not None:
 			self.population_set = self.clean_up_input(self.load_obj(fileLoc))
 			while len(self.population_set) < self.population_size:
@@ -29,11 +31,13 @@ class GenerateGenetics(object):
 		""" Remove any items from the input that are smaller than they should be. 
 		"""
 		for item in input_list:
-			if len(item) < 11:
+			if len(item) < self.step_len:
 				input_list.remove(item)
 		return input_list
 
 	def generate_new_population(self):
+		""" Generate a brand-new population of individuals
+		"""
 		new_population = []
 		for i in range(self.population_size):
 			new_population.append(self.generate_new_individual())
@@ -42,30 +46,28 @@ class GenerateGenetics(object):
 	def generate_new_individual(self):
 		""" Generate a brand-new set of steps
 		"""
-		number_steps = 30
+		number_steps = 10
 		step_set = []
 		for i in range(number_steps):
 			step_set.append(self.generate_new_step())
 		return step_set
 
 	def generate_new_step(self):
-		""" Generate a new random string of an 11-length binary
+		""" Generate a new random string of an 19-length binary
+		This describes the position of a specific servo, and the amount of time (in ms) to wait until moving the next leg.
+		Done in binary to increase the variability of the effect of a mutation-
+		a switched bit will sometimes have a very small effect (such as changing the position
+		of a leg by a single degree), but sometimes a very large effect (changing the position greatly)
 		"""
-		out = [str(i) for i in (np.random.randint(2, size=11))]
+		out = [str(i) for i in (np.random.randint(2, size=self.step_len))]
 		return "".join(out)
 
 	def evaluate_individual(self, individual):
 		""" Evaluate an individual 
 		"""
 		for step in individual:
-			if len(step) == 11:
-				self.move_leg(step)
-			else:
-				pass
-			#time.sleep(0.25)
-		#print("inches moved: ")
-		#success = int(input())
-		success = random.random()
+			self.move_leg(step)
+		success = random.random()  #TODO: success should be evaluated based on movement from position
 		return success
 
 	def compute_performance_population(self, population):
@@ -109,8 +111,6 @@ class GenerateGenetics(object):
 		"""
 		child1 = []
 		child2 = []
-		print("parent1:")
-		print(parent1[0])
 		for i in range(len(parent1)):
 			[step1, step2] = self.mate(parent1[i], parent2[i], self.mutation_liklihood)
 			child1.append(step1)
@@ -126,9 +126,12 @@ class GenerateGenetics(object):
 		"""
 		if (mutation_liklihood > random.randint(0,100)):
 			gene1 = self.mutate(gene1)
-		outgene1 = gene1[0:5] + gene2[5::]
-		outgene2 = gene2[0:5] + gene1[5::]
-		return random.shuffle([outgene1, outgene2])
+		halfway = int(self.step_len / 2)
+		outgene1 = gene1[0:halfway] + gene2[halfway::]
+		outgene2 = gene2[0:halfway] + gene1[halfway::]
+		outlist = [outgene1, outgene2]
+		random.shuffle(outlist)
+		return outlist
 
 	def mutate(self, gene):
 		""" Randomly change one value in the gene. For example:
@@ -137,16 +140,20 @@ class GenerateGenetics(object):
 		index = random.randrange(0,10)
 		print("mutating: " + gene)
 		if(gene[index] == "0"):
-			return gene[0:index] + "1" + gene[index+1:11]
+			return gene[0:index] + "1" + gene[index+1::]
 		else:
-			return gene[0:index] + "0" + gene[index+1:11]
+			return gene[0:index] + "0" + gene[index+1::]
 
 	def save_obj(self, obj, name):
+		""" Save object to given filename
+		"""
 		print("saving to file: " + name + ".pkl")
 		with open('../obj/'+ name + '.pkl', 'wb') as f:
 			pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
 
 	def load_obj(self, name):
+		""" Load object from given filename
+		"""
 		print("loading " + name + ".pkl")
 		with open('../obj/' + name + '.pkl', 'rb') as f:
 			return pickle.load(f)
@@ -160,7 +167,7 @@ class GenerateGenetics(object):
 
 
 if __name__ == '__main__':
-	g = GenerateGenetics("out")
+	g = GenerateGenetics("out", "out")
 	g.run()
 
 
