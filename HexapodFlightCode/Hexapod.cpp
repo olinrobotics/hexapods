@@ -330,7 +330,9 @@ int Hexapod::sampleIR() {
       goodvaluesum += distR;
       goodvaluecount++;
     }
-    int avgRval = goodvaluesum/goodvaluecount; //average the good values
+    if (goodvaluecount > 0){
+      int avgRval = goodvaluesum/goodvaluecount; //average the good values
+    }
   }
    
 }
