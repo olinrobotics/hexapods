@@ -326,13 +326,14 @@ int Hexapod::sampleIR() {
     int goodvaluecount = 0;
     int goodvaluesum = 0;
     int distR = IR_r.getDistance();    //read right IR sensor
-    if (distR < 31 && distR > 4) {    //if within the readable range
+    if (distR < 81 && distR > 9) {    //if within the readable range
       goodvaluesum += distR;
       goodvaluecount++;
     }
     if (goodvaluecount > 0){
       int avgRval = goodvaluesum/goodvaluecount; //average the good values
+      Serial.println(avgRval);
+      return avgRval;
     }
   }
-   
 }
