@@ -322,18 +322,22 @@ void Hexapod::getAccel(float *acceleration) {
 
 //Read the distance from the IR sensor
 int Hexapod::sampleIR() {
-  for (int i=0; i<5; i++) {           //sample five times
-    int goodvaluecount = 0;
-    int goodvaluesum = 0;
+  int goodvaluecount = 0;
+  int goodvaluesum = 0;
+  for (int i=0; i<10; i++) {           //sample five times
     int distR = IR_r.getDistance();    //read right IR sensor
     if (distR < 81 && distR > 9) {    //if within the readable range
       goodvaluesum += distR;
       goodvaluecount++;
-    }
-    if (goodvaluecount > 0){
-      int avgRval = goodvaluesum/goodvaluecount; //average the good values
-      Serial.println(avgRval);
-      return avgRval;
-    }
+      }
   }
+  if (goodvaluecount > 0){
+    int avgRval = goodvaluesum/goodvaluecount; //average the good values
+    //Serial.println(avgRval);
+    //return avgRval;
+  }
+  else {
+    //return 9;
+  }
+  return 70;
 }
