@@ -91,8 +91,8 @@ bool Hexapod::walk(float forward, float turn) {
 //      step(forward, turn, counter-2);
 //      return false;
 //    }
-    int obj_dist = sampleIR();
-      if (obj_dist < 28) {
+      if (sampleIR() < 12) {
+      Serial.println("Object is too close! Stopping!");
         return false;
       }
   }
@@ -324,20 +324,32 @@ void Hexapod::getAccel(float *acceleration) {
 int Hexapod::sampleIR() {
   int goodvaluecount = 0;
   int goodvaluesum = 0;
-  for (int i=0; i<10; i++) {           //sample five times
+  int tooclosecount = 0;
+  int toofarcount = 0;
+  
+
+  //Take sensor values. "Good" values fall within IR range (10-80cm)
+  for (int i=0; i<5; i++) {           //sample five times
     int distR = IR_r.getDistance();    //read right IR sensor
-    if (distR < 81 && distR > 9) {    //if within the readable range
+    if (distR >=80) {toofarcount++;}            //if the object is too far to read
+    else if (distR <= 10) {tooclosecount++;}    //if the object is too close to read
+    else {                                    //if the object is in the right range
       goodvaluesum += distR;
       goodvaluecount++;
       }
   }
-  if (goodvaluecount > 0){
-    int avgRval = goodvaluesum/goodvaluecount; //average the good values
-    //Serial.println(avgRval);
-    //return avgRval;
-  }
+  if (IR_VERBOSE) {
+    Serial.print("The IR got "); Serial.print(goodvaluecount); Serial.println(" good readings (of 10)");
+    Serial.print("The IR got "); Serial.print(tooclosecount); Serial.println(" of TOO CLOSE");
+    Serial.print("The IR got "); Serial.print(toofarcount); Serial.println(" of TOO FAR"); 
+    }
+
+  //Decide what to output. If it shows "too close/far" more than twice, send that value. 
+  if (tooclosecount > 2) {return 9;}
+  else if (toofarcount > 2) {return 80;}
   else {
-    //return 9;
+    int avgRval = goodvaluesum/goodvaluecount; //average the good values
+    if (IR_VERBOSE) {Serial.print("The sensor value is:"); Serial.println(avgRval); }
+    return avgRval;
   }
-  return 70;
 }
