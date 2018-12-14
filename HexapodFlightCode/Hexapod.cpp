@@ -86,6 +86,14 @@ bool Hexapod::walk(float forward, float turn) {
   if (accelPresent) {
     float a[3];
     getAccel(a);
+//    if (sqrt(a[0]*a[0]+a[1]*a[1]) > TILT_THRESHOLD) {
+//      step(forward, turn, counter-2);
+//      return false;
+//    }
+      if (sampleIR() < 12) {
+      Serial.println("Object is too close! Stopping!");
+        return false;
+      }
   }
   if (millis() - stepStartTime > stepDuration) {
     stepStartTime = millis();
@@ -321,15 +329,34 @@ void Hexapod::getAccel(float *acceleration) {
 
 //Read the distance from the IR sensor
 int Hexapod::sampleIR() {
+  int goodvaluecount = 0;
+  int goodvaluesum = 0;
+  int tooclosecount = 0;
+  int toofarcount = 0;
+  
+
+  //Take sensor values. "Good" values fall within IR range (10-80cm)
   for (int i=0; i<5; i++) {           //sample five times
-    int goodvaluecount = 0;
-    int goodvaluesum = 0;
     int distR = IR_r.getDistance();    //read right IR sensor
-    if (distR < 31 && distR > 4) {    //if within the readable range
+    if (distR >=80) {toofarcount++;}            //if the object is too far to read
+    else if (distR <= 10) {tooclosecount++;}    //if the object is too close to read
+    else {                                    //if the object is in the right range
       goodvaluesum += distR;
       goodvaluecount++;
-    }
-    int avgRval = goodvaluesum/goodvaluecount; //average the good values
+      }
   }
-   
+  if (IR_VERBOSE) {
+    Serial.print("The IR got "); Serial.print(goodvaluecount); Serial.println(" good readings (of 10)");
+    Serial.print("The IR got "); Serial.print(tooclosecount); Serial.println(" of TOO CLOSE");
+    Serial.print("The IR got "); Serial.print(toofarcount); Serial.println(" of TOO FAR"); 
+    }
+
+  //Decide what to output. If it shows "too close/far" more than twice, send that value. 
+  if (tooclosecount > 2) {return 9;}
+  else if (toofarcount > 2) {return 80;}
+  else {
+    int avgRval = goodvaluesum/goodvaluecount; //average the good values
+    if (IR_VERBOSE) {Serial.print("The sensor value is:"); Serial.println(avgRval); }
+    return avgRval;
+  }
 }

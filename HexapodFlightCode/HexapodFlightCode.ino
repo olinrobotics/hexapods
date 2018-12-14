@@ -9,10 +9,8 @@ float turn = 0;
 void setup() {
   Serial.begin(9600);
   Serial.println("Starting up! Please enter desired linear and angular velocities.");
-  Serial.print("Max linear speed: ");
-  Serial.println(linSpeed);
-  Serial.print("Max angular speed: ");
-  Serial.println(angSpeed);
+  Serial.print("Max linear speed: "); Serial.println(linSpeed);
+  Serial.print("Max angular speed: "); Serial.println(angSpeed);
   Serial.println("Input values are scaled between -1 and 1");
   delay(10);
   hex.init();
@@ -21,7 +19,9 @@ void setup() {
 void loop() {
   // Operator input
   if (Serial.available() > 0) {
+    if (STATE_VERBOSE) {Serial.println("Found a Serial Command!");}
     if (Serial.peek() == ' ') { // Stop
+      if (STATE_VERBOSE) {Serial.println("Command: Stop");}
       if (state == STAND) {
         state = SIT;
         Serial.println("Sit");
@@ -44,6 +44,7 @@ void loop() {
       hex.clearWaypoints();
       Serial.read();
     } else {
+      if (STATE_VERBOSE) {Serial.println("I'm going to try to walk.");}
       forward = Serial.parseFloat();
       turn = Serial.parseFloat();
       if (abs(forward) + abs(turn) <= 1) { // Walk
@@ -56,12 +57,14 @@ void loop() {
         Serial.println("Invalid velocity");
       }
     }
+    Serial.read();
   }
 
   // Act
   if (state == WALK) {
     if(!hex.walk(forward, turn)) {
-      Serial.println("Tipped");
+      Serial.println("Wall");
+      hex.stand();
     }
   } else if (state == STAND) {
     hex.stand();
