@@ -19,6 +19,7 @@ void Hexapod::init() {
     accel.setRange(LIS3DH_RANGE_4_G);
   }
   pinMode(relay, OUTPUT);
+  pinMode(foot1, INPUT);
   digitalWrite(relay, HIGH);
   pwm1.setPWMFreq(60);
   pwm2.setPWMFreq(60);  // Analog servos run at ~60 Hz updates
@@ -39,8 +40,6 @@ int Hexapod::addWaypoint(float targetX, float targetY) {
   free(waypointsY);
   waypointsX = tempX;
   waypointsY = tempY;
-  Serial.println(waypointLen);
-  Serial.println(waypointIndex);
   return(waypointLen);
 }
 
@@ -70,9 +69,9 @@ bool Hexapod::followWaypoint() {
     return true;
   }
   if(abs(deltaTheta) >= dtheta/2) {
-    walk(0, deltaTheta>0 ? 1:-1);
+    Serial.println(walk(0, deltaTheta>0 ? 1:-1) ? "" : "FALL");
   } else {
-    walk(1, 0);
+    Serial.println(walk(1, 0) ? "" : "FALL");
   }
   Serial.print(x);
   Serial.print(", ");
@@ -87,13 +86,17 @@ bool Hexapod::walk(float forward, float turn) {
   if (accelPresent) {
     float a[3];
     getAccel(a);
-//    if (sqrt(a[0]*a[0]+a[1]*a[1]) > TILT_THRESHOLD) {
-//      step(forward, turn, counter-2);
-//      return false;
-//    }
   }
   if (millis() - stepStartTime > stepDuration) {
     stepStartTime = millis();
+    if (counter%4!=1 && digitalRead(foot1)!=LOW) {
+      step(forward, turn, counter-2);
+      x -= 2*forward*dx*cos(theta);
+      y -= 2*forward*dx*sin(theta);
+      theta -= 2*turn*dtheta;
+      counter--;
+      return false;
+    }
     step(forward, turn, counter);
     counter++;
   }

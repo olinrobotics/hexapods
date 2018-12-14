@@ -39,8 +39,9 @@ void loop() {
       hex.addWaypoint(12, 0);
       Serial.println("Pace");
       Serial.read();
-    } else if (Serial.peek() == 'r') { // Reset position
+    } else if (Serial.peek() == 'r') { // Reset position and waypoints
       hex.resetPosition();
+      hex.clearWaypoints();
       Serial.read();
     } else {
       forward = Serial.parseFloat();

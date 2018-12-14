@@ -7,8 +7,8 @@ const bool VERBOSE = false; // Whether to print each new leg position
 // Gait parameters
 const float ground = -6; // Height of ground relative to body (in)
 const float clearance = 2; // Height of raised leg relative to ground (in)
-const float dx = 1.5; // Half of the linear step distance (in)
-const float dtheta = M_PI/12; // Half of the angular step angle (rad)
+const float dx = 1.5/2; // Half of the linear step distance (in)
+const float dtheta = M_PI/12/2; // Half of the angular step angle (rad)
 const float yoffset = 3; // Horizontal distance of feet from body (in)
 const int stepDuration = 1000; // Time duration of a step (ms)
 const int TILT_THRESHOLD = 3; // Max allowed horizontal acceleration (m/s^2)
@@ -32,6 +32,7 @@ const int LIS3DH_MISO = 12;
 const int LIS3DH_MOSI = 11;
 const int LIS3DH_CS = 10;
 const int irRpin = A15;
+const int foot1 = 45;
 
 // Servo properties
 const String labels[] = {"A", "B", "C"};
@@ -39,7 +40,7 @@ const int N = 3; // number of servos
 const int minLimits[] = {0, 40, 0};
 const int maxLimits[] = {180, 180, 120};
 const int offsets[6][3] = {{0, -3, -1},
-                           {10, 20, 13},
+                           {10, 13, 13},
                            {10, 5, 8},
                            {-5, 10, 9},
                            {0, 0, 10},
