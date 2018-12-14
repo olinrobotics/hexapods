@@ -3,8 +3,8 @@
 
 // Settings
 const bool VERBOSE = false; // Whether to print each new leg position
-const bool IR_VERBOSE = false; // Use for debugging IR sensor data
-const bool STATE_VERBOSE = true; // Debug main states in flight code
+const bool IR_VERBOSE = true; // Use for debugging IR sensor data
+const bool STATE_VERBOSE = false; // Debug main states in flight code
 
 // Gait parameters
 const float ground = -6; // Height of ground relative to body (in)

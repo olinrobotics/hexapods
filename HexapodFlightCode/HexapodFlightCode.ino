@@ -63,8 +63,8 @@ void loop() {
   // Act
   if (state == WALK) {
     if(!hex.walk(forward, turn)) {
-      Serial.println("Wall");
-      hex.stand();
+      Serial.println("Stopping");
+//      hex.stand();
     }
   } else if (state == STAND) {
     hex.stand();

@@ -86,17 +86,13 @@ bool Hexapod::walk(float forward, float turn) {
   if (accelPresent) {
     float a[3];
     getAccel(a);
-//    if (sqrt(a[0]*a[0]+a[1]*a[1]) > TILT_THRESHOLD) {
-//      step(forward, turn, counter-2);
-//      return false;
-//    }
-      if (sampleIR() < 12) {
-      Serial.println("Object is too close! Stopping!");
-        return false;
-      }
   }
   if (millis() - stepStartTime > stepDuration) {
     stepStartTime = millis();
+    if (sampleIR() < 12) {
+      Serial.println("Object is too close! Stopping!");
+      return false;
+    }
     if (counter%4!=1 && digitalRead(foot1)!=LOW) {
       step(forward, turn, counter-2);
       x -= 2*forward*dx*cos(theta);
