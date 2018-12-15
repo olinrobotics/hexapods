@@ -6,8 +6,8 @@ const bool LEGS_VERBOSE = false; // Use for debugging leg positions
 const bool LOCATION_VERBOSE = true; // Use for debugging hexapod location
 const bool IR_VERBOSE = false; // Use for debugging IR sensor data
 const bool ACCEL_VERBOSE = false; // Use for debugging accelerometer data
-const bool STATE_VERBOSE = false; // Debug main states in flight code
-const bool DETECT_WALLS = false; // Use IRs to avoid walls
+const bool STATE_VERBOSE = true; // Debug main states in flight code
+const bool DETECT_WALLS = true; // Use IRs to avoid walls
 const bool DETECT_CLIFFS = true; // Use foot sensor to avoid falling
 
 // Waypoint types

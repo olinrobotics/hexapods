@@ -141,11 +141,6 @@ int Hexapod::followWaypoint() {
   }
 }
 
-// Call to find a new direction after hitting a wall or cliff
-void Hexapod::trynewpath(int stepsback, int turns) {
-  
-}
-
 // Called iteratively to walk with given linear and angular velocities
 // Returns 1 if step taken, -1 if obstacle encountered, 0 otherwise
 int Hexapod::walk(float forward, float turn) {
@@ -155,7 +150,7 @@ int Hexapod::walk(float forward, float turn) {
   }
   if (millis() - stepStartTime > stepDuration) {
     stepStartTime = millis();
-    if (DETECT_WALLS && sampleIR() < 12) {
+    if (DETECT_WALLS && sampleIR() < 12 && forward>0) {
       Serial.println("Object is too close! Stopping!");
       return -1;
     }
@@ -168,6 +163,9 @@ int Hexapod::walk(float forward, float turn) {
       counter--;
       if (counter < 0) counter += 4;
       Serial.println(counter % 4);
+      Serial.println("My feet aren't on the ground!");
+      Serial.print("Foot 1 is: "); Serial.println(digitalRead(foot1));
+      Serial.print("Foot 6 is: "); Serial.println(digitalRead(foot6));
       return -1;
     }
     step(forward, turn, counter);

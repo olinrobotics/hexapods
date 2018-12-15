@@ -80,13 +80,8 @@ class Hexapod {
     //sample IR sensors
     int sampleIR();
 
-<<<<<<< HEAD
-    // If hits a wall, back up and turn somewhere else. 
-    void trynewpath(int stepsback, int turns);
-=======
     // Hexapod coordinates foward (in), left(in), and CCW (rad)
     float x = 0, y = 0, theta = 0;
->>>>>>> paul
 
     Adafruit_PWMServoDriver pwm1 = Adafruit_PWMServoDriver();
     Adafruit_PWMServoDriver pwm2 = Adafruit_PWMServoDriver(0x41);
