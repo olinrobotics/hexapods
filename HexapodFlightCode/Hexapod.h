@@ -31,44 +31,46 @@ class Hexapod {
     void clearWaypoints();
 
     // Walk toward the next waypoint
+    // Returns 1 if waypoint reached, -1 if obstacle encountered, 0 otherwise
     int followWaypoint();
-    
+
     // Set current position to new origin
     void resetPosition();
-    
+
     // Called iteratively to walk with given linear and angular velocities
-    bool walk(float forward, float turn);
-    
+    // Returns 1 if step taken, -1 if obstacle encountered, 0 otherwise
+    int walk(float forward, float turn);
+
     // Move legs into the next configuration of a walking gait
     void step(float forward, float turn, int counter);
-    
+
     // Lower the hexapod to the ground
     void sit();
-    
+
     // Stand with all 6 legs on the ground
     void stand();
 
     // Move all servos to 90 degrees
     void testCalibration();
-    
+
     // Move a leg to a predefined state of the gait
     void moveLegToState(int leg, int state, float forward, float turn);
-    
+
     // Generate a position vector for a given state of a leg
     void getLegPosition(int leg, int state, float forward, float turn, float* output);
-    
+
     // Move all 3 servos of a leg to position the end effector
     void moveLegToPosition(float x, float y, float z, int leg);
-    
+
     // Determine servo angles (deg) from position relative to hexapod center (in)
     void getAngles(float x, float y, float z, int leg, int* angles);
-    
+
     // Move all 3 servos of a leg to a given state
     void moveLeg(int *angles, int leg);
-    
+
     // Move a specified servo to a given angle in degrees
     void moveServo(int value, int leg, int servo);
-    
+
     // Convert angle in degrees to PWM pulse length
     int pulseLength(int angle, int leg, int servo);
 
@@ -77,7 +79,7 @@ class Hexapod {
 
     //sample IR sensors
     int sampleIR();
-    
+
     // Hexapod coordinates foward (in), left(in), and CCW (rad)
     float x = 0, y = 0, theta = 0;
 

@@ -3,10 +3,12 @@
 
 // Settings
 const bool LEGS_VERBOSE = false; // Use for debugging leg positions
-const bool LOCATION_VERBOSE = false; // Use for debugging hexapod location
-const bool IR_VERBOSE = true; // Use for debugging IR sensor data
-const bool ACCEL_VERBOSE = true; // Use for debugging accelerometer data
+const bool LOCATION_VERBOSE = true; // Use for debugging hexapod location
+const bool IR_VERBOSE = false; // Use for debugging IR sensor data
+const bool ACCEL_VERBOSE = false; // Use for debugging accelerometer data
 const bool STATE_VERBOSE = false; // Debug main states in flight code
+const bool DETECT_WALLS = false; // Use IRs to avoid walls
+const bool DETECT_CLIFFS = true; // Use foot sensor to avoid falling
 
 // Waypoint types
 const int WAYPOINT_STAND = 0; // Stand
@@ -45,6 +47,7 @@ const int LIS3DH_MOSI = 11;
 const int LIS3DH_CS = 10;
 const int irRpin = A15;
 const int foot1 = 45;
+const int foot6 = 44;
 
 // Servo properties
 const String labels[] = {"A", "B", "C"};

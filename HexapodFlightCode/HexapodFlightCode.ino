@@ -1,7 +1,7 @@
 #include "Hexapod.h"
 
 Hexapod hex = Hexapod();
-enum State {NONE, STAND, SIT, WALK, TEST, PACE};
+enum State {NONE, STAND, SIT, WALK, TEST, PACE, FOLLOW};
 State state = NONE;
 float forward = 0;
 float turn = 0;
@@ -36,12 +36,22 @@ void loop() {
       Serial.read();
     } else if (Serial.peek() == 'p') { // Pace back and forth
       state = PACE;
+      hex.resetPosition();
+      hex.clearWaypoints();
       hex.addDestination(12, 0);
       Serial.println("Pace");
       Serial.read();
     } else if (Serial.peek() == 'r') { // Reset position and waypoints
       hex.resetPosition();
       hex.clearWaypoints();
+      Serial.read();
+    } else if (Serial.peek() == 'q') { // This is just a test
+      state = FOLLOW;
+      hex.resetPosition();
+      hex.clearWaypoints();
+      hex.addWalkSteps(1, 0, 5);
+      hex.addDelay(3);
+      hex.addWalkSteps(-1, 0, 5);
       Serial.read();
     } else {
       if (STATE_VERBOSE) {Serial.println("I'm going to try to walk.");}
@@ -62,7 +72,7 @@ void loop() {
 
   // Act
   if (state == WALK) {
-    if(!hex.walk(forward, turn)) {
+    if(hex.walk(forward, turn) == -1) {
       Serial.println("Stopping");
 //      hex.stand();
     }
@@ -76,6 +86,8 @@ void loop() {
     hex.sit();
   } else if (state == TEST) {
     hex.testCalibration();
+  } else if (state == FOLLOW) {
+    hex.followWaypoint();
   }
   delay(1);
 }
