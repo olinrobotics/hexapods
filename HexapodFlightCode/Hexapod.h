@@ -73,6 +73,9 @@ class Hexapod {
     //sample IR sensors
     int sampleIR();
 
+    // If hits a wall, back up and turn somewhere else. 
+    void trynewpath(int stepsback, int turns);
+
     Adafruit_PWMServoDriver pwm1 = Adafruit_PWMServoDriver();
     Adafruit_PWMServoDriver pwm2 = Adafruit_PWMServoDriver(0x41);
     Adafruit_LIS3DH accel = Adafruit_LIS3DH(LIS3DH_CS, LIS3DH_MOSI, LIS3DH_MISO, LIS3DH_CLK);

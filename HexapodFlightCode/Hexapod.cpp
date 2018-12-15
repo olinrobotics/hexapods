@@ -81,6 +81,11 @@ bool Hexapod::followWaypoint() {
   return false;
 }
 
+// Call to find a new direction after hitting a wall or cliff
+void Hexapod::trynewpath(int stepsback, int turns) {
+  
+}
+
 // Called iteratively to walk with given linear and angular velocities
 bool Hexapod::walk(float forward, float turn) {
   if (accelPresent) {
