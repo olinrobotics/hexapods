@@ -2,9 +2,18 @@
 #define Constants_h
 
 // Settings
-const bool VERBOSE = false; // Whether to print each new leg position
+const bool LEGS_VERBOSE = false; // Use for debugging leg positions
+const bool LOCATION_VERBOSE = false; // Use for debugging hexapod location
 const bool IR_VERBOSE = true; // Use for debugging IR sensor data
+const bool ACCEL_VERBOSE = true; // Use for debugging accelerometer data
 const bool STATE_VERBOSE = false; // Debug main states in flight code
+
+// Waypoint types
+const int WAYPOINT_STAND = 0; // Stand
+const int WAYPOINT_SIT = -1; // Sit
+const int WAYPOINT_INFINITE = -2; // Walk indefinitely with given gait
+const int WAYPOINT_DESTINATION = -3; // Walk to given coordinates
+const int WAYPOINT_DELAY = -4; // Wait for a given time interval
 
 // Gait parameters
 const float ground = -6; // Height of ground relative to body (in)

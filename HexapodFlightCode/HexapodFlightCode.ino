@@ -36,7 +36,7 @@ void loop() {
       Serial.read();
     } else if (Serial.peek() == 'p') { // Pace back and forth
       state = PACE;
-      hex.addWaypoint(12, 0);
+      hex.addDestination(12, 0);
       Serial.println("Pace");
       Serial.read();
     } else if (Serial.peek() == 'r') { // Reset position and waypoints
@@ -70,7 +70,7 @@ void loop() {
     hex.stand();
   } else if (state == PACE) {
     if(hex.followWaypoint()) {
-      hex.addWaypoint(12-hex.x, 0);
+      hex.addDestination(12-hex.x, 0);
     }
   } else if (state == SIT) {
     hex.sit();

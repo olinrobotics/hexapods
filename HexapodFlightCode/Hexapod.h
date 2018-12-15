@@ -10,20 +10,28 @@
 #include <SPI.h>
 #include <SharpIR.h>
 
-
 class Hexapod {
   public:
     // Initialize pin modes and servo shield
     void init();
 
+    // Add a walk command to the end of the waypoint list
+    int addWalkSteps(float forward, float turn, int steps);
+
+    // Add a destination to the end of the waypoint list
+    int addDestination(float x, float y);
+
+    // Add a delay command in seconds to the end of the waypoint list
+    int addDelay(float duration);
+
     // Add a new desired waypoint to the end of the list
-    int addWaypoint(float x, float y);
+    int addWaypoint(float x, float y, int type);
 
     // Remove all waypoints
     void clearWaypoints();
 
     // Walk toward the next waypoint
-    bool followWaypoint();
+    int followWaypoint();
     
     // Set current position to new origin
     void resetPosition();
@@ -65,13 +73,13 @@ class Hexapod {
     int pulseLength(int angle, int leg, int servo);
 
     // Determine {x,y,z} acceleration in m/s^2
-    void Hexapod::getAccel(float *acceleration);
-
-    // Hexapod coordinates foward (in), left(in), and CCW (rad)
-    float x = 0, y = 0, theta = 0;
+    void getAccel(float *acceleration);
 
     //sample IR sensors
     int sampleIR();
+    
+    // Hexapod coordinates foward (in), left(in), and CCW (rad)
+    float x = 0, y = 0, theta = 0;
 
     Adafruit_PWMServoDriver pwm1 = Adafruit_PWMServoDriver();
     Adafruit_PWMServoDriver pwm2 = Adafruit_PWMServoDriver(0x41);

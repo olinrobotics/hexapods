@@ -1,14 +1,15 @@
 #include "Arduino.h"
 #include "Hexapod.h"
 
-long stepStartTime = 0;
-int counter = 0;
-bool accelPresent = false;
-float pastAccel[FILTER_LENGTH][3];
-float *waypointsX;
-float *waypointsY;
-int waypointLen = 0;
-int waypointIndex = 0;
+long stepStartTime = 0; // Tracks elapsed time
+int counter = 0; // Tracks current walking state
+bool accelPresent = false; // Accelerometer initialized successfully
+float pastAccel[FILTER_LENGTH][3]; // Accelerometer moving average values
+float *waypointsX; // Linear speed (-1 to 1), target x (in), delay (s)
+float *waypointsY; // Angular speed (-1 to 1), target y (in), delay flag
+int *waypointsN; // Waypoint type (N<=0), steps remaining (N>0)
+int waypointLen = 0; // Number of waypoints
+int waypointIndex = 0; // Current waypoint
 
 // Initialize pin modes and servo shield
 void Hexapod::init() {
@@ -25,21 +26,47 @@ void Hexapod::init() {
   pwm2.setPWMFreq(60);  // Analog servos run at ~60 Hz updates
 }
 
+// Add a walk command to the end of the waypoint list
+int Hexapod::addWalkSteps(float forward, float turn, int steps) {
+  if(steps<0) {
+    return(addWaypoint(forward, turn, WAYPOINT_INFINITE));
+  } else if(steps==0) {
+    return(addWaypoint(forward, turn, WAYPOINT_STAND));
+  } else {
+    return(addWaypoint(forward, turn, steps*4));
+  }
+}
+
+// Add a destination to the end of the waypoint list
+int Hexapod::addDestination(float x, float y) {
+  return(addWaypoint(x, y, WAYPOINT_DESTINATION));
+}
+
+// Add a delay command in seconds to the end of the waypoint list
+int Hexapod::addDelay(float duration) {
+  return(addWaypoint(duration, 0, WAYPOINT_DELAY));
+}
+
 // Add a new desired waypoint to the end of the list
-int Hexapod::addWaypoint(float targetX, float targetY) {
+int Hexapod::addWaypoint(float targetX, float targetY, int type) {
   float *tempX = malloc(sizeof(float)*(waypointLen+1));
   float *tempY = malloc(sizeof(float)*(waypointLen+1));  
-  for(int i=1; i<=waypointLen; i++) {
-    tempX[i] = waypointsX[i-1];
-    tempY[i] = waypointsY[i-1];
+  int *tempN = malloc(sizeof(int)*(waypointLen+1));  
+  for(int i=0; i<waypointLen; i++) {
+    tempX[i] = waypointsX[i];
+    tempY[i] = waypointsY[i];
+    tempN[i] = waypointsN[i];
   }
   tempX[waypointLen] = targetX;
   tempY[waypointLen] = targetY;
+  tempN[waypointLen] = type;
   waypointLen++;
   free(waypointsX);
   free(waypointsY);
+  free(waypointsN);
   waypointsX = tempX;
   waypointsY = tempY;
+  waypointsN = tempN;
   return(waypointLen);
 }
 
@@ -57,28 +84,60 @@ void Hexapod::resetPosition() {
 }
 
 // Walk toward the next waypoint
-bool Hexapod::followWaypoint() {
+// Returns 1 if waypoint reached, -1 if obstacle encountered, 0 otherwise
+int Hexapod::followWaypoint() {
   if(waypointIndex >= waypointLen) {
-    return true;
+    return 1;
   }
-  float deltaX = waypointsX[waypointIndex]-x;
-  float deltaY = waypointsY[waypointIndex]-y;
-  float deltaTheta = fmod(atan2(deltaY, deltaX)-theta+M_PI, 2*M_PI)-M_PI;
-  if(abs(sqrt(deltaX*deltaX+deltaY*deltaY))<=dx/2) {
+  if(waypointsN[waypointIndex]==WAYPOINT_STAND) {
+    stand();
     waypointIndex++;
-    return true;
+    return 1;
+  } else if(waypointsN[waypointIndex]==WAYPOINT_SIT) {
+    sit();
+    waypointIndex++;
+    return 1;
+  } else if(waypointsN[waypointIndex]==WAYPOINT_INFINITE) {
+    if(walk(waypointsX[waypointIndex], waypointsY[waypointIndex])) {
+      return -1;
+    }
+    return 0;
+  } else if(waypointsN[waypointIndex]==WAYPOINT_DESTINATION) {
+    float deltaX = waypointsX[waypointIndex]-x;
+    float deltaY = waypointsY[waypointIndex]-y;
+    float deltaTheta = fmod(atan2(deltaY, deltaX)-theta+M_PI, 2*M_PI)-M_PI;
+    if(abs(sqrt(deltaX*deltaX+deltaY*deltaY))<=dx/2) {
+      waypointIndex++;
+      return 1;
+    }
+    if(abs(deltaTheta) >= dtheta/2) {
+      return(walk(0, deltaTheta>0 ? 1:-1) ? 0 : -1);
+    } else {
+      return(walk(1, 0) ? 0 : -1);
+    }
+  } else if(waypointsN[waypointIndex]==WAYPOINT_DELAY) {
+    if(waypointsY[waypointIndex] == 0) {
+      waypointsY[waypointIndex] = 1; // Flag for timer start
+      stepStartTime = millis();
+    }
+    if(millis() - stepStartTime > waypointsX[waypointIndex]) {
+      waypointIndex++;
+      return 1;
+    }
+    return 0;
+  } else if(waypointsN[waypointIndex]>0) {
+    if(walk(waypointsX[waypointIndex], waypointsY[waypointIndex])) {
+      waypointsN[waypointIndex]++;
+      return -1;
+    }
+    waypointsN[waypointIndex]--;
+    if(waypointsN[waypointIndex] == 0) {
+      waypointIndex++;
+      return 1;
+    } else {
+      return 0;
+    }
   }
-  if(abs(deltaTheta) >= dtheta/2) {
-    Serial.println(walk(0, deltaTheta>0 ? 1:-1) ? "" : "FALL");
-  } else {
-    Serial.println(walk(1, 0) ? "" : "FALL");
-  }
-  Serial.print(x);
-  Serial.print(", ");
-  Serial.print(y);
-  Serial.print(", ");
-  Serial.println(theta);
-  return false;
 }
 
 // Called iteratively to walk with given linear and angular velocities
@@ -112,6 +171,13 @@ void Hexapod::step(float forward, float turn, int counter) {
   x += forward*dx*cos(theta);
   y += forward*dx*sin(theta);
   theta += turn*dtheta;
+  if(LOCATION_VERBOSE) {
+    Serial.print(x);
+    Serial.print(", ");
+    Serial.print(y);
+    Serial.print(", ");
+    Serial.println(theta);
+  }
   for (int leg = 1; leg < 7; leg++) {
     if (leg % 2 == 0) { // right side
       moveLegToState(leg, counter % 4, forward, turn);
@@ -251,7 +317,7 @@ void Hexapod::getAngles(float x, float y, float z, int leg, int* angles) {
 
 // Move all 3 servos of a leg to a given state
 void Hexapod::moveLeg(int *angles, int leg) {
-  if (VERBOSE) {
+  if (LEGS_VERBOSE) {
     Serial.print("Leg ");
     Serial.print(leg);
     Serial.print(" moving to ");
@@ -312,12 +378,13 @@ void Hexapod::getAccel(float *acceleration) {
     }
     acceleration[i] = (avg_accel[i]+acceleration[i])/(FILTER_LENGTH+1);
   }
-//  Serial.print(acceleration[0]);
-//  Serial.print(", ");
-//  Serial.print(acceleration[1]);
-//  Serial.print(", ");
-//  Serial.println(acceleration[2]);
-//  Serial.println("---");
+  if(ACCEL_VERBOSE) {
+    Serial.print(acceleration[0]);
+    Serial.print(", ");
+    Serial.print(acceleration[1]);
+    Serial.print(", ");
+    Serial.println(acceleration[2]);
+  }
 }
 
 
@@ -345,9 +412,9 @@ int Hexapod::sampleIR() {
     Serial.print("The IR got "); Serial.print(goodvaluecount); Serial.println(" good readings (of 10)");
     Serial.print("The IR got "); Serial.print(tooclosecount); Serial.println(" of TOO CLOSE");
     Serial.print("The IR got "); Serial.print(toofarcount); Serial.println(" of TOO FAR"); 
-    }
+  }
 
-  //Decide what to output. If it shows "too close/far" more than twice, send that value. 
+  // Decide what to output. If it shows "too close/far" more than twice, send that value. 
   if (tooclosecount > 2) {return 9;}
   else if (toofarcount > 2) {return 80;}
   else {
