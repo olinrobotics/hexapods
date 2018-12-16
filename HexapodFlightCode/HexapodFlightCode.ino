@@ -73,6 +73,7 @@ void loop() {
       }
     }
     Serial.read();
+    Serial.println("Data has been read.");
   }
 
   // hex.walk(forward, turn)) {
