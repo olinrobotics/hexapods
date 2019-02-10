@@ -14,6 +14,7 @@ void setup() {
   Serial.println("Input values are scaled between -1 and 1");
   delay(10);
   hex.init();
+  int pos[3];
 }
 
 void loop() {

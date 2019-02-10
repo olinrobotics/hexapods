@@ -62,6 +62,12 @@ class Hexapod {
     // Move all 3 servos of a leg to position the end effector
     void moveLegToPosition(float x, float y, float z, int leg);
 
+    // Determine current leg position (in) relative to hexapod center
+    void getCurrentPosition(int leg, float* pos);
+
+    // Determine position (in) relative to hexapod center from servo angles (deg)
+    void getPosition(float a, float b, float c, int leg, float* pos);
+
     // Determine servo angles (deg) from position relative to hexapod center (in)
     void getAngles(float x, float y, float z, int leg, int* angles);
 
@@ -70,6 +76,18 @@ class Hexapod {
 
     // Move a specified servo to a given angle in degrees
     void moveServo(int value, int leg, int servo);
+
+    // Incrementally move a specified servo to a given angle in degrees
+    void moveServoSmooth(int value, int leg, int servo);
+
+    // Sets servo target position to its current position
+    void stopServo(int leg, int servo);
+
+    // Directly move all servos to their target angles
+    void moveServosDirect();
+    
+    // Increments servos toward desired positions
+    bool updateServos();
 
     // Convert angle in degrees to PWM pulse length
     int pulseLength(int angle, int leg, int servo);

@@ -6,11 +6,9 @@ const bool LEGS_VERBOSE = false; // Use for debugging leg positions
 const bool LOCATION_VERBOSE = true; // Use for debugging hexapod location
 const bool IR_VERBOSE = false; // Use for debugging IR sensor data
 const bool ACCEL_VERBOSE = false; // Use for debugging accelerometer data
-
 const bool STATE_VERBOSE = true; // Debug main states in flight code
-const bool DETECT_WALLS = false; // Use IRs to avoid walls
-const bool DETECT_CLIFFS = false; // Use foot sensor to avoid falling
-const bool ROUGH_TERRAIN = true; // Use foot sensor to cross rough terrain
+const bool DETECT_WALLS = true; // Use IRs to avoid walls
+const bool DETECT_CLIFFS = true; // Use foot sensor to avoid falling
 
 // Waypoint types
 const int WAYPOINT_STAND = 0; // Stand
@@ -48,14 +46,14 @@ const int LIS3DH_MISO = 12;
 const int LIS3DH_MOSI = 11;
 const int LIS3DH_CS = 10;
 const int irRpin = A15;
-const int feet[] = {45,0,0,0,0,44};
+const int foot1 = 45;
+const int foot6 = 44;
 
 // Servo properties
 const String labels[] = {"A", "B", "C"};
 const int N = 3; // number of servos
 const int minLimits[] = {0, 40, 0};
 const int maxLimits[] = {180, 180, 120};
-const float servoSpeed[] = {40,100,100}; // degrees per second
 const int offsets[6][3] = {{0, -3, -1},
                            {10, 13, 13},
                            {10, 5, 8},

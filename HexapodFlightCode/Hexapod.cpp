@@ -1,10 +1,14 @@
 #include "Arduino.h"
 #include "Hexapod.h"
 
-long stepStartTime = 0; // Tracks elapsed time
+long stepStartTime = 0; // Tracks elapsed time for walking
+long lastServoUpdate = 0; // Tracks elapsed time for servo updates
 int counter = 0; // Tracks current walking state
 bool accelPresent = false; // Accelerometer initialized successfully
 float pastAccel[FILTER_LENGTH][3]; // Accelerometer moving average values
+float servoVals[6][3]; // Current angle of each servo
+float servoTargets[6][3]; // Current target angle of each servo
+float footHeights[6]; // Current height of foot above the ground (in)
 float *waypointsX; // Linear speed (-1 to 1), target x (in), delay (s)
 float *waypointsY; // Angular speed (-1 to 1), target y (in), delay flag
 int *waypointsN; // Waypoint type (N<=0), steps remaining (N>0)
@@ -20,8 +24,9 @@ void Hexapod::init() {
     accel.setRange(LIS3DH_RANGE_4_G);
   }
   pinMode(relay, OUTPUT);
-  pinMode(foot1, INPUT);
-  pinMode(foot6, INPUT);
+  for (int leg = 0; leg < 6; leg++) {
+    pinMode(feet[leg], INPUT);
+  }
   digitalWrite(relay, HIGH);
   pwm1.setPWMFreq(60);
   pwm2.setPWMFreq(60);  // Analog servos run at ~60 Hz updates
@@ -144,18 +149,32 @@ int Hexapod::followWaypoint() {
 // Called iteratively to walk with given linear and angular velocities
 // Returns 1 if step taken, -1 if obstacle encountered, 0 otherwise
 int Hexapod::walk(float forward, float turn) {
+  bool complete = true;
   if (accelPresent) {
     float a[3];
     getAccel(a);
   }
-  if (millis() - stepStartTime > stepDuration) {
+  if (ROUGH_TERRAIN) {
+    complete = updateServos();
+    if (!complete) {
+      for (int leg = 1; leg <= 6; leg++) {
+        if (digitalRead(feet[leg - 1]) == LOW && counter % 4 == 2 * (leg % 2)) {
+          for (int servo = 0; servo < 3; servo++) stopServo(leg, servo);
+          float pos[3];
+          getCurrentPosition(leg, pos);
+          footHeights[leg-1] = pos[2];
+        }
+      }
+    }
+  }
+  if (millis() - stepStartTime > stepDuration && complete) {
     stepStartTime = millis();
-    if (DETECT_WALLS && sampleIR() < 12) {
+    if (DETECT_WALLS && sampleIR() < 12 && forward > 0) {
       Serial.println("Object is too close! Stopping!");
       return -1;
     }
-    if (DETECT_CLIFFS && ((counter % 4 != 1 && digitalRead(foot1) != LOW) ||
-                          (counter % 4 != 3 && digitalRead(foot6) != LOW))) {
+    if (DETECT_CLIFFS && ((counter % 4 != 1 && digitalRead(feet[0]) != LOW) ||
+                          (counter % 4 != 3 && digitalRead(feet[5]) != LOW))) {
       step(forward, turn, counter - 2);
       x -= 2 * forward * dx * cos(theta);
       y -= 2 * forward * dx * sin(theta);
@@ -163,6 +182,9 @@ int Hexapod::walk(float forward, float turn) {
       counter--;
       if (counter < 0) counter += 4;
       Serial.println(counter % 4);
+      Serial.println("My feet aren't on the ground!");
+      Serial.print("Foot 1 is: "); Serial.println(digitalRead(feet[0]));
+      Serial.print("Foot 6 is: "); Serial.println(digitalRead(feet[5]));
       return -1;
     }
     step(forward, turn, counter);
@@ -201,6 +223,7 @@ void Hexapod::sit() {
     float pos[3] = {(R + dR)*cos(leg*M_PI / 3 - M_PI / 6), (R + dR)*sin(leg*M_PI / 3 - M_PI / 6), z0};
     moveLegToPosition(pos[0], pos[1], pos[2], leg);
   }
+  moveServosDirect();
   counter = 0;
 }
 
@@ -209,6 +232,7 @@ void Hexapod::stand() {
   for (int leg = 1; leg < 7; leg++) {
     moveLegToState(leg, 0, 0, 0);
   }
+  moveServosDirect();
   counter = 0;
 }
 
@@ -218,6 +242,7 @@ void Hexapod::testCalibration() {
   for (int leg = 1; leg < 7; leg++) {
     moveLeg(angles, leg);
   }
+  moveServosDirect();
   counter = 0;
 }
 
@@ -237,6 +262,13 @@ void Hexapod::getLegPosition(int leg, int state, float forward, float turn, floa
   float pos[] = {R * cos(leg*M_PI / 3 - M_PI / 6), R * sin(leg*M_PI / 3 - M_PI / 6), ground};
   if (state == 2) { // leg lifted
     pos[2] += clearance;
+  }
+  if (ROUGH_TERRAIN) {
+    if (state == 3) { // leg forward
+      footHeights[leg - 1] = pos[2];
+    } else if (state != 2 && footHeights[leg - 1] != 0) {
+      pos[2] = footHeights[leg - 1];
+    }
   }
   if (leg <= 3) { // left side
     pos[1] += yoffset;
@@ -269,6 +301,22 @@ void Hexapod::moveLegToPosition(float x, float y, float z, int leg) {
   if (angles[0] != -1) {
     moveLeg(angles, leg);
   }
+}
+
+// Determine current leg position (in) relative to hexapod center
+void Hexapod::getCurrentPosition(int leg, float* pos) {
+  getPosition(servoVals[leg-1][0], servoVals[leg-1][1], servoVals[leg-1][2], leg, pos);
+}
+
+// Determine position (in) relative to hexapod center from servo angles (deg)
+void Hexapod::getPosition(float a, float b, float c, int leg, float* pos) {
+  a = M_PI / 180 * (a - 90);
+  b = -M_PI / 180 * (b - 90);
+  c = M_PI / 180 * c;
+  pos[0] = L1 + L2 * cos(b) + L3 * cos(b + c);
+  pos[2] = -L2 * sin(b) - L3 * sin(b + c);
+  pos[1] = pos[0] * sin(leg * M_PI / 3 - M_PI / 6 + a) + R * sin(leg * M_PI / 3 - M_PI / 6);
+  pos[0] = pos[0] * cos(leg * M_PI / 3 - M_PI / 6 + a) + R * cos(leg * M_PI / 3 - M_PI / 6);
 }
 
 // Determine servo angles (deg) from position relative to hexapod center (in)
@@ -334,7 +382,8 @@ void Hexapod::moveLeg(int *angles, int leg) {
     Serial.println(angles[2]);
   }
   for (int i = 0; i < 3; i++) {
-    moveServo(angles[i], leg, i);
+    if (ROUGH_TERRAIN) moveServoSmooth(angles[i], leg, i);
+    else moveServo(angles[i], leg, i);
   }
 }
 
@@ -355,6 +404,64 @@ void Hexapod::moveServo(int value, int leg, int servo) {
     Serial.print(" and ");
     Serial.println(maxLimits[servo]);
   }
+}
+
+// Incrementally move a specified servo to a given angle in degrees
+void Hexapod::moveServoSmooth(int value, int leg, int servo) {
+  if (value >= minLimits[servo] && value <= maxLimits[servo]) {
+    if (servoVals[leg - 1][servo] == 0) servoVals[leg - 1][servo] = value;
+    servoTargets[leg - 1][servo] = value;
+  } else if (value != -1) {
+    Serial.print("Servo ");
+    Serial.print(labels[servo]);
+    Serial.print(" out of bounds: please enter a value between ");
+    Serial.print(minLimits[servo]);
+    Serial.print(" and ");
+    Serial.println(maxLimits[servo]);
+  }
+}
+
+// Incrementally move a specified servo to a given angle in degrees
+void Hexapod::stopServo(int leg, int servo) {
+  servoTargets[leg - 1][servo] = servoVals[leg - 1][servo];
+}
+
+// Directly move all servos to their target angles
+void Hexapod::moveServosDirect() {
+  for (int leg = 0; leg < 6; leg++) {
+    for (int servo = 0; servo < 3; servo++) {
+      if (servoTargets[leg][servo] != 0) { // target exists
+        servoVals[leg][servo] = servoTargets[leg][servo];
+        moveServo(servoVals[leg][servo], leg + 1, servo);
+      }
+    }
+  }
+}
+
+// Increments servos toward desired positions
+bool Hexapod::updateServos() {
+  long dt = millis() - lastServoUpdate;
+  bool complete = true;
+  lastServoUpdate += dt;
+  for (int leg = 0; leg < 6; leg++) {
+    for (int servo = 0; servo < 3; servo++) {
+      float error = servoTargets[leg][servo] - servoVals[leg][servo];
+      if (servoTargets[leg][servo] != 0) { // target exists
+        if (abs(error) < servoSpeed[servo]*dt / 1000) { // reached target
+          servoVals[leg][servo] = servoTargets[leg][servo];
+        } else {
+          complete = false;
+          if (error > 0) {
+            servoVals[leg][servo] += servoSpeed[servo] * dt / 1000;
+          } else {
+            servoVals[leg][servo] -= servoSpeed[servo] * dt / 1000;
+          }
+        }
+        moveServo(servoVals[leg][servo], leg + 1, servo);
+      }
+    }
+  }
+  return complete;
 }
 
 // Convert angle in degrees to PWM pulse length
