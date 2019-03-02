@@ -59,6 +59,12 @@ class Hexapod {
     // Generate a position vector for a given state of a leg
     void getLegPosition(int leg, int state, float forward, float turn, float* output);
 
+    // Displaces the hexapod body by a set amount relative to the ground
+    void translateBody(float dx, float dy, float dz);
+
+    // Rotates the hexapod body by a set amount relative to the ground
+    void rotateBody(float droll, float dpitch, float dyaw);
+
     // Move all 3 servos of a leg to position the end effector
     void moveLegToPosition(float x, float y, float z, int leg);
 

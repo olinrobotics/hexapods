@@ -156,17 +156,37 @@ int Hexapod::walk(float forward, float turn) {
   }
   if (ROUGH_TERRAIN) {
     complete = updateServos();
-    if (!complete) {
+    if (!complete) { // Stop legs if they hit the ground
       for (int leg = 1; leg <= 6; leg++) {
         if (digitalRead(feet[leg - 1]) == LOW && counter % 4 == 2 * (leg % 2)) {
-          for (int servo = 0; servo < 3; servo++) stopServo(leg, servo);
           float pos[3];
           getCurrentPosition(leg, pos);
           footHeights[leg-1] = pos[2];
+          moveLegToPosition(pos[0], pos[1], footHeights[leg-1], leg);
         }
+      }
+    } else if (counter % 2 == 0) { // Shift body up or down
+      int contacts = 0;
+      for (int leg = 1; leg <= 6; leg++) {
+        if (digitalRead(feet[leg - 1]) == LOW && counter % 4 == 2 * (leg % 2)) {
+          contacts++;
+        }
+      }
+      if (contacts==3) { // Raise body
+        translateBody(0, 0, 0.1);
+        float front[3];
+        float back[3];
+        getCurrentPosition((counter%4)/2, front);
+        getCurrentPosition((counter%4)/2+4, back);
+        float pitch = atan2(back[2]-front[2], back[0]-front[0]);
+        if (pitch > 0.02-.05) rotateBody(0, -0.02, 0);
+        else if (pitch < -0.02-.05) rotateBody(0, 0.02, 0);
+      } else { // Lower body
+        translateBody(0, 0, -0.1);
       }
     }
   }
+  complete = updateServos();
   if (millis() - stepStartTime > stepDuration && complete) {
     stepStartTime = millis();
     if (DETECT_WALLS && sampleIR() < 12 && forward > 0) {
@@ -291,6 +311,51 @@ void Hexapod::getLegPosition(int leg, int state, float forward, float turn, floa
   pos[1] = y;
   for (int i = 0; i < 3; i++) {
     output[i] = pos[i];
+  }
+}
+
+// Displaces the hexapod body by a set amount relative to the ground
+void Hexapod::translateBody(float dx, float dy, float dz) {
+  float minHeight = ground+clearance;
+  float maxHeight = ground;
+  float mean = 0;
+  for (int leg = 1; leg <= 6; leg++) {
+    if (counter % 4 == 2 * (leg % 2)) {
+      minHeight = min(footHeights[leg-1], minHeight);
+      maxHeight = max(footHeights[leg-1], maxHeight);
+      mean += footHeights[leg-1]/3;
+      if(footHeights[leg-1] == 0) {
+        return;
+      }
+    }
+  }
+  dz = min(minHeight-ground, dz); // Apply lower limit
+  dz = max(maxHeight-(ground+clearance/2), dz); // Apply upper limit
+  float pos[3];
+  for (int leg = 1; leg <= 6; leg++) {
+    if (digitalRead(feet[leg-1]) == LOW && counter % 2 == 0) {
+      getCurrentPosition(leg, pos);
+      moveLegToPosition(pos[0]-dx, pos[1]-dy, pos[2]-dz, leg);
+      footHeights[leg-1] = pos[2]-dz;
+    }
+  }
+}
+
+// Rotates the hexapod body by a set amount relative to the ground
+void Hexapod::rotateBody(float droll, float dpitch, float dyaw) {
+  float pos[3];
+  for (int leg = 1; leg <= 6; leg++) {
+    if (digitalRead(feet[leg-1]) == LOW) {
+      getCurrentPosition(leg, pos);
+      pos[1] = -pos[2]*sin(droll) + pos[1]*cos(droll);
+      pos[2] = pos[2]*cos(droll) + pos[1]*sin(droll);
+      pos[2] = -pos[0]*sin(dpitch) + pos[2]*cos(dpitch);
+      pos[0] = pos[0]*cos(dpitch) + pos[2]*sin(dpitch);
+      pos[0] = -pos[1]*sin(dyaw) + pos[0]*cos(dyaw);
+      pos[1] = pos[1]*cos(dyaw) + pos[0]*sin(dyaw);
+      moveLegToPosition(pos[0], pos[1], pos[2], leg);
+      footHeights[leg-1] = pos[2];
+    }
   }
 }
 
