@@ -55,7 +55,7 @@ const String labels[] = {"A", "B", "C"};
 const int N = 3; // number of servos
 const int minLimits[] = {0, 40, 0};
 const int maxLimits[] = {180, 180, 120};
-const float servoSpeed[] = {50,100,100}; // degrees per second
+const float servoSpeed = 5; // inches per second of end effector
 const int offsets[6][3] = {{0, -3, -1},
                            {10, 13, 13},
                            {10, 5, 8},

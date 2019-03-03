@@ -68,6 +68,9 @@ class Hexapod {
     // Move all 3 servos of a leg to position the end effector
     void moveLegToPosition(float x, float y, float z, int leg);
 
+    // Incrementally move all 3 servos of a leg to position the end effector
+    void moveLegToPositionSmooth(float x, float y, float z, int leg);
+
     // Determine current leg position (in) relative to hexapod center
     void getCurrentPosition(int leg, float* pos);
 
@@ -86,8 +89,8 @@ class Hexapod {
     // Incrementally move a specified servo to a given angle in degrees
     void moveServoSmooth(int value, int leg, int servo);
 
-    // Sets servo target position to its current position
-    void stopServo(int leg, int servo);
+    // Sets leg target position to its current position
+    void stopLeg(int leg);
 
     // Directly move all servos to their target angles
     void moveServosDirect();
