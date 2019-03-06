@@ -7,7 +7,14 @@ from std_msgs.msg import String
 
 class PiSerial(object):
     """ An object for handling serial communication between a
-    Raspberry Pi and an Arduino. """
+    Raspberry Pi and an Arduino.
+
+    Listens to commands published to the /serial channel, which should be
+    commands and arguments separated by colons and constrained by the restrictions
+    described in the Hexapod Wiki. They do not need to be terminated in semicolons.
+
+
+    """
 
     def __init__(self, port = 0, baud = 9600):
         """ Initializes the PiSerial object.
@@ -16,10 +23,7 @@ class PiSerial(object):
                 baud (int) - Specifies the baud rate of communication (default 9600)
         """
 
-        try:
-            self.ser = serial.Serial("/dev/ttyACM%s" % port)
-        except:
-            print("Serial port not found, or port is busy.")
+        self.ser = serial.Serial("/dev/ttyACM%s" % port)
 
         print("Setting up serial controller.")
 
@@ -68,7 +72,8 @@ class PiSerial(object):
         send_str = command              #   Send command string
         for arg in args:
             send_str += ":" + str(arg)  #   Add arguments, separated by colons
-        send_str += ";"                 #   Terminate message with semicolon
+        if send_str[-1] != ";":
+            send_str += ";"             #   Terminate message with semicolon
         self.send_raw(send_str)         #   Push string to serial
 
 
