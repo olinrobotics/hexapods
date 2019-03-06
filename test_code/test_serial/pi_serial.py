@@ -1,6 +1,8 @@
 import serial
 import sys
 import time
+import rospy
+from std_msgs.msg import String
 
 
 class PiSerial(object):
@@ -19,9 +21,41 @@ class PiSerial(object):
         except:
             print("Serial port not found, or port is busy.")
 
+        print("Setting up serial controller.")
+
+        # Set up ROS node
+        channel = "serial"
+        rospy.init_node('serial_controller', anonymous=True)
+        self.ros_rate = rospy.Rate(30)  #   TODO choose optimal rate
+        self.command_listener = rospy.Subscriber(channel,
+                                                String,
+                                                self.listener_callback,
+                                                queue_size = 10)
+        print("Serial controller listening on channel: %s" % channel)
+
+        # Run loop until ros shuts down
+        while not rospy.is_shutdown():
+            self.listen()
+
+
+    def listen(self):
+        """ Not much you need to do here, sleep ros until you need to do something"""
+
+        self.ros_rate.sleep()
+
+
+    def listener_callback(self, data):
+        """ Send any commands you hear to Arduino. """
+
+        msg = str(data.data)
+        print(msg)
+        self.send(*(msg.split(":")))
+
+
     def send_raw(self, string):
         """ Writes a string to Serial. """
         self.ser.write(string)
+
 
     def send(self, command, *args):
         """ Sends a command over serial, with arguments separated by
@@ -49,6 +83,6 @@ def assert_py(version):
 if __name__ == '__main__':
     assert_py(2);
     a = PiSerial(0, 9600);
-    while True:
-        send_str = raw_input("Send something over Serial: ")
-        a.send_raw(send_str)
+    # while True:
+    #     send_str = raw_input("Send something over Serial: ")
+    #     a.send_raw(send_str)
