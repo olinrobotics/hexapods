@@ -2,6 +2,12 @@
 #define MAX_N_PARAMS 20
 #define MAX_COMMAND_LEN 20
 
+/* This is a test script for Raspberry Pi/Arduino serial communication for 
+ * the Hexapod team in the robotics lab at Olin College. For an overview of
+ * how it works, explore the code or visit our Github Wiki below:
+ * https://github.com/olinrobotics/hexapods/wiki/Arduino-Serial-Communication
+ */
+
 int cur_idx = 0;
 
 void setup() {
