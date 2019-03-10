@@ -73,6 +73,6 @@ const int SERVOMAX = 520; // maximum pwm pulse length count (out of 4096)
 const float R = 5.35; // Distance from center to Servo A (in)
 const float L1 = 1.12; // Distance from Servo A to Servo B (in)
 const float L2 = 2.24; // Distance from Servo B to Servo C (in)
-const float L3 = 4.84; // Distance from Servo C to end effector (in)
+const float L3 = 5; //4.84; // Distance from Servo C to end effector (in)
 
 #endif

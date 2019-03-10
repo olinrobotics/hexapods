@@ -1,7 +1,7 @@
 #include "Hexapod.h"
 
 Hexapod hex = Hexapod();
-enum State {NONE, STAND, SIT, WALK, TEST, PACE, WANDER};
+enum State {NONE, STAND, SIT, WALK, TEST, PACE, WANDER, UPDATE};
 State state = NONE;
 float forward = 0;
 float turn = 0;
@@ -51,6 +51,36 @@ void loop() {
       state = WANDER;
       hex.addWalkSteps(1, 0, -1);
       Serial.read(); 
+    } else if (Serial.peek() == 'j') { // Twist left
+      if (STATE_VERBOSE) {Serial.println("Twist: left");}
+      state = UPDATE;
+      hex.rotateBody(0,0,-.1);
+      Serial.read(); 
+    } else if (Serial.peek() == 'l') { // Twist right
+      if (STATE_VERBOSE) {Serial.println("Twist: right");}
+      state = UPDATE;
+      hex.rotateBody(0,0,.1);
+      Serial.read(); 
+    } else if (Serial.peek() == 'i') { // Pitch up
+      if (STATE_VERBOSE) {Serial.println("Pitch: up");}
+      state = UPDATE;
+      hex.rotateBody(0,-.1,0);
+      Serial.read(); 
+    } else if (Serial.peek() == 'k') { // Pitch down
+      if (STATE_VERBOSE) {Serial.println("Pitch: down");}
+      state = UPDATE;
+      hex.rotateBody(0,.1,0);
+      Serial.read();
+    } else if (Serial.peek() == 'u') { // Roll left
+      if (STATE_VERBOSE) {Serial.println("Roll: left");}
+      state = UPDATE;
+      hex.rotateBody(.08,0,0);
+      Serial.read();
+    } else if (Serial.peek() == 'o') { // Roll right
+      if (STATE_VERBOSE) {Serial.println("Roll: right");}
+      state = UPDATE;
+      hex.rotateBody(-.08,0,0);
+      Serial.read();
     } /*else if (Serial.peek() == 'q') { // This is just a test
       state = FOLLOW;
       hex.resetPosition();
@@ -102,6 +132,8 @@ void loop() {
         hex.addWalkSteps(0, 1, random(4, 10));
         hex.addWalkSteps(1, 0, -1);
       }
+  }  else if (state == UPDATE) {
+      hex.updateServos();
   } /*else if (state == FOLLOW) {
     hex.followWaypoint();
   } */

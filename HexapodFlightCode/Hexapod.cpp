@@ -173,19 +173,27 @@ int Hexapod::walk(float forward, float turn) {
         }
       }
       if (contacts==3) { // Raise body
-        translateBody(0, 0, 0.1);
+        translateBody(0, 0, 0.05);
         float front[3];
         float back[3];
+        float mid[3];
         if ((counter%4)/2==1) {
           getCurrentPosition(1, front);
+          getCurrentPosition(5, mid);
           getCurrentPosition(3, back);
         } else {
           getCurrentPosition(6, front);
+          getCurrentPosition(2, mid);
           getCurrentPosition(4, back);
         }
-        float pitch = atan2(back[2]-front[2], back[0]-front[0]);
-        if (pitch > 0.02) rotateBody(0, -0.02, 0);
-        else if (pitch < -0.02) rotateBody(0, 0.02, 0);
+        float pitch = -atan2(front[2]-back[2], front[0]-back[0]) - .1;
+        float roll = atan2(back[2]+front[2]-2*mid[2], back[1]+front[1]-2*mid[1]);
+        Serial.println(pitch);
+        if ((counter%4)/2==0) roll *= -1;
+        if (pitch > 0.02) rotateBody(0, -0.01, 0);
+        else if (pitch < -0.02) rotateBody(0, 0.01, 0);
+        if (roll > 0.02) rotateBody(-0.01, 0, 0);
+        else if (roll < -0.02) rotateBody(0.01, 0, 0);
       } else { // Lower body
         translateBody(0, 0, -0.1);
       }
