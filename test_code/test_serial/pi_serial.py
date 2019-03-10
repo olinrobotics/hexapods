@@ -35,21 +35,50 @@ class PiSerial(object):
                                                 String,
                                                 self.listener_callback,
                                                 queue_size = 10)
+
+        # This dictionary is populated with key-value pairs CHANNEL:PUBLISHER,
+        # based on communication from the Arduino. When it receives a packet to
+        # CHANNEL, it publishes it or creates a new publisher.
+        self.publishers = {}
+
         print("Serial controller listening on channel: %s" % channel)
 
         # Run loop until ros shuts down
         while not rospy.is_shutdown():
-            self.listen()
+            self.sleep()
 
 
-    def listen(self):
+    def add_publisher(self, channel):
+        """ Adds a ROS publisher object to the self.publishers dictionary with
+        key, and topic name, equal to the provided string. No entry is added if
+        the key aready exists.
+
+        All publishers produced with this method publish strings."""
+
+        if not channel in self.publishers:
+            self.publishers[channel] = rospy.Publisher(channel, String)
+
+
+    def publish(self, channel, message):
+        """ Publishes a string to a publisher in self.publishers that matches
+        the specified channel. If one doesn't exist, it's created.
+
+        channel (str):  name of the ros topic to publish to
+        message (str):  string message to publish to that topic """
+
+        self.add_publisher(channel)
+        pub = self.publishers[channel]
+        pub.publish(String(message))
+
+
+    def sleep(self):
         """ Not much you need to do here, sleep ros until you need to do something"""
 
         self.ros_rate.sleep()
 
 
     def listener_callback(self, data):
-        """ Send any commands you hear to Arduino. """
+        """ Send commands to Arduino every update. """
 
         msg = str(data.data)
         print(msg)

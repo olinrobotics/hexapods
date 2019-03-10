@@ -184,6 +184,35 @@ int sRead(char* write_buffer, int* idx) {
   
 }
 
+/*  Writes a message terminating in a semicolon to serial.
+ *  
+ *  To be interpreted correctly by the Rasperry Pi, messages should consist of two strings
+ *  separated by a colon, the first being the name of the channel to publish data to, and the
+ *  second being the data to send.
+ *  
+ *  It's up to the caller to ensure that the message is properly terminating in a semicolon. 
+ *  In other words, if you get a segmentation fault in this function, it's your own doing.
+ */
+void sWrite(char* msg) {
+
+  char new_char;
+
+  for (int i = 0; ; i++) {
+
+    new_char = msg[i];
+
+    //  Stream data to serial
+    Serial.write(new_char);
+
+    //  End loop on semicolon and free pointer
+    if (new_char == ';') {
+      return;
+    }
+    
+  }
+  
+}
+
 /*  Converts a string from a string pointer, ending with a colon or semicolon, into an integer value.
  *  
  *  Ignores decimal points when scanning for digits. E.g.) "30.25" becomes 3025.
