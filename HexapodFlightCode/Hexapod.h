@@ -37,12 +37,16 @@ class Hexapod {
     // Set current position to new origin
     void resetPosition();
 
-    // Called iteratively to walk with given linear and angular velocities
+    // Called iteratively to walk with given x, y, and angular velocities (normalized)
     // Returns 1 if step taken, -1 if obstacle encountered, 0 otherwise
-    int walk(float forward, float turn);
+    int walk(float forward, float left, float turn);
+
+    // Called iteratively to lower feet to the ground and level out hexapod body
+    // Returns true if complete
+    bool balance();
 
     // Move legs into the next configuration of a walking gait
-    void step(float forward, float turn, int counter);
+    void step(float forward, float left, float turn, int counter);
 
     // Lower the hexapod to the ground
     void sit();
@@ -54,10 +58,10 @@ class Hexapod {
     void testCalibration();
 
     // Move a leg to a predefined state of the gait
-    void moveLegToState(int leg, int state, float forward, float turn);
+    void moveLegToState(int leg, int state, float forward, float left, float turn);
 
     // Generate a position vector for a given state of a leg
-    void getLegPosition(int leg, int state, float forward, float turn, float* output);
+    void getLegPosition(int leg, int state, float forward, float turn, float left, float* output);
 
     // Displaces the hexapod body by a set amount relative to the ground
     void translateBody(float dx, float dy, float dz);

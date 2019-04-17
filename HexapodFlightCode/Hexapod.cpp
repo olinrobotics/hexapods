@@ -4,6 +4,7 @@
 long stepStartTime = 0; // Tracks elapsed time for walking
 long lastServoUpdate = 0; // Tracks elapsed time for servo updates
 int counter = 0; // Tracks current walking state
+bool feetDown = true; // Tracks if a step is currently in progress
 bool accelPresent = false; // Accelerometer initialized successfully
 float pastAccel[FILTER_LENGTH][3]; // Accelerometer moving average values
 float footVals[6][3]; // Current x-y-z position of each foot
@@ -104,7 +105,7 @@ int Hexapod::followWaypoint() {
     waypointIndex++;
     return 1;
   } else if (waypointsN[waypointIndex] == WAYPOINT_INFINITE) {
-    if (walk(waypointsX[waypointIndex], waypointsY[waypointIndex]) == -1) {
+    if (walk(waypointsX[waypointIndex], 0, waypointsY[waypointIndex]) == -1) {
       return -1;
     }
     return 0;
@@ -117,9 +118,9 @@ int Hexapod::followWaypoint() {
       return 1;
     }
     if (abs(deltaTheta) >= dtheta / 2) {
-      return (walk(0, deltaTheta > 0 ? 1 : -1) == -1 ? -1 : 0);
+      return (walk(0, 0, deltaTheta > 0 ? 1 : -1) == -1 ? -1 : 0);
     } else {
-      return (walk(1, 0) == -1 ? -1 : 0);
+      return (walk(1, 0, 0) == -1 ? -1 : 0);
     }
   } else if (waypointsN[waypointIndex] == WAYPOINT_DELAY) {
     if (waypointsY[waypointIndex] == 0) {
@@ -132,7 +133,7 @@ int Hexapod::followWaypoint() {
     }
     return 0;
   } else if (waypointsN[waypointIndex] > 0) {
-    switch (walk(waypointsX[waypointIndex], waypointsY[waypointIndex])) {
+    switch (walk(waypointsX[waypointIndex], 0, waypointsY[waypointIndex])) {
       case -1: waypointsN[waypointIndex]++; return -1;
       case 0: return 0;
     }
@@ -148,15 +149,14 @@ int Hexapod::followWaypoint() {
 
 // Called iteratively to walk with given linear and angular velocities
 // Returns 1 if step taken, -1 if obstacle encountered, 0 otherwise
-int Hexapod::walk(float forward, float turn) {
+int Hexapod::walk(float forward, float left, float turn) {
   bool complete = true;
   if (accelPresent) {
     float a[3];
     getAccel(a);
   }
   if (ROUGH_TERRAIN) {
-    complete = updateServos();
-    if (!complete) { // Stop legs if they hit the ground
+    if (!feetDown) { // Stop legs if they hit the ground
       for (int leg = 1; leg <= 6; leg++) {
         if (digitalRead(feet[leg - 1]) == LOW && counter % 4 == 2 * (leg % 2)) {
           float pos[3];
@@ -165,74 +165,86 @@ int Hexapod::walk(float forward, float turn) {
           moveLegToPositionSmooth(footVals[leg-1][0], footVals[leg-1][1], footHeights[leg-1], leg);
         }
       }
+      feetDown = updateServos();
+      return 0;
     } else if (counter % 2 == 0) { // Shift body up or down
-      int contacts = 0;
-      for (int leg = 1; leg <= 6; leg++) {
-        if (digitalRead(feet[leg - 1]) == LOW && counter % 4 == 2 * (leg % 2)) {
-          contacts++;
-        }
-      }
-      if (contacts==3) { // Raise body
-        translateBody(0, 0, 0.05);
-        float front[3];
-        float back[3];
-        float mid[3];
-        if ((counter%4)/2==1) {
-          getCurrentPosition(1, front);
-          getCurrentPosition(5, mid);
-          getCurrentPosition(3, back);
-        } else {
-          getCurrentPosition(6, front);
-          getCurrentPosition(2, mid);
-          getCurrentPosition(4, back);
-        }
-        float pitch = -atan2(front[2]-back[2], front[0]-back[0]) - .1;
-        float roll = atan2(back[2]+front[2]-2*mid[2], back[1]+front[1]-2*mid[1]);
-        Serial.println(pitch);
-        if ((counter%4)/2==0) roll *= -1;
-        if (pitch > 0.02) rotateBody(0, -0.01, 0);
-        else if (pitch < -0.02) rotateBody(0, 0.01, 0);
-        if (roll > 0.02) rotateBody(-0.01, 0, 0);
-        else if (roll < -0.02) rotateBody(0.01, 0, 0);
-      } else { // Lower body
-        translateBody(0, 0, -0.1);
+      if(!balance()) {
+        return false;
       }
     }
+  } else {
+    updateServos();
   }
-  complete = updateServos();
-  if (millis() - stepStartTime > stepDuration && complete) {
+  if (millis() - stepStartTime > stepDuration) { // Take new step
     stepStartTime = millis();
     if (DETECT_WALLS && sampleIR() < 12 && forward > 0) {
       Serial.println("Object is too close! Stopping!");
       return -1;
     }
-    Serial.println(counter%4);
     if (DETECT_CLIFFS && ((counter % 4 == 2 && digitalRead(feet[0]) != LOW) ||
                           (counter % 4 == 0 && digitalRead(feet[5]) != LOW))) {
-      step(forward, turn, counter - 2);
+      step(forward, left, turn, counter - 2);
       x -= 2 * forward * dx * cos(theta);
       y -= 2 * forward * dx * sin(theta);
       theta -= 2 * turn * dtheta;
       counter--;
       if (counter < 0) counter += 4;
-      Serial.println(counter % 4);
       Serial.println("My feet aren't on the ground!");
       Serial.print("Foot 1 is: "); Serial.println(digitalRead(feet[0]));
       Serial.print("Foot 6 is: "); Serial.println(digitalRead(feet[5]));
       return -1;
     }
-    step(forward, turn, counter);
+    step(forward, left, turn, counter);
     counter++;
     return 1;
   }
   return 0;
 }
 
+// Called iteratively to lower feet to the ground and level out hexapod body
+// Returns true if complete
+bool Hexapod::balance() {
+  int contacts = 0;
+  for (int leg = 1; leg <= 6; leg++) {
+    if (digitalRead(feet[leg - 1]) == LOW && counter % 4 == 2 * (leg % 2)) {
+      contacts++;
+    }
+  }
+  if (contacts==3) { // Raise body
+    translateBody(0, 0, 0.05);
+    float front[3];
+    float back[3];
+    float mid[3];
+    if ((counter%4)/2==1) {
+      getCurrentPosition(1, front);
+      getCurrentPosition(5, mid);
+      getCurrentPosition(3, back);
+    } else {
+      getCurrentPosition(6, front);
+      getCurrentPosition(2, mid);
+      getCurrentPosition(4, back);
+    }
+    float pitch = -atan2(front[2]-back[2], front[0]-back[0]) - .1;
+    float roll = atan2(back[2]+front[2]-2*mid[2], back[1]+front[1]-2*mid[1]);
+    if ((counter%4)/2==0) roll *= -1;
+    Serial.println(pitch);
+    Serial.println(roll);
+    if (pitch > 0.02) rotateBody(0, -0.01, 0);
+    else if (pitch < -0.02) rotateBody(0, 0.01, 0);
+    if (roll > 0.02) rotateBody(-0.01, 0, 0);
+    else if (roll < -0.02) rotateBody(0.01, 0, 0);
+  } else { // Lower body
+    translateBody(0, 0, -0.05);
+  }
+  return updateServos();
+}
+
 // Move legs into the next configuration of a walking gait
-void Hexapod::step(float forward, float turn, int counter) {
-  x += forward * dx * cos(theta);
-  y += forward * dx * sin(theta);
+void Hexapod::step(float forward, float left, float turn, int counter) {
+  x += forward * dx * cos(theta) - left * dy * sin(theta);
+  y += forward * dx * sin(theta) + left * dy * cos(theta);
   theta += turn * dtheta;
+  feetDown = false;
   if (LOCATION_VERBOSE) {
     Serial.print(x);
     Serial.print(", ");
@@ -242,9 +254,9 @@ void Hexapod::step(float forward, float turn, int counter) {
   }
   for (int leg = 1; leg < 7; leg++) {
     if (leg % 2 == 0) { // right side
-      moveLegToState(leg, counter % 4, forward, turn);
+      moveLegToState(leg, counter % 4, forward, left, turn);
     } else {
-      moveLegToState(leg, (counter + 2) % 4, forward, turn);
+      moveLegToState(leg, (counter + 2) % 4, forward, left, turn);
     }
   }
 }
@@ -264,7 +276,7 @@ void Hexapod::sit() {
 // Stand with all 6 legs on the ground
 void Hexapod::stand() {
   for (int leg = 1; leg < 7; leg++) {
-    moveLegToState(leg, 0, 0, 0);
+    moveLegToState(leg, 0, 0, 0, 0);
   }
   moveServosDirect();
   counter = 0;
@@ -280,9 +292,9 @@ void Hexapod::testCalibration() {
 }
 
 // Move a leg to a predefined state of the gait
-void Hexapod::moveLegToState(int leg, int state, float forward, float turn) {
+void Hexapod::moveLegToState(int leg, int state, float forward, float left, float turn) {
   float pos[3];
-  getLegPosition(leg, state, forward, turn, pos);
+  getLegPosition(leg, state, forward, left, turn, pos);
   moveLegToPositionSmooth(pos[0], pos[1], pos[2], leg);
 }
 
@@ -291,7 +303,7 @@ void Hexapod::moveLegToState(int leg, int state, float forward, float turn) {
 // States numbered 1-4 back-up-forward-down
 // forward and turn specify movement direction between -1 and 1
 // Resulting position is stored in output
-void Hexapod::getLegPosition(int leg, int state, float forward, float turn, float* output) {
+void Hexapod::getLegPosition(int leg, int state, float forward, float left, float turn, float* output) {
   float pos[] = {R * cos(leg*M_PI / 3 - M_PI / 6), R * sin(leg*M_PI / 3 - M_PI / 6), ground};
   if (state == 2) { // leg lifted
     pos[2] += clearance;
@@ -311,10 +323,12 @@ void Hexapod::getLegPosition(int leg, int state, float forward, float turn, floa
   float w = 0;
   if (state == 1) { // leg back
     pos[0] -= dx * forward;
+    pos[1] -= dy * left;
     w = -turn * dtheta;
   }
   else if (state == 3) { // leg forward
     pos[0] += dx * forward;
+    pos[1] += dy * left;
     w = turn * dtheta;
   }
   // turn
@@ -356,7 +370,7 @@ void Hexapod::translateBody(float dx, float dy, float dz) {
 void Hexapod::rotateBody(float droll, float dpitch, float dyaw) {
   float pos[3];
   for (int leg = 1; leg <= 6; leg++) {
-    if (digitalRead(feet[leg-1]) == LOW) {
+    if (!ROUGH_TERRAIN || digitalRead(feet[leg-1]) == LOW) {
       getCurrentPosition(leg, pos);
       pos[1] = -pos[2]*sin(droll) + pos[1]*cos(droll);
       pos[2] = pos[2]*cos(droll) + pos[1]*sin(droll);

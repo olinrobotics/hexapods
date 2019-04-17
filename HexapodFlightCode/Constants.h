@@ -9,8 +9,8 @@ const bool ACCEL_VERBOSE = false; // Use for debugging accelerometer data
 
 const bool STATE_VERBOSE = true; // Debug main states in flight code
 const bool DETECT_WALLS = false; // Use IRs to avoid walls
-const bool DETECT_CLIFFS = true; // Use foot sensor to avoid falling
-const bool ROUGH_TERRAIN = true; // Use foot sensor to cross rough terrain
+const bool DETECT_CLIFFS = false; // Use foot sensor to avoid falling
+const bool ROUGH_TERRAIN = false; // Use foot sensor to cross rough terrain
 
 // Waypoint types
 const int WAYPOINT_STAND = 0; // Stand
@@ -20,11 +20,12 @@ const int WAYPOINT_DESTINATION = -3; // Walk to given coordinates
 const int WAYPOINT_DELAY = -4; // Wait for a given time interval
 
 // Gait parameters
-const float ground = -6; // Height of ground relative to body (in)
+const float ground = -8.25; // Height of ground relative to body (in)
 const float clearance = 2.25; // Height of raised leg relative to ground (in)
-const float dx = 1.5/2; // Half of the linear step distance (in)
+const float dx = 2/2; // Half of the forward step distance (in)
+const float dy = 2/2; // Half of the sideways step distance (in)
 const float dtheta = M_PI/12/2; // Half of the angular step angle (rad)
-const float yoffset = 3; // Horizontal distance of feet from body (in)
+const float yoffset = 3.5; // Horizontal distance of feet from body (in)
 const int stepDuration = 1000; // Time duration of a step (ms)
 const int TILT_THRESHOLD = 3; // Max allowed horizontal acceleration (m/s^2)
 const int FILTER_LENGTH = 10; // Number of accelerometer values to average
@@ -73,6 +74,6 @@ const int SERVOMAX = 520; // maximum pwm pulse length count (out of 4096)
 const float R = 5.35; // Distance from center to Servo A (in)
 const float L1 = 1.12; // Distance from Servo A to Servo B (in)
 const float L2 = 2.24; // Distance from Servo B to Servo C (in)
-const float L3 = 5; //4.84; // Distance from Servo C to end effector (in)
+const float L3 = 7;//5;//4.84; // Distance from Servo C to end effector (in)
 
 #endif
