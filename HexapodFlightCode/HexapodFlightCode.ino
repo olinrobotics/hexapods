@@ -1,9 +1,10 @@
 #include "Hexapod.h"
 
 Hexapod hex = Hexapod();
-enum State {NONE, STAND, SIT, WALK, TEST, PACE, WANDER};
+enum State {NONE, STAND, SIT, WALK, TEST, PACE, WANDER, UPDATE};
 State state = NONE;
 float forward = 0;
+float left = 0;
 float turn = 0;
 
 void setup() {
@@ -14,6 +15,7 @@ void setup() {
   Serial.println("Input values are scaled between -1 and 1");
   delay(10);
   hex.init();
+  int pos[3];
 }
 
 void loop() {
@@ -41,15 +43,88 @@ void loop() {
       hex.addDestination(12, 0);
       Serial.println("Pace");
       Serial.read();
-    } else if (Serial.peek() == 'r') { // Reset position and waypoints
-      hex.resetPosition();
-      hex.clearWaypoints();
-      Serial.read();
-    } else if (Serial.peek() == 'w') { //"Wander" mode; takes off at random, sensing cliffs and walls)
-      if (STATE_VERBOSE) {Serial.println("Command: Wander");}
-      state = WANDER;
-      hex.addWalkSteps(1, 0, -1);
+//    } else if (Serial.peek() == 'r') { // Reset position and waypoints
+//      hex.resetPosition();
+//      hex.clearWaypoints();
+//      Serial.read();
+//    } else if (Serial.peek() == 'w') { //"Wander" mode; takes off at random, sensing cliffs and walls)
+//      if (STATE_VERBOSE) {Serial.println("Command: Wander");}
+//      state = WANDER;
+//      hex.addWalkSteps(1, 0, -1);
+//      Serial.read();
+
+    } else if (Serial.peek() == 'a') { // Move left
+      if (STATE_VERBOSE) {Serial.println("Move: 0 1");}
+      state = WALK;
+      forward = 0;
+      turn = 0;
+      left = 1;
       Serial.read(); 
+    } else if (Serial.peek() == 's') { // Move backward
+      if (STATE_VERBOSE) {Serial.println("Move: -1 0");}
+      state = WALK;
+      forward = -1;
+      turn = 0;
+      left = 0;
+      Serial.read(); 
+    } else if (Serial.peek() == 'd') { // Move right
+      if (STATE_VERBOSE) {Serial.println("Move: 0 -1");}
+      state = WALK;
+      forward = 0;
+      turn = 0;
+      left = -1;
+      Serial.read(); 
+    } else if (Serial.peek() == 'w') { // Move forward
+      if (STATE_VERBOSE) {Serial.println("Move: 1 0");}
+      state = WALK;
+      forward = 1;
+      turn = 0;
+      left = 0;
+      Serial.read(); 
+    } else if (Serial.peek() == 'q') { // Turn left
+      if (STATE_VERBOSE) {Serial.println("Turn: 1");}
+      state = WALK;
+      forward = 0;
+      turn = 1;
+      left = 0;
+      Serial.read(); 
+    }  else if (Serial.peek() == 'e') { // Turn right
+      if (STATE_VERBOSE) {Serial.println("Turn: -1");}
+      state = WALK;
+      forward = 0;
+      turn = -1;
+      left = 0;
+      Serial.read(); 
+    } else if (Serial.peek() == 'j') { // Twist left
+      if (STATE_VERBOSE) {Serial.println("Twist: left");}
+      state = UPDATE;
+      hex.rotateBody(0,0,-.05);
+      Serial.read(); 
+    } else if (Serial.peek() == 'l') { // Twist right
+      if (STATE_VERBOSE) {Serial.println("Twist: right");}
+      state = UPDATE;
+      hex.rotateBody(0,0,.05);
+      Serial.read(); 
+    } else if (Serial.peek() == 'i') { // Pitch up
+      if (STATE_VERBOSE) {Serial.println("Pitch: up");}
+      state = UPDATE;
+      hex.rotateBody(0,-.05,0);
+      Serial.read(); 
+    } else if (Serial.peek() == 'k') { // Pitch down
+      if (STATE_VERBOSE) {Serial.println("Pitch: down");}
+      state = UPDATE;
+      hex.rotateBody(0,.05,0);
+      Serial.read();
+    } else if (Serial.peek() == 'u') { // Roll left
+      if (STATE_VERBOSE) {Serial.println("Roll: left");}
+      state = UPDATE;
+      hex.rotateBody(.05,0,0);
+      Serial.read();
+    } else if (Serial.peek() == 'o') { // Roll right
+      if (STATE_VERBOSE) {Serial.println("Roll: right");}
+      state = UPDATE;
+      hex.rotateBody(-.05,0,0);
+      Serial.read();
     } /*else if (Serial.peek() == 'q') { // This is just a test
       state = FOLLOW;
       hex.resetPosition();
@@ -62,6 +137,7 @@ void loop() {
       if (STATE_VERBOSE) {Serial.println("I'm going to try to walk.");}
       forward = Serial.parseFloat();
       turn = Serial.parseFloat();
+      left = 0;
       if (abs(forward) + abs(turn) <= 1) { // Walk
         Serial.print("Walk: ");
         Serial.print(forward);
@@ -80,7 +156,7 @@ void loop() {
         //hex.trynewpath(2, 2);
       //Act
   if (state == WALK) {
-    if(hex.walk(forward, turn) == -1) {
+    if(hex.walk(forward, left, turn) == -1) {
       Serial.println("Stopping");
 //      hex.stand();
     }
@@ -101,6 +177,8 @@ void loop() {
         hex.addWalkSteps(0, 1, random(4, 10));
         hex.addWalkSteps(1, 0, -1);
       }
+  }  else if (state == UPDATE) {
+    hex.updateServos();
   } /*else if (state == FOLLOW) {
     hex.followWaypoint();
   } */
