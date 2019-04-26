@@ -1,23 +1,29 @@
 % UI
 close all;
-f = figure;
-xSlider = uicontrol('style','slider', 'position',[30,30,200,20],...
-    'min',-10, 'max',10, 'Value',0);
-ySlider = uicontrol('style','slider', 'position',[30,10,200,20],...
-    'min',-10, 'max',10, 'Value',0);
-zSlider = uicontrol('style','slider', 'position',[260,30,200,20],...
-    'min',-5, 'max',5, 'Value',0);
-legSlider = uicontrol('style','slider', 'position',[260,10,200,20],...
-    'min',1, 'max',6, 'Value',1, 'SliderStep',[1/6,1]);
-uicontrol('style','text', 'position',[10,30,20,20],'String','x');
-uicontrol('style','text', 'position',[10,10,20,20],'String','y');
-uicontrol('style','text', 'position',[240,30,20,20],'String','z');
-uicontrol('style','text', 'position',[240,10,20,20],'String','leg');
-xSlider.Callback = @callback;
-ySlider.Callback = @callback;
-zSlider.Callback = @callback;
-legSlider.Callback = @callback;
-guidata(f, [xSlider, ySlider, zSlider, legSlider]);
+% f = figure;
+% xSlider = uicontrol('style','slider', 'position',[30,30,200,20],...
+%     'min',-10, 'max',10, 'Value',0);
+% ySlider = uicontrol('style','slider', 'position',[30,10,200,20],...
+%     'min',-10, 'max',10, 'Value',0);
+% zSlider = uicontrol('style','slider', 'position',[260,30,200,20],...
+%     'min',-5, 'max',5, 'Value',0);
+% legSlider = uicontrol('style','slider', 'position',[260,10,200,20],...
+%     'min',1, 'max',6, 'Value',1, 'SliderStep',[1/6,1]);
+% uicontrol('style','text', 'position',[10,30,20,20],'String','x');
+% uicontrol('style','text', 'position',[10,10,20,20],'String','y');
+% uicontrol('style','text', 'position',[240,30,20,20],'String','z');
+% uicontrol('style','text', 'position',[240,10,20,20],'String','leg');
+% xSlider.Callback = @callback;
+% ySlider.Callback = @callback;
+% zSlider.Callback = @callback;
+% legSlider.Callback = @callback;
+% guidata(f, [xSlider, ySlider, zSlider, legSlider]);
+for leg = 1:6
+    for state = 1:6
+        [x,y,z] = getTargetPos(leg, state);
+        plotAngles(x, y, z, leg);
+    end
+end
 
 function callback(~,~)
     s = guidata(gcf);
@@ -40,7 +46,7 @@ function [a, b, c] = getAngles(x, y, z, L1, L2, L3, leg, R)
     c = 0;
     x = x - R*cos(leg*pi/3 - pi/6);
     y = y - R*sin(leg*pi/3 - pi/6);
-    a = atan2(y, x) + pi/6 - leg*pi/3
+    a = atan2(y, x) + pi/6 - leg*pi/3;
     r = sqrt(x^2+y^2) - L1;
     if a < -pi
         a = a + 2*pi;
@@ -70,7 +76,7 @@ function [a, b, c] = getAngles(x, y, z, L1, L2, L3, leg, R)
     
     minLimits = [0, 40, 0];
     maxLimits = [180, 180, 130];
-    output = [180/pi*a + 90, -180/pi*b + 90, 180/pi*c]
+    output = [180/pi*a + 90, -180/pi*b + 90, 180/pi*c];
     if sum((output < minLimits) + (output > maxLimits))
         disp('Out of bounds: ');
         disp((output < minLimits) + (output > maxLimits));
@@ -82,13 +88,13 @@ function plotAngles(x, y, z, leg)
     R = 5.35; % Distance from center to Servo A in inches
     L1 = 1.12; % Distance from Servo A to Servo B in inches
     L2 = 2.24; % Distance from Servo B to Servo C in inches
-    L3 = 4.84; % Distance from Servo C to end effector in inches
+    L3 = 6.75; % Distance from Servo C to end effector in inches
     
-    disp('Input');
-    disp([x,y,z,leg]);
+%     disp('Input');
+%     disp([x,y,z,leg]);
     [a, b, c] = getAngles(x, y, z, L1, L2, L3, leg, R);
-    disp('Output');
-    disp(rad2deg([a,b,c]))
+%     disp('Output');
+%     disp(rad2deg([a,b,c]))
     vertices = [1:6, 1];
     R0 = vrrotvec2mat([0,0,1,leg*pi/3-pi/6]);
     v0 = R0*[R;0;0];
@@ -99,10 +105,53 @@ function plotAngles(x, y, z, leg)
     R3 = R2*vrrotvec2mat([0,1,0,c]);
     v3 = R3*[L3;0;0]+v2;
     v = [v0 v1 v2 v3];
-    hold off;
+%     hold off;
     plot3(R*cos(vertices*pi/3-pi/6),R*sin(vertices*pi/3-pi/6),vertices*0);
     hold on; axis equal;
     plot3(v(1,:), v(2,:), v(3,:), 'k.-');
     plot3(v0(1),v0(2),v0(3),'r.','MarkerSize',20);
     plot3(x,y,z,'b.','MarkerSize',20);
+end
+
+% States:
+% 1 = raise left leg
+% 2 = move left leg forward
+% 3 = lower left leg
+% 4 = raise right leg
+% 5 = move right leg forward
+% 6 = lower right leg
+function [x, y, z] = getTargetPos(leg, state)
+    if mod(leg, 2) == 0
+        state = mod(state + 3,6);
+    end
+    R = 5.35; % Distance from center to Servo A in inches
+    L1 = 1.12; % Distance from Servo A to Servo B in inches
+    L2 = 2.24; % Distance from Servo B to Servo C in inches
+    L3 = 6.75; % Distance from Servo C to end effector in inches
+    rot = vrrotvec2mat([0,0,1,leg*pi/3-pi/6]);
+    rx = cos(leg*pi/3-pi/6);
+    ry = sin(leg*pi/3-pi/6);
+    v = rot*[R;0;0];
+    ground = -8.25;
+    dx = 1;
+    dz = 2.5;
+    dr = 3;
+    x = v(1)+rx*dr;
+    y = v(2)+ry*dr;
+    z = v(3)+ground;
+    if state == 1
+        z = z+dz;
+        x = x - dx;
+    elseif state == 2
+        z = z+dz;
+        x = x + dx;
+    elseif state == 3
+        x = x + dx;
+    elseif state == 4
+        x = x + dx;
+    elseif state == 5
+        x = x - dx;
+    elseif state == 6 || state == 0
+        x = x - dx;
+    end
 end

@@ -31,6 +31,7 @@ void Hexapod::init() {
   digitalWrite(relay, HIGH);
   pwm1.setPWMFreq(60);
   pwm2.setPWMFreq(60);  // Analog servos run at ~60 Hz updates
+  tiltLidar(25);
 }
 
 // Add a walk command to the end of the waypoint list
@@ -229,10 +230,10 @@ bool Hexapod::balance() {
     if ((counter%4)/2==0) roll *= -1;
     Serial.println(pitch);
     Serial.println(roll);
-    if (pitch > 0.02) rotateBody(0, -0.01, 0);
-    else if (pitch < -0.02) rotateBody(0, 0.01, 0);
-    if (roll > 0.02) rotateBody(-0.01, 0, 0);
-    else if (roll < -0.02) rotateBody(0.01, 0, 0);
+//    if (pitch > 0.02) rotateBody(0, -0.01, 0);
+//    else if (pitch < -0.02) rotateBody(0, 0.01, 0);
+//    if (roll > 0.02) rotateBody(-0.01, 0, 0);
+//    else if (roll < -0.02) rotateBody(0.01, 0, 0);
   } else { // Lower body
     translateBody(0, 0, -0.05);
   }
@@ -253,11 +254,7 @@ void Hexapod::step(float forward, float left, float turn, int counter) {
     Serial.println(theta);
   }
   for (int leg = 1; leg < 7; leg++) {
-    if (leg % 2 == 0) { // right side
-      moveLegToState(leg, counter % 4, forward, left, turn);
-    } else {
-      moveLegToState(leg, (counter + 2) % 4, forward, left, turn);
-    }
+    moveLegToState(leg, counter % 6, forward, left, turn);
   }
 }
 
@@ -300,12 +297,17 @@ void Hexapod::moveLegToState(int leg, int state, float forward, float left, floa
 
 // Generate a position vector for a given state of a leg
 // Legs numbered 1-6 CCW from front left
-// States numbered 1-4 back-up-forward-down
+// States numbered 1-6 (odd up-forward-down, even up-forward-down)
 // forward and turn specify movement direction between -1 and 1
 // Resulting position is stored in output
 void Hexapod::getLegPosition(int leg, int state, float forward, float left, float turn, float* output) {
-  float pos[] = {R * cos(leg*M_PI / 3 - M_PI / 6), R * sin(leg*M_PI / 3 - M_PI / 6), ground};
-  if (state == 2) { // leg lifted
+  float r0 = R+roffset;
+  float pos[] = {r0 * cos(leg*M_PI / 3 - M_PI / 6), r0 * sin(leg*M_PI / 3 - M_PI / 6), ground};
+  if (leg%2==1) {
+    state = state+3;
+  }
+  state = state%6;
+  if (state == 1 || state == 2) { // leg lifted
     pos[2] += clearance;
   }
   if (ROUGH_TERRAIN) {
@@ -315,21 +317,15 @@ void Hexapod::getLegPosition(int leg, int state, float forward, float left, floa
       pos[2] = footHeights[leg - 1];
     }
   }
-  if (leg <= 3) { // left side
-    pos[1] += yoffset;
-  } else {
-    pos[1] -= yoffset;
-  }
   float w = 0;
-  if (state == 1) { // leg back
-    pos[0] -= dx * forward;
-    pos[1] -= dy * left;
-    w = -turn * dtheta;
-  }
-  else if (state == 3) { // leg forward
+  if (state == 2 || state == 3 || state == 4) { // leg forward
     pos[0] += dx * forward;
     pos[1] += dy * left;
     w = turn * dtheta;
+  }  else { // leg back
+    pos[0] -= dx * forward;
+    pos[1] -= dy * left;
+    w = -turn * dtheta;
   }
   // turn
   float x = pos[0] * cos(w) - pos[1] * sin(w);
@@ -577,6 +573,16 @@ int Hexapod::pulseLength(int angle, int leg, int servo) {
     len = map(180 - angle, ANGLEMIN, ANGLEMAX, SERVOMIN, SERVOMAX);
   }
   return (len);
+}
+
+// Rotate lidar servo to angle in degrees below horizontal
+int Hexapod::tiltLidar(int angle) {
+  int pulse = pulseLength(angle-LIDAR_TILT_OFFSET, 0, 0);
+  if (angle < LIDAR_MAX_ANGLE) {
+    pwm1.setPWM(9, 0, pulse);
+  } else {
+    Serial.println("Error: LIDAR angle out of bounds");
+  }
 }
 
 // Determine {x,y,z} acceleration in m/s^2

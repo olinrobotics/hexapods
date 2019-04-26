@@ -8,7 +8,7 @@ Adafruit_PWMServoDriver pwm2 = Adafruit_PWMServoDriver(0x41);
 int relay = 22;
 
 // State variables
-String state = "stop ";   //create a string for the state of the robot
+String state = "test";   //create a string for the state of the robot
 int new_pos = -1; //for user input to move the servo around
 boolean realTimeStop = true; //real time control loop flag
 
@@ -31,41 +31,10 @@ void setup() {
 }
 
 void loop() {
-
-  //----------------------------------------OCU-----------------------------------------
-  state = getOperatorInput();
-  if (state == "stop") realTimeStop = false;
-  else realTimeStop = true;
-
-
- //-------------------------------------real time loop ----------------------------------
-  while(realTimeStop == true) {
-    if (Serial.available() > 0) {
-      realTimeStop = false;
-      state = Serial.readString();
-      break;
-    }
-    else {realTimeStop = true;}
-
-
-    //----------------------------------- state machine ---------------------------------
-    if (state == "stop") {
-      Serial.println("Stop Robot");
-      realTimeStop = true;
-    }
-    else if (state == "test") {
-      Serial.println("Testing Robot!");
-      delay(100);
-      robotPlay();
-      realTimeStop = true;
-    }
-    else {
-      Serial.println("Nope, that's not a state! Please try again.");
-      realTimeStop = false;
-    }
-  }
-  //send state to OCU -------------------- Send OCU update -------------------------------
-  Serial.println("Robot control loop stopping to wait for new command");
+  Serial.println("Testing Robot!");
+  delay(100);
+  robotPlay();
+  realTimeStop = true;
 }
 //------------------------------------- TEST functions -----------------------------------
 void robotPlay() {
@@ -84,8 +53,11 @@ void robotPlay() {
 }
 
 void moveServo(int pin, int value) {
+  if(pin==0) return;
   // Move a specified servo to the given position
   Serial.println("Moving to position.");
+  Serial.println(pin);
+  Serial.println(value);
   if(pin < 16) {
     pwm1.setPWM(pin, 0, pulseLength(value));
   } else {

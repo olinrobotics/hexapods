@@ -105,6 +105,9 @@ class Hexapod {
     // Convert angle in degrees to PWM pulse length
     int pulseLength(int angle, int leg, int servo);
 
+    // Rotate lidar servo to angle in degrees below horizontal
+    int tiltLidar(int angle);
+  
     // Determine {x,y,z} acceleration in m/s^2
     void getAccel(float *acceleration);
 
@@ -116,6 +119,7 @@ class Hexapod {
 
     Adafruit_PWMServoDriver pwm1 = Adafruit_PWMServoDriver();
     Adafruit_PWMServoDriver pwm2 = Adafruit_PWMServoDriver(0x41);
+//    Adafruit_LIS3DH accel = Adafruit_LIS3DH(); // I2C
     Adafruit_LIS3DH accel = Adafruit_LIS3DH(LIS3DH_CS, LIS3DH_MOSI, LIS3DH_MISO, LIS3DH_CLK);
     SharpIR IR_r = SharpIR(SharpIR::GP2Y0A21YK0F, irRpin);
 };
