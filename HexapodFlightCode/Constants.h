@@ -3,7 +3,7 @@
 
 // Settings
 const bool LEGS_VERBOSE = false; // Use for debugging leg positions
-const bool LOCATION_VERBOSE = true; // Use for debugging hexapod location
+const bool LOCATION_VERBOSE = false; // Use for debugging hexapod location
 const bool IR_VERBOSE = false; // Use for debugging IR sensor data
 const bool ACCEL_VERBOSE = false; // Use for debugging accelerometer data
 
@@ -56,7 +56,7 @@ const String labels[] = {"A", "B", "C"};
 const int N = 3; // number of servos
 const int minLimits[] = {0, 40, 0};
 const int maxLimits[] = {180, 180, 120};
-const float servoSpeed = 5; // inches per second of end effector
+const float servoSpeed = 2; // inches per second of end effector
 const int offsets[6][3] = {{0, -3, -1},
                            {10, 13, 13},
                            {10, 5, 8},

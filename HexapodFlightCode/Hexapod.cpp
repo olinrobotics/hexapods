@@ -158,7 +158,7 @@ int Hexapod::walk(float forward, float left, float turn) {
   if (ROUGH_TERRAIN) {
     if (!feetDown) { // Stop legs if they hit the ground
       for (int leg = 1; leg <= 6; leg++) {
-        if (digitalRead(feet[leg - 1]) == LOW && counter % 4 == 2 * (leg % 2)) {
+        if (digitalRead(feet[leg - 1]) == LOW && getLegState(leg, counter) == 3) {
           float pos[3];
           getCurrentPosition(leg, pos);
           footHeights[leg-1] = pos[2];
@@ -166,9 +166,11 @@ int Hexapod::walk(float forward, float left, float turn) {
         }
       }
       feetDown = updateServos();
+      Serial.println("Lowering feet");
       return 0;
-    } else if (counter % 2 == 0) { // Shift body up or down
+    } else if (counter % 3 == 0) { // Shift body up or down
       if(!balance()) {
+        Serial.println("Balancing");
         return false;
       }
     }
@@ -181,21 +183,21 @@ int Hexapod::walk(float forward, float left, float turn) {
       Serial.println("Object is too close! Stopping!");
       return -1;
     }
-    if (DETECT_CLIFFS && ((counter % 4 == 2 && digitalRead(feet[0]) != LOW) ||
-                          (counter % 4 == 0 && digitalRead(feet[5]) != LOW))) {
+    if (DETECT_CLIFFS && ((getLegState(1, counter) == 4 && digitalRead(feet[0]) != LOW) ||
+                          (getLegState(6, counter) == 4 && digitalRead(feet[5]) != LOW))) {
       step(forward, left, turn, counter - 2);
       x -= 2 * forward * dx * cos(theta);
       y -= 2 * forward * dx * sin(theta);
       theta -= 2 * turn * dtheta;
       counter--;
-      if (counter < 0) counter += 4;
+      if (counter < 0) counter += 6;
       Serial.println("My feet aren't on the ground!");
       Serial.print("Foot 1 is: "); Serial.println(digitalRead(feet[0]));
       Serial.print("Foot 6 is: "); Serial.println(digitalRead(feet[5]));
       return -1;
     }
-    step(forward, left, turn, counter);
     counter++;
+    step(forward, left, turn, counter);
     return 1;
   }
   return 0;
@@ -206,12 +208,12 @@ int Hexapod::walk(float forward, float left, float turn) {
 bool Hexapod::balance() {
   int contacts = 0;
   for (int leg = 1; leg <= 6; leg++) {
-    if (digitalRead(feet[leg - 1]) == LOW && counter % 4 == 2 * (leg % 2)) {
+    if (digitalRead(feet[leg - 1]) == LOW && getLegState(leg, counter) == 3) {
       contacts++;
     }
   }
   if (contacts==3) { // Raise body
-    translateBody(0, 0, 0.05);
+    translateBody(0, 0, 0.1);
     float front[3];
     float back[3];
     float mid[3];
@@ -227,14 +229,23 @@ bool Hexapod::balance() {
     float pitch = -atan2(front[2]-back[2], front[0]-back[0]) - .1;
     float roll = atan2(back[2]+front[2]-2*mid[2], back[1]+front[1]-2*mid[1]);
     if ((counter%4)/2==0) roll *= -1;
+<<<<<<< Updated upstream
     Serial.println(pitch);
     Serial.println(roll);
     if (pitch > 0.02) rotateBody(0, -0.01, 0);
     else if (pitch < -0.02) rotateBody(0, 0.01, 0);
     if (roll > 0.02) rotateBody(-0.01, 0, 0);
     else if (roll < -0.02) rotateBody(0.01, 0, 0);
+=======
+//    Serial.println(pitch);
+//    Serial.println(roll);
+//    if (pitch > 0.02) rotateBody(0, -0.01, 0);
+//    else if (pitch < -0.02) rotateBody(0, 0.01, 0);
+//    if (roll > 0.02) rotateBody(-0.01, 0, 0);
+//    else if (roll < -0.02) rotateBody(0.01, 0, 0);
+>>>>>>> Stashed changes
   } else { // Lower body
-    translateBody(0, 0, -0.05);
+    translateBody(0, 0, -0.1);
   }
   return updateServos();
 }
@@ -304,14 +315,24 @@ void Hexapod::moveLegToState(int leg, int state, float forward, float left, floa
 // forward and turn specify movement direction between -1 and 1
 // Resulting position is stored in output
 void Hexapod::getLegPosition(int leg, int state, float forward, float left, float turn, float* output) {
+<<<<<<< Updated upstream
   float pos[] = {R * cos(leg*M_PI / 3 - M_PI / 6), R * sin(leg*M_PI / 3 - M_PI / 6), ground};
   if (state == 2) { // leg lifted
+=======
+  float r0 = R+roffset;
+  float pos[] = {r0 * cos(leg*M_PI / 3 - M_PI / 6), r0 * sin(leg*M_PI / 3 - M_PI / 6), ground};
+  if (leg%2==0) {
+    state = state+3;
+  }
+  state = state%6;
+  if (state == 1 || state == 2) { // leg lifted
+>>>>>>> Stashed changes
     pos[2] += clearance;
   }
   if (ROUGH_TERRAIN) {
-    if (state == 3) { // leg forward
+    if (state == 3) { // leg down
       footHeights[leg - 1] = pos[2];
-    } else if (state != 2 && footHeights[leg - 1] != 0) {
+    } else if (state != 1 && state !=2 && footHeights[leg - 1] != 0) { // leg on ground
       pos[2] = footHeights[leg - 1];
     }
   }
@@ -341,12 +362,21 @@ void Hexapod::getLegPosition(int leg, int state, float forward, float left, floa
   }
 }
 
+// States numbered 1-6 (up, forward, down, down, back, back)
+int Hexapod::getLegState(int leg, int counter) {
+  if (leg%2 == 1) { // Odd
+    return(counter%6);
+  } else {
+    return((counter+3)%6);
+  }
+}
+
 // Displaces the hexapod body by a set amount relative to the ground
 void Hexapod::translateBody(float dx, float dy, float dz) {
   float minHeight = ground+clearance;
   float maxHeight = ground;
   for (int leg = 1; leg <= 6; leg++) {
-    if (counter % 4 == 2 * (leg % 2)) {
+    if (getLegState(leg,counter) == 3) {
       minHeight = min(footHeights[leg-1], minHeight);
       maxHeight = max(footHeights[leg-1], maxHeight);
       if(footHeights[leg-1] == 0) {
@@ -358,7 +388,7 @@ void Hexapod::translateBody(float dx, float dy, float dz) {
   dz = max(maxHeight-(ground+clearance/2), dz); // Apply upper limit
   float pos[3];
   for (int leg = 1; leg <= 6; leg++) {
-    if (digitalRead(feet[leg-1]) == LOW && counter % 2 == 0) {
+    if (digitalRead(feet[leg-1]) == LOW && counter % 3 == 0) {
       getCurrentPosition(leg, pos);
       moveLegToPositionSmooth(pos[0]-dx, pos[1]-dy, pos[2]-dz, leg);
       footHeights[leg-1] = pos[2]-dz;
