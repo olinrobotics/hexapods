@@ -488,8 +488,6 @@ F 3 "~" H 4500 4900 50  0001 C CNN
 	1    4500 4900
 	0    1    1    0   
 $EndComp
-Wire Wire Line
-	4650 4900 4750 4900
 $Comp
 L Device:R R12
 U 1 1 5CBCEC31
@@ -501,9 +499,6 @@ F 3 "~" H 4750 4100 50  0001 C CNN
 	1    4750 4100
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	4750 4900 4750 4850
-Connection ~ 4750 4900
 Wire Wire Line
 	4750 3950 4750 3850
 $Comp
@@ -517,13 +512,6 @@ F 3 "" H 4750 3850 50  0001 C CNN
 	1    4750 3850
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	4750 4850 4800 4850
-Wire Wire Line
-	4800 4850 4800 4900
-Connection ~ 4750 4850
-Wire Wire Line
-	4750 4250 4750 4850
 Wire Wire Line
 	3450 3550 3450 3650
 Wire Wire Line
@@ -782,8 +770,6 @@ $EndComp
 Wire Wire Line
 	5850 6300 5850 6400
 Wire Wire Line
-	4800 4900 6100 4900
-Wire Wire Line
 	5800 5100 6400 5100
 Wire Wire Line
 	5800 5300 6400 5300
@@ -805,29 +791,27 @@ $EndComp
 $Comp
 L hex_master_sym:Pushbutton_Stockroom U6
 U 1 1 5CBD5BFF
-P 4550 6050
-F 0 "U6" H 4550 6875 50  0000 C CNN
-F 1 "Pushbutton_Stockroom" H 4550 6784 50  0000 C CNN
-F 2 "" H 4550 6250 50  0001 C CNN
-F 3 "" H 4550 6250 50  0001 C CNN
-	1    4550 6050
+P 4200 7800
+F 0 "U6" H 4200 8625 50  0000 C CNN
+F 1 "Pushbutton_Stockroom" H 4200 8534 50  0000 C CNN
+F 2 "" H 4200 8000 50  0001 C CNN
+F 3 "" H 4200 8000 50  0001 C CNN
+	1    4200 7800
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	4750 4900 4750 5450
-Wire Wire Line
-	4750 5750 4750 5850
-NoConn ~ 4350 5450
-NoConn ~ 4350 5750
+	4400 7500 4400 7600
+NoConn ~ 4000 7200
+NoConn ~ 4000 7500
 $Comp
 L power:GND #PWR0127
 U 1 1 5CBEC62B
-P 4750 5850
-F 0 "#PWR0127" H 4750 5600 50  0001 C CNN
-F 1 "GND" H 4755 5677 50  0000 C CNN
-F 2 "" H 4750 5850 50  0001 C CNN
-F 3 "" H 4750 5850 50  0001 C CNN
-	1    4750 5850
+P 4400 7600
+F 0 "#PWR0127" H 4400 7350 50  0001 C CNN
+F 1 "GND" H 4405 7427 50  0000 C CNN
+F 2 "" H 4400 7600 50  0001 C CNN
+F 3 "" H 4400 7600 50  0001 C CNN
+	1    4400 7600
 	1    0    0    -1  
 $EndComp
 Text Label 6400 7600 2    50   ~ 0
@@ -1419,7 +1403,6 @@ Text Label 7600 6000 0    50   ~ 0
 MOSI
 Wire Wire Line
 	6100 4900 6100 4750
-Connection ~ 6100 4900
 Wire Wire Line
 	6100 4900 6400 4900
 Text Label 6100 4750 0    50   ~ 0
@@ -1447,7 +1430,7 @@ L Device:LED D4
 U 1 1 5CD48B1B
 P 8050 4450
 F 0 "D4" V 8088 4333 50  0000 R CNN
-F 1 "LED" V 7997 4333 50  0000 R CNN
+F 1 "IO_LED" V 7997 4333 50  0000 R CNN
 F 2 "" H 8050 4450 50  0001 C CNN
 F 3 "~" H 8050 4450 50  0001 C CNN
 	1    8050 4450
@@ -1483,12 +1466,12 @@ F 3 "" H 8050 5100 50  0001 C CNN
 	1    8050 5100
 	1    0    0    -1  
 $EndComp
-Text Notes 8350 4700 0    138  ~ 0
+Text Notes 8350 4800 0    138  ~ 0
 LED\n
-Text Notes 13550 1150 0    138  ~ 0
+Text Notes 13400 1050 0    138  ~ 0
 Switch Inputs
-Text Notes 13750 1250 0    50   ~ 0
-Internal pull-ups, D0-D5\n
+Text Notes 13400 1250 0    50   ~ 0
+These are for switches on the hexapod feet\nInternal pull-ups, D0-D5\n
 $Comp
 L Device:R R17
 U 1 1 5CC6BFF4
@@ -1555,18 +1538,6 @@ F 3 "~" H 14600 1800 50  0001 C CNN
 	1    14600 1800
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	13100 1950 13100 2100
-Wire Wire Line
-	13400 1950 13400 2100
-Wire Wire Line
-	13700 1950 13700 2100
-Wire Wire Line
-	14000 1950 14000 2100
-Wire Wire Line
-	14300 1950 14300 2100
-Wire Wire Line
-	14600 1950 14600 2100
 $Comp
 L power:+5V #PWR0144
 U 1 1 5CCE2C04
@@ -1607,18 +1578,6 @@ Wire Wire Line
 Connection ~ 13400 1550
 Wire Wire Line
 	13400 1550 13700 1550
-Text Label 13100 2100 0    50   ~ 0
-D0
-Text Label 13400 2100 0    50   ~ 0
-D1
-Text Label 13700 2100 0    50   ~ 0
-D2
-Text Label 14000 2100 0    50   ~ 0
-D3
-Text Label 14300 2100 0    50   ~ 0
-D4
-Text Label 14600 2100 0    50   ~ 0
-D5
 Text Label 6400 6700 2    50   ~ 0
 A0
 Text Label 6400 6800 2    50   ~ 0
@@ -1854,4 +1813,178 @@ Text Notes 900  8000 0    138  ~ 0
 Serial Multiplexing\n\n
 Text Notes 1250 8050 0    50   ~ 0
 Make sure using power as a \nlogic level isn't sketchy
+Wire Wire Line
+	13100 1950 13100 2250
+$Comp
+L Switch:SW_DIP_x01 SW?
+U 1 1 5D863B63
+P 13100 2550
+F 0 "SW?" V 13054 2680 50  0000 L CNN
+F 1 "SW_DIP_x01" V 13145 2680 50  0000 L CNN
+F 2 "" H 13100 2550 50  0001 C CNN
+F 3 "" H 13100 2550 50  0001 C CNN
+	1    13100 2550
+	0    1    1    0   
+$EndComp
+$Comp
+L Switch:SW_DIP_x01 SW?
+U 1 1 5D863CF5
+P 13400 2550
+F 0 "SW?" V 13354 2680 50  0000 L CNN
+F 1 "SW_DIP_x01" V 13445 2680 50  0000 L CNN
+F 2 "" H 13400 2550 50  0001 C CNN
+F 3 "" H 13400 2550 50  0001 C CNN
+	1    13400 2550
+	0    1    1    0   
+$EndComp
+$Comp
+L Switch:SW_DIP_x01 SW?
+U 1 1 5D873601
+P 13700 2550
+F 0 "SW?" V 13654 2680 50  0000 L CNN
+F 1 "SW_DIP_x01" V 13745 2680 50  0000 L CNN
+F 2 "" H 13700 2550 50  0001 C CNN
+F 3 "" H 13700 2550 50  0001 C CNN
+	1    13700 2550
+	0    1    1    0   
+$EndComp
+$Comp
+L Switch:SW_DIP_x01 SW?
+U 1 1 5D882F0E
+P 14000 2550
+F 0 "SW?" V 13954 2680 50  0000 L CNN
+F 1 "SW_DIP_x01" V 14045 2680 50  0000 L CNN
+F 2 "" H 14000 2550 50  0001 C CNN
+F 3 "" H 14000 2550 50  0001 C CNN
+	1    14000 2550
+	0    1    1    0   
+$EndComp
+$Comp
+L Switch:SW_DIP_x01 SW?
+U 1 1 5D89281A
+P 14300 2550
+F 0 "SW?" V 14254 2680 50  0000 L CNN
+F 1 "SW_DIP_x01" V 14345 2680 50  0000 L CNN
+F 2 "" H 14300 2550 50  0001 C CNN
+F 3 "" H 14300 2550 50  0001 C CNN
+	1    14300 2550
+	0    1    1    0   
+$EndComp
+$Comp
+L Switch:SW_DIP_x01 SW?
+U 1 1 5D8A2129
+P 14600 2550
+F 0 "SW?" V 14554 2680 50  0000 L CNN
+F 1 "SW_DIP_x01" V 14645 2680 50  0000 L CNN
+F 2 "" H 14600 2550 50  0001 C CNN
+F 3 "" H 14600 2550 50  0001 C CNN
+	1    14600 2550
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	13400 1950 13400 2250
+Wire Wire Line
+	13700 1950 13700 2250
+Wire Wire Line
+	14000 1950 14000 2250
+Wire Wire Line
+	14300 1950 14300 2250
+Wire Wire Line
+	14600 1950 14600 2250
+$Comp
+L power:GND #PWR?
+U 1 1 5D90FAE1
+P 13100 2850
+F 0 "#PWR?" H 13100 2600 50  0001 C CNN
+F 1 "GND" H 13105 2677 50  0000 C CNN
+F 2 "" H 13100 2850 50  0001 C CNN
+F 3 "" H 13100 2850 50  0001 C CNN
+	1    13100 2850
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5D91F305
+P 13400 2850
+F 0 "#PWR?" H 13400 2600 50  0001 C CNN
+F 1 "GND" H 13405 2677 50  0000 C CNN
+F 2 "" H 13400 2850 50  0001 C CNN
+F 3 "" H 13400 2850 50  0001 C CNN
+	1    13400 2850
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5D92EB29
+P 13700 2850
+F 0 "#PWR?" H 13700 2600 50  0001 C CNN
+F 1 "GND" H 13705 2677 50  0000 C CNN
+F 2 "" H 13700 2850 50  0001 C CNN
+F 3 "" H 13700 2850 50  0001 C CNN
+	1    13700 2850
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5D93E34D
+P 14000 2850
+F 0 "#PWR?" H 14000 2600 50  0001 C CNN
+F 1 "GND" H 14005 2677 50  0000 C CNN
+F 2 "" H 14000 2850 50  0001 C CNN
+F 3 "" H 14000 2850 50  0001 C CNN
+	1    14000 2850
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5D95D3CF
+P 14300 2850
+F 0 "#PWR?" H 14300 2600 50  0001 C CNN
+F 1 "GND" H 14305 2677 50  0000 C CNN
+F 2 "" H 14300 2850 50  0001 C CNN
+F 3 "" H 14300 2850 50  0001 C CNN
+	1    14300 2850
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5D96CBF3
+P 14600 2850
+F 0 "#PWR?" H 14600 2600 50  0001 C CNN
+F 1 "GND" H 14605 2677 50  0000 C CNN
+F 2 "" H 14600 2850 50  0001 C CNN
+F 3 "" H 14600 2850 50  0001 C CNN
+	1    14600 2850
+	1    0    0    -1  
+$EndComp
+Text Label 13100 2100 0    50   ~ 0
+D0
+Text Label 13400 2100 0    50   ~ 0
+D1
+Text Label 13700 2100 0    50   ~ 0
+D2
+Text Label 14000 2100 0    50   ~ 0
+D3
+Text Label 14300 2100 0    50   ~ 0
+D4
+Text Label 14600 2100 0    50   ~ 0
+D5
+Text Notes 4500 7450 0    50   ~ 0
+Reset\nButton
+Text Label 4400 6750 0    50   ~ 0
+~RESET
+Wire Wire Line
+	4400 6750 4400 7200
+Wire Wire Line
+	6100 4900 4750 4900
+Connection ~ 6100 4900
+Wire Wire Line
+	4750 4250 4750 4900
+Connection ~ 4750 4900
+Wire Wire Line
+	4750 4900 4650 4900
+Text Notes 9400 4950 0    50   ~ 0
+TODO spec and integrate an IMU that uses I2C\nTODO verify that serial mux won't break everything\nTODO power LIDAR (is this just raspi usb?)\n\nTODO actually spec connectors for foot limit switch wires\nTODO finish creating all footprints\nTODO make some high-level layout decisions\nTODO figure out arduino raspi communication\n
+Text Notes 1150 1700 0    50   ~ 0
+Logic Power
 $EndSCHEMATC

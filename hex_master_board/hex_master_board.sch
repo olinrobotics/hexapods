@@ -17,27 +17,16 @@ $EndDescr
 $Comp
 L hex_master_sym:Jack_CP-002B-ND U1
 U 1 1 5CB747C3
-P 1450 1550
-F 0 "U1" H 1506 2115 50  0000 C CNN
-F 1 "Jack_CP-002B-ND" H 1506 2024 50  0000 C CNN
-F 2 "hex_master_board:Jack_CP-002B-ND" H 1450 1500 50  0001 C CNN
-F 3 "" H 1450 1500 50  0001 C CNN
-	1    1450 1550
-	1    0    0    -1  
-$EndComp
-$Comp
-L Regulator_Linear:MCP1700-5002E_SOT23 U3
-U 1 1 5CB7486F
-P 2800 1250
-F 0 "U3" H 2800 1492 50  0000 C CNN
-F 1 "MCP1700-5002E_SOT23" H 2800 1401 50  0000 C CNN
-F 2 "Package_TO_SOT_SMD:SOT-23" H 2800 1475 50  0001 C CNN
-F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/20001826C.pdf" H 2800 1250 50  0001 C CNN
-	1    2800 1250
+P 1050 1550
+F 0 "U1" H 1106 2115 50  0000 C CNN
+F 1 "Jack_CP-002B-ND" H 1106 2024 50  0000 C CNN
+F 2 "hex_master_board:Jack_CP-002B-ND" H 1050 1500 50  0001 C CNN
+F 3 "" H 1050 1500 50  0001 C CNN
+	1    1050 1550
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	1700 1250 2350 1250
+	1300 1250 1950 1250
 $Comp
 L hex_master_sym:TPS2113A U5
 U 1 1 5CB74C1B
@@ -49,8 +38,6 @@ F 3 "" H 4400 2050 50  0001 C CNN
 	1    4400 2250
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	3100 1250 3200 1250
 $Comp
 L Device:R R9
 U 1 1 5CB74FAD
@@ -334,60 +321,56 @@ Wire Wire Line
 $Comp
 L power:GND #PWR0111
 U 1 1 5CB7F824
-P 2800 1800
-F 0 "#PWR0111" H 2800 1550 50  0001 C CNN
-F 1 "GND" H 2805 1627 50  0000 C CNN
-F 2 "" H 2800 1800 50  0001 C CNN
-F 3 "" H 2800 1800 50  0001 C CNN
-	1    2800 1800
+P 2550 1950
+F 0 "#PWR0111" H 2550 1700 50  0001 C CNN
+F 1 "GND" H 2555 1777 50  0000 C CNN
+F 2 "" H 2550 1950 50  0001 C CNN
+F 3 "" H 2550 1950 50  0001 C CNN
+	1    2550 1950
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR0112
 U 1 1 5CB7F85E
-P 2350 1800
-F 0 "#PWR0112" H 2350 1550 50  0001 C CNN
-F 1 "GND" H 2355 1627 50  0000 C CNN
-F 2 "" H 2350 1800 50  0001 C CNN
-F 3 "" H 2350 1800 50  0001 C CNN
-	1    2350 1800
+P 1950 1800
+F 0 "#PWR0112" H 1950 1550 50  0001 C CNN
+F 1 "GND" H 1955 1627 50  0000 C CNN
+F 2 "" H 1950 1800 50  0001 C CNN
+F 3 "" H 1950 1800 50  0001 C CNN
+	1    1950 1800
 	1    0    0    -1  
 $EndComp
 $Comp
 L Device:C C1
 U 1 1 5CB7F8A6
-P 2350 1500
-F 0 "C1" H 2465 1546 50  0000 L CNN
-F 1 "1uF" H 2465 1455 50  0000 L CNN
-F 2 "" H 2388 1350 50  0001 C CNN
-F 3 "~" H 2350 1500 50  0001 C CNN
-	1    2350 1500
+P 1950 1500
+F 0 "C1" H 2065 1546 50  0000 L CNN
+F 1 "1uF" H 2065 1455 50  0000 L CNN
+F 2 "" H 1988 1350 50  0001 C CNN
+F 3 "~" H 1950 1500 50  0001 C CNN
+	1    1950 1500
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	2350 1350 2350 1250
-Connection ~ 2350 1250
+	1950 1350 1950 1250
+Connection ~ 1950 1250
 Wire Wire Line
-	2350 1250 2500 1250
-Wire Wire Line
-	2350 1650 2350 1800
-Wire Wire Line
-	2800 1550 2800 1800
+	1950 1650 1950 1800
 $Comp
 L power:GND #PWR0113
 U 1 1 5CB8188E
-P 1800 1600
-F 0 "#PWR0113" H 1800 1350 50  0001 C CNN
-F 1 "GND" H 1805 1427 50  0000 C CNN
-F 2 "" H 1800 1600 50  0001 C CNN
-F 3 "" H 1800 1600 50  0001 C CNN
-	1    1800 1600
+P 1400 1600
+F 0 "#PWR0113" H 1400 1350 50  0001 C CNN
+F 1 "GND" H 1405 1427 50  0000 C CNN
+F 2 "" H 1400 1600 50  0001 C CNN
+F 3 "" H 1400 1600 50  0001 C CNN
+	1    1400 1600
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	1700 1450 1800 1450
+	1300 1450 1400 1450
 Wire Wire Line
-	1800 1450 1800 1600
+	1400 1450 1400 1600
 $Comp
 L Interface_USB:FT232RL U4
 U 1 1 5CBA34B9
@@ -1430,7 +1413,7 @@ L Device:LED D4
 U 1 1 5CD48B1B
 P 8050 4450
 F 0 "D4" V 8088 4333 50  0000 R CNN
-F 1 "LED" V 7997 4333 50  0000 R CNN
+F 1 "IO_LED" V 7997 4333 50  0000 R CNN
 F 2 "" H 8050 4450 50  0001 C CNN
 F 3 "~" H 8050 4450 50  0001 C CNN
 	1    8050 4450
@@ -1466,7 +1449,7 @@ F 3 "" H 8050 5100 50  0001 C CNN
 	1    8050 5100
 	1    0    0    -1  
 $EndComp
-Text Notes 8350 4700 0    138  ~ 0
+Text Notes 8350 4800 0    138  ~ 0
 LED\n
 Text Notes 13400 1050 0    138  ~ 0
 Switch Inputs
@@ -1984,5 +1967,24 @@ Connection ~ 4750 4900
 Wire Wire Line
 	4750 4900 4650 4900
 Text Notes 9400 4950 0    50   ~ 0
-TODO spec and integrate an IMU that uses I2C\nTODO verify that serial mux won't break everything\nTODO actually spec connectors for foot limit switch wires\nTODO finish creating all footprints\nTODO make some high-level layout decisions\n
+TODO spec and integrate an IMU that uses I2C\nTODO verify that serial mux won't break everything\nTODO power LIDAR (is this just raspi usb?)\n\nTODO actually spec connectors for foot limit switch wires\nTODO finish creating all footprints\nTODO make some high-level layout decisions\nTODO figure out arduino raspi communication\n
+Text Notes 750  1700 0    50   ~ 0
+Logic Power
+$Comp
+L hex_master_sym:AP2210N-lin-reg U?
+U 1 1 5D8C65D8
+P 2550 1000
+F 0 "U?" H 2550 1065 50  0000 C CNN
+F 1 "AP2210N-lin-reg" H 2550 974 50  0000 C CNN
+F 2 "" H 2550 1000 50  0001 C CNN
+F 3 "" H 2550 1000 50  0001 C CNN
+	1    2550 1000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2950 1250 3200 1250
+Wire Wire Line
+	2550 1650 2550 1950
+Wire Wire Line
+	1950 1250 2150 1250
 $EndSCHEMATC
