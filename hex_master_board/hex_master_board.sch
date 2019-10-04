@@ -797,9 +797,9 @@ F 3 "" H 4400 7600 50  0001 C CNN
 	1    4400 7600
 	1    0    0    -1  
 $EndComp
-Text Label 6400 7600 2    50   ~ 0
+Text Label 6300 7600 2    50   ~ 0
 Atmega_RXD0
-Text Label 6400 7700 2    50   ~ 0
+Text Label 6300 7700 2    50   ~ 0
 Atmega_TXD0
 Wire Wire Line
 	7000 3950 7000 4600
@@ -1294,87 +1294,83 @@ Wire Wire Line
 $Comp
 L Device:LED D2
 U 1 1 5CC864DC
-P 1400 6200
-F 0 "D2" V 1438 6083 50  0000 R CNN
-F 1 "LED" V 1347 6083 50  0000 R CNN
-F 2 "" H 1400 6200 50  0001 C CNN
-F 3 "~" H 1400 6200 50  0001 C CNN
-	1    1400 6200
+P 1350 6100
+F 0 "D2" V 1388 5983 50  0000 R CNN
+F 1 "LED" V 1297 5983 50  0000 R CNN
+F 2 "" H 1350 6100 50  0001 C CNN
+F 3 "~" H 1350 6100 50  0001 C CNN
+	1    1350 6100
 	0    -1   -1   0   
 $EndComp
 $Comp
 L Device:LED D1
 U 1 1 5CC866C6
-P 1050 6200
-F 0 "D1" V 1088 6083 50  0000 R CNN
-F 1 "LED" V 997 6083 50  0000 R CNN
-F 2 "" H 1050 6200 50  0001 C CNN
-F 3 "~" H 1050 6200 50  0001 C CNN
-	1    1050 6200
+P 1000 6100
+F 0 "D1" V 1038 5983 50  0000 R CNN
+F 1 "LED" V 947 5983 50  0000 R CNN
+F 2 "" H 1000 6100 50  0001 C CNN
+F 3 "~" H 1000 6100 50  0001 C CNN
+	1    1000 6100
 	0    -1   -1   0   
 $EndComp
-Text Label 4150 5500 0    50   ~ 0
-USB_RXD
-Text Label 4150 5600 0    50   ~ 0
-USB_TXD
-Text Label 1400 6850 3    50   ~ 0
-~RX
-Text Label 1050 6850 3    50   ~ 0
-~TX
+Text Label 1350 6750 3    50   ~ 0
+~RX_LED
+Text Label 1000 6750 3    50   ~ 0
+~TX_LED
 $Comp
 L Device:R R1
 U 1 1 5CCB425A
-P 1050 6600
-F 0 "R1" H 1120 6646 50  0000 L CNN
-F 1 "1kΩ" H 1120 6555 50  0000 L CNN
-F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 980 6600 50  0001 C CNN
-F 3 "~" H 1050 6600 50  0001 C CNN
-	1    1050 6600
+P 1000 6500
+F 0 "R1" H 1070 6546 50  0000 L CNN
+F 1 "1kΩ" H 1070 6455 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 930 6500 50  0001 C CNN
+F 3 "~" H 1000 6500 50  0001 C CNN
+	1    1000 6500
 	1    0    0    -1  
 $EndComp
 $Comp
 L Device:R R6
 U 1 1 5CCB42D4
-P 1400 6600
-F 0 "R6" H 1470 6646 50  0000 L CNN
-F 1 "1kΩ" H 1470 6555 50  0000 L CNN
-F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 1330 6600 50  0001 C CNN
-F 3 "~" H 1400 6600 50  0001 C CNN
-	1    1400 6600
+P 1350 6500
+F 0 "R6" H 1420 6546 50  0000 L CNN
+F 1 "1kΩ" H 1420 6455 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 1280 6500 50  0001 C CNN
+F 3 "~" H 1350 6500 50  0001 C CNN
+	1    1350 6500
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	1050 6450 1050 6350
+	1000 6350 1000 6250
 Wire Wire Line
-	1400 6450 1400 6350
+	1350 6350 1350 6250
 Wire Wire Line
-	1400 6850 1400 6750
+	1350 6750 1350 6650
 Wire Wire Line
-	1050 6850 1050 6750
+	1000 6750 1000 6650
 Wire Wire Line
-	1400 6050 1400 5950
+	1350 5950 1350 5850
 Wire Wire Line
-	1050 6050 1050 5950
+	1000 5950 1000 5850
 $Comp
 L power:+5V #PWR0141
 U 1 1 5CCECA7A
-P 1050 5950
-F 0 "#PWR0141" H 1050 5800 50  0001 C CNN
-F 1 "+5V" H 1065 6123 50  0000 C CNN
-F 2 "" H 1050 5950 50  0001 C CNN
-F 3 "" H 1050 5950 50  0001 C CNN
-	1    1050 5950
+P 1000 5850
+F 0 "#PWR0141" H 1000 5700 50  0001 C CNN
+F 1 "+5V" H 1015 6023 50  0000 C CNN
+F 2 "" H 1000 5850 50  0001 C CNN
+F 3 "" H 1000 5850 50  0001 C CNN
+	1    1000 5850
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:+5V #PWR0142
 U 1 1 5CCECAF6
-P 1400 5950
-F 0 "#PWR0142" H 1400 5800 50  0001 C CNN
-F 1 "+5V" H 1415 6123 50  0000 C CNN
-F 2 "" H 1400 5950 50  0001 C CNN
-F 3 "" H 1400 5950 50  0001 C CNN
-	1    1400 5950
+P 1350 5850
+F 0 "#PWR0142" H 1350 5700 50  0001 C CNN
+F 1 "+5V" H 1365 6023 50  0000 C CNN
+F 2 "" H 1350 5850 50  0001 C CNN
+F 3 "" H 1350 5850 50  0001 C CNN
+	1    1350 5850
 	1    0    0    -1  
 $EndComp
 NoConn ~ 4150 5200
@@ -1732,12 +1728,6 @@ Wire Wire Line
 	1750 8950 1750 8900
 Wire Wire Line
 	1750 8900 1800 8900
-Wire Wire Line
-	1350 9050 1750 9050
-Wire Wire Line
-	1750 9050 1750 9100
-Wire Wire Line
-	1750 9100 1800 9100
 $Comp
 L Device:R R8
 U 1 1 5CEC0693
@@ -1792,9 +1782,9 @@ Atmega_TXD0
 Wire Wire Line
 	2050 10400 2300 10400
 Connection ~ 2050 10400
-Text Notes 900  8000 0    138  ~ 0
+Text Notes 750  8100 0    138  ~ 0
 Serial Multiplexing\n\n
-Text Notes 1250 8050 0    50   ~ 0
+Text Notes 1100 8150 0    50   ~ 0
 Make sure using power as a \nlogic level isn't sketchy
 Wire Wire Line
 	12250 2150 12250 2450
@@ -1966,7 +1956,7 @@ Wire Wire Line
 Connection ~ 4750 4900
 Wire Wire Line
 	4750 4900 4650 4900
-Text Notes 5300 10200 0    50   ~ 0
+Text Notes 13500 9750 0    50   ~ 0
 TODOs are probably out of date, check Asana\n\nTODO spec and integrate an IMU that uses I2C\nTODO verify that serial mux won't break everything\nTODO power LIDAR (is this just raspi usb?)\n\nTODO actually spec connectors for foot limit switch wires\nTODO finish creating all footprints\nTODO make some high-level layout decisions\nTODO figure out arduino raspi communication\n
 Text Notes 750  1700 0    50   ~ 0
 Logic Power
@@ -1990,31 +1980,27 @@ Wire Wire Line
 $Comp
 L hex_master_sym:Jack_CP-002B-ND U12
 U 1 1 5D9061A0
-P 8950 4200
-F 0 "U12" H 9006 4765 50  0000 C CNN
-F 1 "Jack_CP-002B-ND" H 9006 4674 50  0000 C CNN
-F 2 "hex_master_board:Jack_CP-002B-ND" H 8950 4150 50  0001 C CNN
-F 3 "" H 8950 4150 50  0001 C CNN
-	1    8950 4200
+P 8800 4100
+F 0 "U12" H 8856 4665 50  0000 C CNN
+F 1 "Jack_CP-002B-ND" H 8856 4574 50  0000 C CNN
+F 2 "hex_master_board:Jack_CP-002B-ND" H 8800 4050 50  0001 C CNN
+F 3 "" H 8800 4050 50  0001 C CNN
+	1    8800 4100
 	1    0    0    -1  
 $EndComp
-Text Label 9300 3900 0    50   ~ 0
+Text Label 9450 3800 0    50   ~ 0
 servo_power
 Wire Wire Line
-	9300 3900 9200 3900
-Wire Wire Line
-	9200 4100 9300 4100
-Wire Wire Line
-	9300 4100 9300 4200
+	9050 4000 9150 4000
 $Comp
 L power:GND #PWR0155
 U 1 1 5D945768
-P 9300 4200
-F 0 "#PWR0155" H 9300 3950 50  0001 C CNN
-F 1 "GND" H 9305 4027 50  0000 C CNN
-F 2 "" H 9300 4200 50  0001 C CNN
-F 3 "" H 9300 4200 50  0001 C CNN
-	1    9300 4200
+P 9150 4250
+F 0 "#PWR0155" H 9150 4000 50  0001 C CNN
+F 1 "GND" H 9155 4077 50  0000 C CNN
+F 2 "" H 9150 4250 50  0001 C CNN
+F 3 "" H 9150 4250 50  0001 C CNN
+	1    9150 4250
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -3413,6 +3399,191 @@ Text Label 7600 6300 0    50   ~ 0
 D10
 Text Label 7600 6400 0    50   ~ 0
 D11
-Text Label 7600 6500 0    50   ~ 0
-D12
+Text Label 4150 5600 0    50   ~ 0
+~TX_LED
+Text Label 4150 5500 0    50   ~ 0
+~RX_LED
+Wire Wire Line
+	6300 7600 6400 7600
+Wire Wire Line
+	6400 7700 6300 7700
+Wire Wire Line
+	1800 9100 1750 9100
+Wire Wire Line
+	1750 9100 1750 9050
+Wire Wire Line
+	1750 9050 1350 9050
+$Comp
+L Device:C C?
+U 1 1 5DB02CE4
+P 9350 4000
+F 0 "C?" H 9465 4046 50  0000 L CNN
+F 1 "10uF" H 9465 3955 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 9388 3850 50  0001 C CNN
+F 3 "~" H 9350 4000 50  0001 C CNN
+	1    9350 4000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9050 3800 9350 3800
+Wire Wire Line
+	9350 3800 9350 3850
+Connection ~ 9350 3800
+Wire Wire Line
+	9350 3800 9450 3800
+Wire Wire Line
+	9350 4150 9350 4250
+$Comp
+L power:GND #PWR0194
+U 1 1 5DBA7C91
+P 9350 4250
+F 0 "#PWR0194" H 9350 4000 50  0001 C CNN
+F 1 "GND" H 9355 4077 50  0000 C CNN
+F 2 "" H 9350 4250 50  0001 C CNN
+F 3 "" H 9350 4250 50  0001 C CNN
+	1    9350 4250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9150 4000 9150 4250
+Text Notes 3200 5200 0    50   ~ 0
+FT232RQ
+$Comp
+L hex_master_sym:header_0.1_8 U?
+U 1 1 5DD239EE
+P 5550 9600
+F 0 "U?" H 5545 9178 50  0000 C CNN
+F 1 "header_0.1_8" H 5545 9087 50  0000 C CNN
+F 2 "" H 5550 9200 50  0001 C CNN
+F 3 "" H 5550 9200 50  0001 C CNN
+	1    5550 9600
+	1    0    0    -1  
+$EndComp
+Text Label 5900 9650 1    50   ~ 0
+A0
+Text Label 5800 9650 1    50   ~ 0
+A1
+Text Label 5700 9650 1    50   ~ 0
+A2
+Text Label 5600 9650 1    50   ~ 0
+A3
+Text Label 5500 9650 1    50   ~ 0
+A4
+Text Label 5400 9650 1    50   ~ 0
+A5
+Text Label 5300 9650 1    50   ~ 0
+A6
+Text Label 5200 9650 1    50   ~ 0
+A7
+Wire Wire Line
+	5200 9650 5200 9750
+Wire Wire Line
+	5300 9750 5300 9650
+Wire Wire Line
+	5400 9650 5400 9750
+Wire Wire Line
+	5500 9750 5500 9650
+Wire Wire Line
+	5600 9650 5600 9750
+Wire Wire Line
+	5700 9750 5700 9650
+Wire Wire Line
+	5800 9650 5800 9750
+Wire Wire Line
+	5900 9750 5900 9650
+Text Notes 5100 10600 0    118  ~ 0
+IO Breakouts
+Text Label 6400 7800 2    50   ~ 0
+D13
+Text Label 6400 7900 2    50   ~ 0
+D14
+Text Label 6400 8000 2    50   ~ 0
+D15
+Text Label 6400 8100 2    50   ~ 0
+D16
+Text Label 6400 8200 2    50   ~ 0
+D17
+Text Label 6400 8300 2    50   ~ 0
+D18
+Text Label 7600 6700 0    50   ~ 0
+D19
+Text Label 7600 6800 0    50   ~ 0
+D20
+Text Label 7600 6900 0    50   ~ 0
+D21
+Text Label 7600 7000 0    50   ~ 0
+D22
+Text Label 7600 7100 0    50   ~ 0
+D23
+Text Label 7600 7200 0    50   ~ 0
+D24
+Text Label 7600 7300 0    50   ~ 0
+D25
+Text Label 7600 7400 0    50   ~ 0
+D26
+NoConn ~ 7600 7800
+NoConn ~ 7600 7900
+NoConn ~ 7600 8000
+NoConn ~ 7600 8100
+NoConn ~ 7600 8200
+NoConn ~ 7600 8300
+NoConn ~ 6400 5800
+NoConn ~ 6400 5900
+NoConn ~ 6400 6000
+NoConn ~ 6400 6100
+NoConn ~ 6400 6200
+NoConn ~ 6400 6300
+$Comp
+L hex_master_sym:header_0.1_8 U?
+U 1 1 5E0A6DBA
+P 6550 9600
+F 0 "U?" H 6545 9178 50  0000 C CNN
+F 1 "header_0.1_8" H 6545 9087 50  0000 C CNN
+F 2 "" H 6550 9200 50  0001 C CNN
+F 3 "" H 6550 9200 50  0001 C CNN
+	1    6550 9600
+	1    0    0    -1  
+$EndComp
+$Comp
+L hex_master_sym:header_0.1_8 U?
+U 1 1 5E0D1B6D
+P 7550 9600
+F 0 "U?" H 7545 9178 50  0000 C CNN
+F 1 "header_0.1_8" H 7545 9087 50  0000 C CNN
+F 2 "" H 7550 9200 50  0001 C CNN
+F 3 "" H 7550 9200 50  0001 C CNN
+	1    7550 9600
+	1    0    0    -1  
+$EndComp
+Text Label 7900 9750 1    50   ~ 0
+D13
+Text Label 7800 9750 1    50   ~ 0
+D14
+Text Label 7700 9750 1    50   ~ 0
+D15
+Text Label 7600 9750 1    50   ~ 0
+D16
+Text Label 7500 9750 1    50   ~ 0
+D17
+Text Label 7400 9750 1    50   ~ 0
+D18
+Text Label 7300 9750 1    50   ~ 0
+D19
+Text Label 7200 9750 1    50   ~ 0
+D20
+Text Label 6900 9750 1    50   ~ 0
+D21
+Text Label 6800 9750 1    50   ~ 0
+D22
+Text Label 6700 9750 1    50   ~ 0
+D23
+Text Label 6600 9750 1    50   ~ 0
+D24
+Text Label 6500 9750 1    50   ~ 0
+D25
+Text Label 6400 9750 1    50   ~ 0
+D26
+NoConn ~ 6200 9750
+NoConn ~ 6300 9750
+NoConn ~ 7600 6500
 $EndSCHEMATC
