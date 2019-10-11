@@ -37,6 +37,28 @@ class Hexapod {
     // Set current position to new origin
     void resetPosition();
 
+/// BEGIN NEW GAIT CODE //////////////////////////////////////////////////////////
+
+    // Called iteratively to move the hexapod to the given coordinates
+    // Returns true if target position reached
+    bool goTo(float x2, float y2, float theta2);
+
+    // Incrementally move a foot triangle by given displacement
+    bool moveTripod(float dx, float dy, float dz, float dtheta, bool even, bool ignoreLimits);
+
+    // Levels the hexapod body relative to the ground
+    // Returns true if body is level
+    bool levelBody(float pitch, float roll);
+    
+    // Determine midpoint of tripod
+    void getCentroid(bool even, float* centroid);
+
+    // Adjust radius and angle offset of a raised foot triangle
+    // Positive angle = space legs closer horizontally
+    bool resizeTripod(float radius, float angle, bool even);
+
+/// END NEW GAIT CODE /////////////////////////////////////////////////////////////
+
     // Called iteratively to walk with given x, y, and angular velocities (normalized)
     // Returns 1 if step taken, -1 if obstacle encountered, 0 otherwise
     int walk(float forward, float left, float turn);
@@ -73,7 +95,8 @@ class Hexapod {
     void rotateBody(float droll, float dpitch, float dyaw);
 
     // Move all 3 servos of a leg to position the end effector
-    void moveLegToPosition(float x, float y, float z, int leg);
+    // Return false if given position is out of range
+    bool moveLegToPosition(float x, float y, float z, int leg);
 
     // Incrementally move all 3 servos of a leg to position the end effector
     void moveLegToPositionSmooth(float x, float y, float z, int leg);

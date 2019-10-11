@@ -1,23 +1,29 @@
 % UI
 close all;
-f = figure;
-xSlider = uicontrol('style','slider', 'position',[30,30,200,20],...
-    'min',-10, 'max',10, 'Value',0);
-ySlider = uicontrol('style','slider', 'position',[30,10,200,20],...
-    'min',-10, 'max',10, 'Value',0);
-zSlider = uicontrol('style','slider', 'position',[260,30,200,20],...
-    'min',-5, 'max',5, 'Value',0);
-legSlider = uicontrol('style','slider', 'position',[260,10,200,20],...
-    'min',1, 'max',6, 'Value',1, 'SliderStep',[1/6,1]);
-uicontrol('style','text', 'position',[10,30,20,20],'String','x');
-uicontrol('style','text', 'position',[10,10,20,20],'String','y');
-uicontrol('style','text', 'position',[240,30,20,20],'String','z');
-uicontrol('style','text', 'position',[240,10,20,20],'String','leg');
-xSlider.Callback = @callback;
-ySlider.Callback = @callback;
-zSlider.Callback = @callback;
-legSlider.Callback = @callback;
-guidata(f, [xSlider, ySlider, zSlider, legSlider]);
+plotAngles(7.23, -7.67, -8.25, 1);
+plotAngles(7.23, -7.67, -8.25, 2);
+plotAngles(7.23, -7.67, -8.25, 3);
+plotAngles(7.23, -7.67, -8.25, 4);
+plotAngles(7.23, -7.67, -8.25, 5);
+plotAngles(7.23, -7.67, -8.25, 6);
+% f = figure;
+% xSlider = uicontrol('style','slider', 'position',[30,30,200,20],...
+%     'min',-10, 'max',10, 'Value',0);
+% ySlider = uicontrol('style','slider', 'position',[30,10,200,20],...
+%     'min',-10, 'max',10, 'Value',0);
+% zSlider = uicontrol('style','slider', 'position',[260,30,200,20],...
+%     'min',-5, 'max',5, 'Value',0);
+% legSlider = uicontrol('style','slider', 'position',[260,10,200,20],...
+%     'min',1, 'max',6, 'Value',1, 'SliderStep',[1/6,1]);
+% uicontrol('style','text', 'position',[10,30,20,20],'String','x');
+% uicontrol('style','text', 'position',[10,10,20,20],'String','y');
+% uicontrol('style','text', 'position',[240,30,20,20],'String','z');
+% uicontrol('style','text', 'position',[240,10,20,20],'String','leg');
+% xSlider.Callback = @callback;
+% ySlider.Callback = @callback;
+% zSlider.Callback = @callback;
+% legSlider.Callback = @callback;
+% guidata(f, [xSlider, ySlider, zSlider, legSlider]);
 
 function callback(~,~)
     s = guidata(gcf);
@@ -82,7 +88,7 @@ function plotAngles(x, y, z, leg)
     R = 5.35; % Distance from center to Servo A in inches
     L1 = 1.12; % Distance from Servo A to Servo B in inches
     L2 = 2.24; % Distance from Servo B to Servo C in inches
-    L3 = 4.84; % Distance from Servo C to end effector in inches
+    L3 = 7; % Distance from Servo C to end effector in inches
     
     disp('Input');
     disp([x,y,z,leg]);

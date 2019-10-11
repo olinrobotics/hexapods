@@ -15,7 +15,6 @@ void setup() {
   Serial.println("Input values are scaled between -1 and 1");
   delay(10);
   hex.init();
-  int pos[3];
 }
 
 void loop() {
@@ -138,7 +137,7 @@ void loop() {
       forward = Serial.parseFloat();
       turn = Serial.parseFloat();
       left = 0;
-      if (abs(forward) + abs(turn) <= 1) { // Walk
+      if (abs(forward) + abs(turn) <= 100000) { // Walk
         Serial.print("Walk: ");
         Serial.print(forward);
         Serial.print(", ");
@@ -156,7 +155,7 @@ void loop() {
         //hex.trynewpath(2, 2);
       //Act
   if (state == WALK) {
-    if(hex.walk(forward, left, turn) == -1) {
+    if(hex.goTo(forward, left, turn) == 1) {
       Serial.println("Stopping");
 //      hex.stand();
     }

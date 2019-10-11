@@ -21,15 +21,19 @@ const int WAYPOINT_DELAY = -4; // Wait for a given time interval
 
 // Gait parameters
 const float ground = -8.25; // Height of ground relative to body (in)
-const float clearance = 2.25; // Height of raised leg relative to ground (in)
+const float clearance = 2; // Height of raised leg relative to ground (in)
 const float dx = 2/2; // Half of the forward step distance (in)
 const float dy = 2/2; // Half of the sideways step distance (in)
+const float roffset = 3.2; // Radial distance of feet from first joint (in)
 const float dtheta = M_PI/12/2; // Half of the angular step angle (rad)
 const float yoffset = 3.5; // Horizontal distance of feet from body (in)
 const int stepDuration = 1000; // Time duration of a step (ms)
 const int TILT_THRESHOLD = 3; // Max allowed horizontal acceleration (m/s^2)
 const int FILTER_LENGTH = 10; // Number of accelerometer values to average
 const int IR_THRESHOLD = 28; // Distance seen by IR sensor to make it stop (cm)
+
+const float SPEED = .003; // Max linear speed (in/ms)
+const float STABILITY_MARGIN = 0.25; // Normalized distance between CoM and center of tripod
 
 // Derived gait parameters
 const float linSpeed = dx*1000/stepDuration; // Max linear speed (in/s)
