@@ -1374,11 +1374,11 @@ F 3 "" H 1350 5850 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 NoConn ~ 4150 5200
-Text Label 7600 5900 0    50   ~ 0
+Text Label 7650 5900 0    50   ~ 0
 SCK
-Text Label 7600 6100 0    50   ~ 0
+Text Label 7650 6100 0    50   ~ 0
 MISO
-Text Label 7600 6000 0    50   ~ 0
+Text Label 7650 6000 0    50   ~ 0
 MOSI
 Wire Wire Line
 	6100 4900 6100 4750
@@ -3454,7 +3454,7 @@ U 1 1 5DD239EE
 P 5550 9600
 F 0 "U?" H 5545 9178 50  0000 C CNN
 F 1 "header_0.1_8" H 5545 9087 50  0000 C CNN
-F 2 "" H 5550 9200 50  0001 C CNN
+F 2 "hex_master_board:header_0.1_8x" H 5550 9200 50  0001 C CNN
 F 3 "" H 5550 9200 50  0001 C CNN
 	1    5550 9600
 	1    0    0    -1  
@@ -3539,7 +3539,7 @@ U 1 1 5E0A6DBA
 P 6550 9600
 F 0 "U?" H 6545 9178 50  0000 C CNN
 F 1 "header_0.1_8" H 6545 9087 50  0000 C CNN
-F 2 "" H 6550 9200 50  0001 C CNN
+F 2 "hex_master_board:header_0.1_8x" H 6550 9200 50  0001 C CNN
 F 3 "" H 6550 9200 50  0001 C CNN
 	1    6550 9600
 	1    0    0    -1  
@@ -3550,7 +3550,7 @@ U 1 1 5E0D1B6D
 P 7550 9600
 F 0 "U?" H 7545 9178 50  0000 C CNN
 F 1 "header_0.1_8" H 7545 9087 50  0000 C CNN
-F 2 "" H 7550 9200 50  0001 C CNN
+F 2 "hex_master_board:header_0.1_8x" H 7550 9200 50  0001 C CNN
 F 3 "" H 7550 9200 50  0001 C CNN
 	1    7550 9600
 	1    0    0    -1  
@@ -3586,4 +3586,69 @@ D26
 NoConn ~ 6200 9750
 NoConn ~ 6300 9750
 NoConn ~ 7600 6500
+Wire Wire Line
+	7650 5900 7600 5900
+Wire Wire Line
+	7600 6000 7650 6000
+Wire Wire Line
+	7650 6100 7600 6100
+$Comp
+L hex_master_sym:ICSP_breakout U?
+U 1 1 5DB051F0
+P 5150 8750
+F 0 "U?" H 5150 8975 50  0000 C CNN
+F 1 "ICSP_breakout" H 5150 8884 50  0000 C CNN
+F 2 "" H 5150 8900 50  0001 C CNN
+F 3 "" H 5150 8900 50  0001 C CNN
+	1    5150 8750
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR?
+U 1 1 5DB05A40
+P 5600 8650
+F 0 "#PWR?" H 5600 8500 50  0001 C CNN
+F 1 "+5V" H 5615 8823 50  0000 C CNN
+F 2 "" H 5600 8650 50  0001 C CNN
+F 3 "" H 5600 8650 50  0001 C CNN
+	1    5600 8650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5500 8750 5600 8750
+Wire Wire Line
+	5600 8750 5600 8650
+$Comp
+L power:GND #PWR?
+U 1 1 5DB32C63
+P 5600 9050
+F 0 "#PWR?" H 5600 8800 50  0001 C CNN
+F 1 "GND" H 5605 8877 50  0000 C CNN
+F 2 "" H 5600 9050 50  0001 C CNN
+F 3 "" H 5600 9050 50  0001 C CNN
+	1    5600 9050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5500 8950 5600 8950
+Wire Wire Line
+	5600 8950 5600 9050
+Text Label 5550 8850 0    50   ~ 0
+MOSI
+Text Label 4750 8750 2    50   ~ 0
+MISO
+Text Label 4750 8850 2    50   ~ 0
+SCK
+Text Label 4750 8950 2    50   ~ 0
+~RESET
+Wire Wire Line
+	4750 8750 4800 8750
+Wire Wire Line
+	4750 8850 4800 8850
+Wire Wire Line
+	4750 8950 4800 8950
+Wire Wire Line
+	5500 8850 5550 8850
+Text Notes 4550 8300 0    118  ~ 0
+ICSP Headers
 $EndSCHEMATC
