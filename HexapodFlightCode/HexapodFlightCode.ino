@@ -155,7 +155,7 @@ void loop() {
         //hex.trynewpath(2, 2);
       //Act
   if (state == WALK) {
-    if(hex.goTo(forward, left, turn) == 1) {
+    if(hex.goTo(forward, left, turn*M_PI/180) == 1) {
       Serial.println("Stopping");
 //      hex.stand();
     }

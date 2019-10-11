@@ -271,8 +271,6 @@ bool Hexapod::goTo(float x2, float y2, float theta2) {
   x += dx * cos(theta);
   y += dy * sin(theta);
   theta += dyaw;
-  evenTripodYaw -= dyaw;
-  oddTripodYaw -= dyaw;
   
   bool swap = false;
   // Move grounded feet reverse of body motion
@@ -287,8 +285,8 @@ bool Hexapod::goTo(float x2, float y2, float theta2) {
   float yMargin = (c1[1] - c2[1] + dy) / (2 * roffset * 0.5); // sideways stability margin
   swap = swap || max(abs(xMargin), abs(yMargin)) > STABILITY_MARGIN; // exceed stability threshold
   // TODO: adjust for slope, change y margin every other step
-  // TODO 10/8: check for swap when turning
-  swap = swap || evenStep && copysignf(evenTripodYaw, dyaw) > dtheta|| !evenStep && copysignf(oddTripodYaw, dyaw) > dtheta;
+  // TODO 10/8: fix turning code with printouts
+  swap = swap || evenStep && evenTripodYaw*copysignf(1.0, dyaw) > dtheta || !evenStep && oddTripodYaw*copysignf(1.0, dyaw) > dtheta;
   if (swap) { // switch feet
     evenStep = !evenStep;
     delay(100); // TODO: this is awful, set a delay variable somewhere instead
