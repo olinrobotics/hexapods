@@ -47,7 +47,7 @@ class Hexapod {
     bool moveTripod(float dx, float dy, float dz, float dtheta, bool even, bool ignoreLimits);
 
     // Levels the hexapod body relative to the ground
-    // Returns true if body is level
+    // Returns false if position is unreachable
     bool levelBody(float pitch, float roll);
     
     // Determine midpoint of tripod
