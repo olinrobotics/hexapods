@@ -178,7 +178,7 @@ U 1 1 5CB76A6A
 P 5900 2200
 F 0 "D3" V 5938 2083 50  0000 R CNN
 F 1 "POWER" V 5847 2083 50  0000 R CNN
-F 2 "" H 5900 2200 50  0001 C CNN
+F 2 "hex_master_board:LED_SMD_1206" H 5900 2200 50  0001 C CNN
 F 3 "~" H 5900 2200 50  0001 C CNN
 	1    5900 2200
 	0    -1   -1   0   
@@ -477,7 +477,7 @@ U 1 1 5CBCEC31
 P 4750 4100
 F 0 "R12" H 4820 4146 50  0000 L CNN
 F 1 "1k" H 4820 4055 50  0000 L CNN
-F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 4680 4100 50  0001 C CNN
+F 2 "" V 4680 4100 50  0001 C CNN
 F 3 "~" H 4750 4100 50  0001 C CNN
 	1    4750 4100
 	1    0    0    -1  
@@ -1297,7 +1297,7 @@ U 1 1 5CC864DC
 P 1350 6100
 F 0 "D2" V 1388 5983 50  0000 R CNN
 F 1 "LED" V 1297 5983 50  0000 R CNN
-F 2 "" H 1350 6100 50  0001 C CNN
+F 2 "hex_master_board:LED_SMD_1206" H 1350 6100 50  0001 C CNN
 F 3 "~" H 1350 6100 50  0001 C CNN
 	1    1350 6100
 	0    -1   -1   0   
@@ -1308,7 +1308,7 @@ U 1 1 5CC866C6
 P 1000 6100
 F 0 "D1" V 1038 5983 50  0000 R CNN
 F 1 "LED" V 947 5983 50  0000 R CNN
-F 2 "" H 1000 6100 50  0001 C CNN
+F 2 "hex_master_board:LED_SMD_1206" H 1000 6100 50  0001 C CNN
 F 3 "~" H 1000 6100 50  0001 C CNN
 	1    1000 6100
 	0    -1   -1   0   
@@ -1410,7 +1410,7 @@ U 1 1 5CD48B1B
 P 8050 4450
 F 0 "D4" V 8088 4333 50  0000 R CNN
 F 1 "IO_LED" V 7997 4333 50  0000 R CNN
-F 2 "" H 8050 4450 50  0001 C CNN
+F 2 "hex_master_board:LED_SMD_1206" H 8050 4450 50  0001 C CNN
 F 3 "~" H 8050 4450 50  0001 C CNN
 	1    8050 4450
 	0    -1   -1   0   
@@ -1421,7 +1421,7 @@ U 1 1 5CD48B23
 P 8050 4850
 F 0 "R15" H 8120 4896 50  0000 L CNN
 F 1 "1k" H 8120 4805 50  0000 L CNN
-F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 7980 4850 50  0001 C CNN
+F 2 "" V 7980 4850 50  0001 C CNN
 F 3 "~" H 8050 4850 50  0001 C CNN
 	1    8050 4850
 	1    0    0    -1  
@@ -1577,7 +1577,7 @@ $Comp
 L hex_master_sym:74LVC1G157GV_MUX2 U2
 U 1 1 5CCD9426
 P 2550 9500
-F 0 "U2" H 2891 9921 50  0000 L CNN
+F 0 "U2" H 2400 9850 50  0000 L CNN
 F 1 "74LVC1G157GV_MUX2" H 2600 9500 50  0000 L CNN
 F 2 "hex_master_board:74LVC1G157_MUX2_TSOP6" H 2550 9250 50  0001 C CNN
 F 3 "" H 2550 9250 50  0001 C CNN
@@ -1794,7 +1794,7 @@ U 1 1 5D863B63
 P 12250 2750
 F 0 "SW1" V 11950 2800 50  0000 L CNN
 F 1 "SW_DIP_x01" V 12295 2880 50  0000 L CNN
-F 2 "" H 12250 2750 50  0001 C CNN
+F 2 "hex_master_board:switch_ins" H 12250 2750 50  0001 C CNN
 F 3 "" H 12250 2750 50  0001 C CNN
 	1    12250 2750
 	0    1    1    0   
@@ -1805,7 +1805,7 @@ U 1 1 5D863CF5
 P 12550 2750
 F 0 "SW2" V 12250 2800 50  0000 L CNN
 F 1 "SW_DIP_x01" V 12595 2880 50  0000 L CNN
-F 2 "" H 12550 2750 50  0001 C CNN
+F 2 "hex_master_board:switch_ins" H 12550 2750 50  0001 C CNN
 F 3 "" H 12550 2750 50  0001 C CNN
 	1    12550 2750
 	0    1    1    0   
@@ -1816,7 +1816,7 @@ U 1 1 5D873601
 P 12850 2750
 F 0 "SW3" V 12550 2800 50  0000 L CNN
 F 1 "SW_DIP_x01" V 12895 2880 50  0000 L CNN
-F 2 "" H 12850 2750 50  0001 C CNN
+F 2 "hex_master_board:switch_ins" H 12850 2750 50  0001 C CNN
 F 3 "" H 12850 2750 50  0001 C CNN
 	1    12850 2750
 	0    1    1    0   
@@ -1827,7 +1827,7 @@ U 1 1 5D882F0E
 P 13150 2750
 F 0 "SW4" V 12850 2800 50  0000 L CNN
 F 1 "SW_DIP_x01" V 13195 2880 50  0000 L CNN
-F 2 "" H 13150 2750 50  0001 C CNN
+F 2 "hex_master_board:switch_ins" H 13150 2750 50  0001 C CNN
 F 3 "" H 13150 2750 50  0001 C CNN
 	1    13150 2750
 	0    1    1    0   
@@ -1838,7 +1838,7 @@ U 1 1 5D89281A
 P 13450 2750
 F 0 "SW5" V 13150 2800 50  0000 L CNN
 F 1 "SW_DIP_x01" V 13495 2880 50  0000 L CNN
-F 2 "" H 13450 2750 50  0001 C CNN
+F 2 "hex_master_board:switch_ins" H 13450 2750 50  0001 C CNN
 F 3 "" H 13450 2750 50  0001 C CNN
 	1    13450 2750
 	0    1    1    0   
@@ -1849,7 +1849,7 @@ U 1 1 5D8A2129
 P 13750 2750
 F 0 "SW6" V 13450 2800 50  0000 L CNN
 F 1 "SW_DIP_x01" V 13795 2880 50  0000 L CNN
-F 2 "" H 13750 2750 50  0001 C CNN
+F 2 "hex_master_board:switch_ins" H 13750 2750 50  0001 C CNN
 F 3 "" H 13750 2750 50  0001 C CNN
 	1    13750 2750
 	0    1    1    0   
@@ -1956,7 +1956,7 @@ Wire Wire Line
 Connection ~ 4750 4900
 Wire Wire Line
 	4750 4900 4650 4900
-Text Notes 13500 9750 0    50   ~ 0
+Text Notes 9100 10700 0    50   ~ 0
 TODOs are probably out of date, check Asana\n\nTODO spec and integrate an IMU that uses I2C\nTODO verify that serial mux won't break everything\nTODO power LIDAR (is this just raspi usb?)\n\nTODO actually spec connectors for foot limit switch wires\nTODO finish creating all footprints\nTODO make some high-level layout decisions\nTODO figure out arduino raspi communication\n
 Text Notes 750  1700 0    50   ~ 0
 Logic Power
@@ -1980,1054 +1980,1054 @@ Wire Wire Line
 $Comp
 L hex_master_sym:Jack_CP-002B-ND U12
 U 1 1 5D9061A0
-P 8800 4100
-F 0 "U12" H 8856 4665 50  0000 C CNN
-F 1 "Jack_CP-002B-ND" H 8856 4574 50  0000 C CNN
-F 2 "hex_master_board:Jack_CP-002B-ND" H 8800 4050 50  0001 C CNN
-F 3 "" H 8800 4050 50  0001 C CNN
-	1    8800 4100
+P 13400 4350
+F 0 "U12" H 13456 4915 50  0000 C CNN
+F 1 "Jack_CP-002B-ND" H 13456 4824 50  0000 C CNN
+F 2 "hex_master_board:Jack_CP-002B-ND" H 13400 4300 50  0001 C CNN
+F 3 "" H 13400 4300 50  0001 C CNN
+	1    13400 4350
 	1    0    0    -1  
 $EndComp
-Text Label 9450 3800 0    50   ~ 0
+Text Label 14050 4050 0    50   ~ 0
 servo_power
 Wire Wire Line
-	9050 4000 9150 4000
+	13650 4250 13750 4250
 $Comp
 L power:GND #PWR0155
 U 1 1 5D945768
-P 9150 4250
-F 0 "#PWR0155" H 9150 4000 50  0001 C CNN
-F 1 "GND" H 9155 4077 50  0000 C CNN
-F 2 "" H 9150 4250 50  0001 C CNN
-F 3 "" H 9150 4250 50  0001 C CNN
-	1    9150 4250
+P 13750 4500
+F 0 "#PWR0155" H 13750 4250 50  0001 C CNN
+F 1 "GND" H 13755 4327 50  0000 C CNN
+F 2 "" H 13750 4500 50  0001 C CNN
+F 3 "" H 13750 4500 50  0001 C CNN
+	1    13750 4500
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U13
 U 1 1 5D9666CA
-P 9750 4500
-F 0 "U13" H 9877 4221 50  0000 L CNN
-F 1 "Servo_connector" H 9877 4130 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 9750 4500 50  0001 C CNN
-F 3 "" H 9750 4500 50  0001 C CNN
-	1    9750 4500
+P 10150 5100
+F 0 "U13" H 10277 4821 50  0000 L CNN
+F 1 "Servo_connector" H 10277 4730 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 10150 5100 50  0001 C CNN
+F 3 "" H 10150 5100 50  0001 C CNN
+	1    10150 5100
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U14
 U 1 1 5D96679F
-P 9750 5000
-F 0 "U14" H 9877 4721 50  0000 L CNN
-F 1 "Servo_connector" H 9877 4630 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 9750 5000 50  0001 C CNN
-F 3 "" H 9750 5000 50  0001 C CNN
-	1    9750 5000
+P 10150 5600
+F 0 "U14" H 10277 5321 50  0000 L CNN
+F 1 "Servo_connector" H 10277 5230 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 10150 5600 50  0001 C CNN
+F 3 "" H 10150 5600 50  0001 C CNN
+	1    10150 5600
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U15
 U 1 1 5D966884
-P 9750 5500
-F 0 "U15" H 9877 5221 50  0000 L CNN
-F 1 "Servo_connector" H 9877 5130 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 9750 5500 50  0001 C CNN
-F 3 "" H 9750 5500 50  0001 C CNN
-	1    9750 5500
+P 10150 6100
+F 0 "U15" H 10277 5821 50  0000 L CNN
+F 1 "Servo_connector" H 10277 5730 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 10150 6100 50  0001 C CNN
+F 3 "" H 10150 6100 50  0001 C CNN
+	1    10150 6100
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U16
 U 1 1 5D9669BD
-P 9750 6000
-F 0 "U16" H 9877 5721 50  0000 L CNN
-F 1 "Servo_connector" H 9877 5630 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 9750 6000 50  0001 C CNN
-F 3 "" H 9750 6000 50  0001 C CNN
-	1    9750 6000
+P 10150 6600
+F 0 "U16" H 10277 6321 50  0000 L CNN
+F 1 "Servo_connector" H 10277 6230 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 10150 6600 50  0001 C CNN
+F 3 "" H 10150 6600 50  0001 C CNN
+	1    10150 6600
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U17
 U 1 1 5D9669C4
-P 9750 6500
-F 0 "U17" H 9877 6221 50  0000 L CNN
-F 1 "Servo_connector" H 9877 6130 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 9750 6500 50  0001 C CNN
-F 3 "" H 9750 6500 50  0001 C CNN
-	1    9750 6500
+P 10150 7100
+F 0 "U17" H 10277 6821 50  0000 L CNN
+F 1 "Servo_connector" H 10277 6730 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 10150 7100 50  0001 C CNN
+F 3 "" H 10150 7100 50  0001 C CNN
+	1    10150 7100
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U18
 U 1 1 5D9669CB
-P 9750 7000
-F 0 "U18" H 9877 6721 50  0000 L CNN
-F 1 "Servo_connector" H 9877 6630 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 9750 7000 50  0001 C CNN
-F 3 "" H 9750 7000 50  0001 C CNN
-	1    9750 7000
+P 10150 7600
+F 0 "U18" H 10277 7321 50  0000 L CNN
+F 1 "Servo_connector" H 10277 7230 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 10150 7600 50  0001 C CNN
+F 3 "" H 10150 7600 50  0001 C CNN
+	1    10150 7600
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U21
 U 1 1 5D976828
-P 11200 4500
-F 0 "U21" H 11327 4221 50  0000 L CNN
-F 1 "Servo_connector" H 11327 4130 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 11200 4500 50  0001 C CNN
-F 3 "" H 11200 4500 50  0001 C CNN
-	1    11200 4500
+P 11600 5100
+F 0 "U21" H 11727 4821 50  0000 L CNN
+F 1 "Servo_connector" H 11727 4730 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 11600 5100 50  0001 C CNN
+F 3 "" H 11600 5100 50  0001 C CNN
+	1    11600 5100
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U22
 U 1 1 5D97682F
-P 11200 5000
-F 0 "U22" H 11327 4721 50  0000 L CNN
-F 1 "Servo_connector" H 11327 4630 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 11200 5000 50  0001 C CNN
-F 3 "" H 11200 5000 50  0001 C CNN
-	1    11200 5000
+P 11600 5600
+F 0 "U22" H 11727 5321 50  0000 L CNN
+F 1 "Servo_connector" H 11727 5230 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 11600 5600 50  0001 C CNN
+F 3 "" H 11600 5600 50  0001 C CNN
+	1    11600 5600
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U23
 U 1 1 5D976836
-P 11200 5500
-F 0 "U23" H 11327 5221 50  0000 L CNN
-F 1 "Servo_connector" H 11327 5130 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 11200 5500 50  0001 C CNN
-F 3 "" H 11200 5500 50  0001 C CNN
-	1    11200 5500
+P 11600 6100
+F 0 "U23" H 11727 5821 50  0000 L CNN
+F 1 "Servo_connector" H 11727 5730 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 11600 6100 50  0001 C CNN
+F 3 "" H 11600 6100 50  0001 C CNN
+	1    11600 6100
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U24
 U 1 1 5D97683D
-P 11200 6000
-F 0 "U24" H 11327 5721 50  0000 L CNN
-F 1 "Servo_connector" H 11327 5630 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 11200 6000 50  0001 C CNN
-F 3 "" H 11200 6000 50  0001 C CNN
-	1    11200 6000
+P 11600 6600
+F 0 "U24" H 11727 6321 50  0000 L CNN
+F 1 "Servo_connector" H 11727 6230 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 11600 6600 50  0001 C CNN
+F 3 "" H 11600 6600 50  0001 C CNN
+	1    11600 6600
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U25
 U 1 1 5D976844
-P 11200 6500
-F 0 "U25" H 11327 6221 50  0000 L CNN
-F 1 "Servo_connector" H 11327 6130 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 11200 6500 50  0001 C CNN
-F 3 "" H 11200 6500 50  0001 C CNN
-	1    11200 6500
+P 11600 7100
+F 0 "U25" H 11727 6821 50  0000 L CNN
+F 1 "Servo_connector" H 11727 6730 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 11600 7100 50  0001 C CNN
+F 3 "" H 11600 7100 50  0001 C CNN
+	1    11600 7100
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U26
 U 1 1 5D97684B
-P 11200 7000
-F 0 "U26" H 11327 6721 50  0000 L CNN
-F 1 "Servo_connector" H 11327 6630 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 11200 7000 50  0001 C CNN
-F 3 "" H 11200 7000 50  0001 C CNN
-	1    11200 7000
+P 11600 7600
+F 0 "U26" H 11727 7321 50  0000 L CNN
+F 1 "Servo_connector" H 11727 7230 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 11600 7600 50  0001 C CNN
+F 3 "" H 11600 7600 50  0001 C CNN
+	1    11600 7600
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U31
 U 1 1 5D9962E8
-P 12700 4500
-F 0 "U31" H 12827 4221 50  0000 L CNN
-F 1 "Servo_connector" H 12827 4130 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 12700 4500 50  0001 C CNN
-F 3 "" H 12700 4500 50  0001 C CNN
-	1    12700 4500
+P 13100 5100
+F 0 "U31" H 13227 4821 50  0000 L CNN
+F 1 "Servo_connector" H 13227 4730 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 13100 5100 50  0001 C CNN
+F 3 "" H 13100 5100 50  0001 C CNN
+	1    13100 5100
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U32
 U 1 1 5D9962EF
-P 12700 5000
-F 0 "U32" H 12827 4721 50  0000 L CNN
-F 1 "Servo_connector" H 12827 4630 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 12700 5000 50  0001 C CNN
-F 3 "" H 12700 5000 50  0001 C CNN
-	1    12700 5000
+P 13100 5600
+F 0 "U32" H 13227 5321 50  0000 L CNN
+F 1 "Servo_connector" H 13227 5230 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 13100 5600 50  0001 C CNN
+F 3 "" H 13100 5600 50  0001 C CNN
+	1    13100 5600
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U33
 U 1 1 5D9962F6
-P 12700 5500
-F 0 "U33" H 12827 5221 50  0000 L CNN
-F 1 "Servo_connector" H 12827 5130 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 12700 5500 50  0001 C CNN
-F 3 "" H 12700 5500 50  0001 C CNN
-	1    12700 5500
+P 13100 6100
+F 0 "U33" H 13227 5821 50  0000 L CNN
+F 1 "Servo_connector" H 13227 5730 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 13100 6100 50  0001 C CNN
+F 3 "" H 13100 6100 50  0001 C CNN
+	1    13100 6100
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U34
 U 1 1 5D9962FD
-P 12700 6000
-F 0 "U34" H 12827 5721 50  0000 L CNN
-F 1 "Servo_connector" H 12827 5630 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 12700 6000 50  0001 C CNN
-F 3 "" H 12700 6000 50  0001 C CNN
-	1    12700 6000
+P 13100 6600
+F 0 "U34" H 13227 6321 50  0000 L CNN
+F 1 "Servo_connector" H 13227 6230 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 13100 6600 50  0001 C CNN
+F 3 "" H 13100 6600 50  0001 C CNN
+	1    13100 6600
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U35
 U 1 1 5D996304
-P 12700 6500
-F 0 "U35" H 12827 6221 50  0000 L CNN
-F 1 "Servo_connector" H 12827 6130 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 12700 6500 50  0001 C CNN
-F 3 "" H 12700 6500 50  0001 C CNN
-	1    12700 6500
+P 13100 7100
+F 0 "U35" H 13227 6821 50  0000 L CNN
+F 1 "Servo_connector" H 13227 6730 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 13100 7100 50  0001 C CNN
+F 3 "" H 13100 7100 50  0001 C CNN
+	1    13100 7100
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U36
 U 1 1 5D99630B
-P 12700 7000
-F 0 "U36" H 12827 6721 50  0000 L CNN
-F 1 "Servo_connector" H 12827 6630 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 12700 7000 50  0001 C CNN
-F 3 "" H 12700 7000 50  0001 C CNN
-	1    12700 7000
+P 13100 7600
+F 0 "U36" H 13227 7321 50  0000 L CNN
+F 1 "Servo_connector" H 13227 7230 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 13100 7600 50  0001 C CNN
+F 3 "" H 13100 7600 50  0001 C CNN
+	1    13100 7600
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U19
 U 1 1 5D9A6006
-P 9750 7500
-F 0 "U19" H 9877 7221 50  0000 L CNN
-F 1 "Servo_connector" H 9877 7130 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 9750 7500 50  0001 C CNN
-F 3 "" H 9750 7500 50  0001 C CNN
-	1    9750 7500
+P 10150 8100
+F 0 "U19" H 10277 7821 50  0000 L CNN
+F 1 "Servo_connector" H 10277 7730 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 10150 8100 50  0001 C CNN
+F 3 "" H 10150 8100 50  0001 C CNN
+	1    10150 8100
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U20
 U 1 1 5D9A600D
-P 9750 8000
-F 0 "U20" H 9877 7721 50  0000 L CNN
-F 1 "Servo_connector" H 9877 7630 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 9750 8000 50  0001 C CNN
-F 3 "" H 9750 8000 50  0001 C CNN
-	1    9750 8000
+P 10150 8600
+F 0 "U20" H 10277 8321 50  0000 L CNN
+F 1 "Servo_connector" H 10277 8230 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 10150 8600 50  0001 C CNN
+F 3 "" H 10150 8600 50  0001 C CNN
+	1    10150 8600
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U27
 U 1 1 5D9A6014
-P 11200 7500
-F 0 "U27" H 11327 7221 50  0000 L CNN
-F 1 "Servo_connector" H 11327 7130 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 11200 7500 50  0001 C CNN
-F 3 "" H 11200 7500 50  0001 C CNN
-	1    11200 7500
+P 11600 8100
+F 0 "U27" H 11727 7821 50  0000 L CNN
+F 1 "Servo_connector" H 11727 7730 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 11600 8100 50  0001 C CNN
+F 3 "" H 11600 8100 50  0001 C CNN
+	1    11600 8100
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U28
 U 1 1 5D9A601B
-P 11200 8000
-F 0 "U28" H 11327 7721 50  0000 L CNN
-F 1 "Servo_connector" H 11327 7630 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 11200 8000 50  0001 C CNN
-F 3 "" H 11200 8000 50  0001 C CNN
-	1    11200 8000
+P 11600 8600
+F 0 "U28" H 11727 8321 50  0000 L CNN
+F 1 "Servo_connector" H 11727 8230 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 11600 8600 50  0001 C CNN
+F 3 "" H 11600 8600 50  0001 C CNN
+	1    11600 8600
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U37
 U 1 1 5D9A6022
-P 12700 7500
-F 0 "U37" H 12827 7221 50  0000 L CNN
-F 1 "Servo_connector" H 12827 7130 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 12700 7500 50  0001 C CNN
-F 3 "" H 12700 7500 50  0001 C CNN
-	1    12700 7500
+P 13100 8100
+F 0 "U37" H 13227 7821 50  0000 L CNN
+F 1 "Servo_connector" H 13227 7730 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 13100 8100 50  0001 C CNN
+F 3 "" H 13100 8100 50  0001 C CNN
+	1    13100 8100
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U38
 U 1 1 5D9A6029
-P 12700 8000
-F 0 "U38" H 12827 7721 50  0000 L CNN
-F 1 "Servo_connector" H 12827 7630 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 12700 8000 50  0001 C CNN
-F 3 "" H 12700 8000 50  0001 C CNN
-	1    12700 8000
+P 13100 8600
+F 0 "U38" H 13227 8321 50  0000 L CNN
+F 1 "Servo_connector" H 13227 8230 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 13100 8600 50  0001 C CNN
+F 3 "" H 13100 8600 50  0001 C CNN
+	1    13100 8600
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U39
 U 1 1 5D9C5B4F
-P 14200 4500
-F 0 "U39" H 14327 4221 50  0000 L CNN
-F 1 "Servo_connector" H 14327 4130 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 14200 4500 50  0001 C CNN
-F 3 "" H 14200 4500 50  0001 C CNN
-	1    14200 4500
+P 14600 5100
+F 0 "U39" H 14727 4821 50  0000 L CNN
+F 1 "Servo_connector" H 14727 4730 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 14600 5100 50  0001 C CNN
+F 3 "" H 14600 5100 50  0001 C CNN
+	1    14600 5100
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U40
 U 1 1 5D9C5B56
-P 14200 5000
-F 0 "U40" H 14327 4721 50  0000 L CNN
-F 1 "Servo_connector" H 14327 4630 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 14200 5000 50  0001 C CNN
-F 3 "" H 14200 5000 50  0001 C CNN
-	1    14200 5000
+P 14600 5600
+F 0 "U40" H 14727 5321 50  0000 L CNN
+F 1 "Servo_connector" H 14727 5230 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 14600 5600 50  0001 C CNN
+F 3 "" H 14600 5600 50  0001 C CNN
+	1    14600 5600
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U41
 U 1 1 5D9C5B5D
-P 14200 5500
-F 0 "U41" H 14327 5221 50  0000 L CNN
-F 1 "Servo_connector" H 14327 5130 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 14200 5500 50  0001 C CNN
-F 3 "" H 14200 5500 50  0001 C CNN
-	1    14200 5500
+P 14600 6100
+F 0 "U41" H 14727 5821 50  0000 L CNN
+F 1 "Servo_connector" H 14727 5730 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 14600 6100 50  0001 C CNN
+F 3 "" H 14600 6100 50  0001 C CNN
+	1    14600 6100
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U42
 U 1 1 5D9C5B64
-P 14200 6000
-F 0 "U42" H 14327 5721 50  0000 L CNN
-F 1 "Servo_connector" H 14327 5630 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 14200 6000 50  0001 C CNN
-F 3 "" H 14200 6000 50  0001 C CNN
-	1    14200 6000
+P 14600 6600
+F 0 "U42" H 14727 6321 50  0000 L CNN
+F 1 "Servo_connector" H 14727 6230 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 14600 6600 50  0001 C CNN
+F 3 "" H 14600 6600 50  0001 C CNN
+	1    14600 6600
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U43
 U 1 1 5D9C5B6B
-P 14200 6500
-F 0 "U43" H 14327 6221 50  0000 L CNN
-F 1 "Servo_connector" H 14327 6130 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 14200 6500 50  0001 C CNN
-F 3 "" H 14200 6500 50  0001 C CNN
-	1    14200 6500
+P 14600 7100
+F 0 "U43" H 14727 6821 50  0000 L CNN
+F 1 "Servo_connector" H 14727 6730 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 14600 7100 50  0001 C CNN
+F 3 "" H 14600 7100 50  0001 C CNN
+	1    14600 7100
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U44
 U 1 1 5D9C5B72
-P 14200 7000
-F 0 "U44" H 14327 6721 50  0000 L CNN
-F 1 "Servo_connector" H 14327 6630 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 14200 7000 50  0001 C CNN
-F 3 "" H 14200 7000 50  0001 C CNN
-	1    14200 7000
+P 14600 7600
+F 0 "U44" H 14727 7321 50  0000 L CNN
+F 1 "Servo_connector" H 14727 7230 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 14600 7600 50  0001 C CNN
+F 3 "" H 14600 7600 50  0001 C CNN
+	1    14600 7600
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U45
 U 1 1 5D9C5B79
-P 14200 7500
-F 0 "U45" H 14327 7221 50  0000 L CNN
-F 1 "Servo_connector" H 14327 7130 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 14200 7500 50  0001 C CNN
-F 3 "" H 14200 7500 50  0001 C CNN
-	1    14200 7500
+P 14600 8100
+F 0 "U45" H 14727 7821 50  0000 L CNN
+F 1 "Servo_connector" H 14727 7730 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 14600 8100 50  0001 C CNN
+F 3 "" H 14600 8100 50  0001 C CNN
+	1    14600 8100
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:Servo_connector U46
 U 1 1 5D9C5B80
-P 14200 8000
-F 0 "U46" H 14327 7721 50  0000 L CNN
-F 1 "Servo_connector" H 14327 7630 50  0000 L CNN
-F 2 "hex_master_board:servo_header" H 14200 8000 50  0001 C CNN
-F 3 "" H 14200 8000 50  0001 C CNN
-	1    14200 8000
+P 14600 8600
+F 0 "U46" H 14727 8321 50  0000 L CNN
+F 1 "Servo_connector" H 14727 8230 50  0000 L CNN
+F 2 "hex_master_board:servo_header" H 14600 8600 50  0001 C CNN
+F 3 "" H 14600 8600 50  0001 C CNN
+	1    14600 8600
 	1    0    0    -1  
 $EndComp
-Text Label 9450 4850 2    50   ~ 0
+Text Label 9850 5450 2    50   ~ 0
 SSIG_0
-Text Label 9450 5350 2    50   ~ 0
+Text Label 9850 5950 2    50   ~ 0
 SSIG_1
-Text Label 9450 5850 2    50   ~ 0
+Text Label 9850 6450 2    50   ~ 0
 SSIG_2
-Text Label 9450 6350 2    50   ~ 0
+Text Label 9850 6950 2    50   ~ 0
 SSIG_3
-Text Label 9450 6850 2    50   ~ 0
+Text Label 9850 7450 2    50   ~ 0
 SSIG_4
-Text Label 9450 7350 2    50   ~ 0
+Text Label 9850 7950 2    50   ~ 0
 SSIG_5
-Text Label 9450 7850 2    50   ~ 0
+Text Label 9850 8450 2    50   ~ 0
 SSIG_6
-Text Label 9450 8350 2    50   ~ 0
+Text Label 9850 8950 2    50   ~ 0
 SSIG_7
-Text Label 10900 4850 2    50   ~ 0
+Text Label 11300 5450 2    50   ~ 0
 SSIG_8
-Text Label 10900 5350 2    50   ~ 0
+Text Label 11300 5950 2    50   ~ 0
 SSIG_9
-Text Label 10900 5850 2    50   ~ 0
+Text Label 11300 6450 2    50   ~ 0
 SSIG_10
-Text Label 10900 6350 2    50   ~ 0
+Text Label 11300 6950 2    50   ~ 0
 SSIG_11
-Text Label 10900 6850 2    50   ~ 0
+Text Label 11300 7450 2    50   ~ 0
 SSIG_12
-Text Label 10900 7350 2    50   ~ 0
+Text Label 11300 7950 2    50   ~ 0
 SSIG_13
-Text Label 10900 7850 2    50   ~ 0
+Text Label 11300 8450 2    50   ~ 0
 SSIG_14
-Text Label 10900 8350 2    50   ~ 0
+Text Label 11300 8950 2    50   ~ 0
 SSIG_15
-Text Label 12400 4850 2    50   ~ 0
+Text Label 12800 5450 2    50   ~ 0
 SSIG_16
-Text Label 12400 5350 2    50   ~ 0
+Text Label 12800 5950 2    50   ~ 0
 SSIG_17
-Text Label 12400 5850 2    50   ~ 0
+Text Label 12800 6450 2    50   ~ 0
 SSIG_18
-Text Label 12400 6350 2    50   ~ 0
+Text Label 12800 6950 2    50   ~ 0
 SSIG_19
-Text Label 12400 6850 2    50   ~ 0
+Text Label 12800 7450 2    50   ~ 0
 SSIG_20
-Text Label 12400 7350 2    50   ~ 0
+Text Label 12800 7950 2    50   ~ 0
 SSIG_21
-Text Label 12400 7850 2    50   ~ 0
+Text Label 12800 8450 2    50   ~ 0
 SSIG_22
-Text Label 12400 8350 2    50   ~ 0
+Text Label 12800 8950 2    50   ~ 0
 SSIG_23
-Text Label 13900 4850 2    50   ~ 0
+Text Label 14300 5450 2    50   ~ 0
 SSIG_24
-Text Label 13900 5350 2    50   ~ 0
+Text Label 14300 5950 2    50   ~ 0
 SSIG_25
-Text Label 13900 5850 2    50   ~ 0
+Text Label 14300 6450 2    50   ~ 0
 SSIG_26
-Text Label 13900 6350 2    50   ~ 0
+Text Label 14300 6950 2    50   ~ 0
 SSIG_27
-Text Label 13900 6850 2    50   ~ 0
+Text Label 14300 7450 2    50   ~ 0
 SSIG_28
-Text Label 13900 7350 2    50   ~ 0
+Text Label 14300 7950 2    50   ~ 0
 SSIG_29
-Text Label 13900 7850 2    50   ~ 0
+Text Label 14300 8450 2    50   ~ 0
 SSIG_30
-Text Label 13900 8350 2    50   ~ 0
+Text Label 14300 8950 2    50   ~ 0
 SSIG_31
-Text Label 9450 4750 2    50   ~ 0
+Text Label 9850 5350 2    50   ~ 0
 servo_power
 Wire Wire Line
-	9450 4750 9550 4750
-Text Label 9450 5250 2    50   ~ 0
+	9850 5350 9950 5350
+Text Label 9850 5850 2    50   ~ 0
 servo_power
 Wire Wire Line
-	9450 5250 9550 5250
-Text Label 9450 5750 2    50   ~ 0
+	9850 5850 9950 5850
+Text Label 9850 6350 2    50   ~ 0
 servo_power
 Wire Wire Line
-	9450 5750 9550 5750
-Text Label 9450 6250 2    50   ~ 0
+	9850 6350 9950 6350
+Text Label 9850 6850 2    50   ~ 0
 servo_power
 Wire Wire Line
-	9450 6250 9550 6250
-Text Label 10900 4750 2    50   ~ 0
+	9850 6850 9950 6850
+Text Label 11300 5350 2    50   ~ 0
 servo_power
 Wire Wire Line
-	10900 4750 11000 4750
-Text Label 10900 5250 2    50   ~ 0
+	11300 5350 11400 5350
+Text Label 11300 5850 2    50   ~ 0
 servo_power
 Wire Wire Line
-	10900 5250 11000 5250
-Text Label 10900 5750 2    50   ~ 0
+	11300 5850 11400 5850
+Text Label 11300 6350 2    50   ~ 0
 servo_power
 Wire Wire Line
-	10900 5750 11000 5750
-Text Label 10900 6250 2    50   ~ 0
+	11300 6350 11400 6350
+Text Label 11300 6850 2    50   ~ 0
 servo_power
 Wire Wire Line
-	10900 6250 11000 6250
-Text Label 12400 4750 2    50   ~ 0
+	11300 6850 11400 6850
+Text Label 12800 5350 2    50   ~ 0
 servo_power
 Wire Wire Line
-	12400 4750 12500 4750
-Text Label 12400 5250 2    50   ~ 0
+	12800 5350 12900 5350
+Text Label 12800 5850 2    50   ~ 0
 servo_power
 Wire Wire Line
-	12400 5250 12500 5250
-Text Label 12400 5750 2    50   ~ 0
+	12800 5850 12900 5850
+Text Label 12800 6350 2    50   ~ 0
 servo_power
 Wire Wire Line
-	12400 5750 12500 5750
-Text Label 12400 6250 2    50   ~ 0
+	12800 6350 12900 6350
+Text Label 12800 6850 2    50   ~ 0
 servo_power
 Wire Wire Line
-	12400 6250 12500 6250
-Text Label 13900 4750 2    50   ~ 0
+	12800 6850 12900 6850
+Text Label 14300 5350 2    50   ~ 0
 servo_power
 Wire Wire Line
-	13900 4750 14000 4750
-Text Label 13900 5250 2    50   ~ 0
+	14300 5350 14400 5350
+Text Label 14300 5850 2    50   ~ 0
 servo_power
 Wire Wire Line
-	13900 5250 14000 5250
-Text Label 13900 5750 2    50   ~ 0
+	14300 5850 14400 5850
+Text Label 14300 6350 2    50   ~ 0
 servo_power
 Wire Wire Line
-	13900 5750 14000 5750
-Text Label 13900 6250 2    50   ~ 0
+	14300 6350 14400 6350
+Text Label 14300 6850 2    50   ~ 0
 servo_power
 Wire Wire Line
-	13900 6250 14000 6250
-Text Label 9450 6750 2    50   ~ 0
+	14300 6850 14400 6850
+Text Label 9850 7350 2    50   ~ 0
 servo_power
 Wire Wire Line
-	9450 6750 9550 6750
-Text Label 9450 7250 2    50   ~ 0
+	9850 7350 9950 7350
+Text Label 9850 7850 2    50   ~ 0
 servo_power
 Wire Wire Line
-	9450 7250 9550 7250
-Text Label 9450 7750 2    50   ~ 0
+	9850 7850 9950 7850
+Text Label 9850 8350 2    50   ~ 0
 servo_power
 Wire Wire Line
-	9450 7750 9550 7750
-Text Label 9450 8250 2    50   ~ 0
+	9850 8350 9950 8350
+Text Label 9850 8850 2    50   ~ 0
 servo_power
 Wire Wire Line
-	9450 8250 9550 8250
-Text Label 10900 6750 2    50   ~ 0
+	9850 8850 9950 8850
+Text Label 11300 7350 2    50   ~ 0
 servo_power
 Wire Wire Line
-	10900 6750 11000 6750
-Text Label 10900 7250 2    50   ~ 0
+	11300 7350 11400 7350
+Text Label 11300 7850 2    50   ~ 0
 servo_power
 Wire Wire Line
-	10900 7250 11000 7250
-Text Label 10900 7750 2    50   ~ 0
+	11300 7850 11400 7850
+Text Label 11300 8350 2    50   ~ 0
 servo_power
 Wire Wire Line
-	10900 7750 11000 7750
-Text Label 10900 8250 2    50   ~ 0
+	11300 8350 11400 8350
+Text Label 11300 8850 2    50   ~ 0
 servo_power
 Wire Wire Line
-	10900 8250 11000 8250
-Text Label 12400 6750 2    50   ~ 0
+	11300 8850 11400 8850
+Text Label 12800 7350 2    50   ~ 0
 servo_power
 Wire Wire Line
-	12400 6750 12500 6750
-Text Label 12400 7250 2    50   ~ 0
+	12800 7350 12900 7350
+Text Label 12800 7850 2    50   ~ 0
 servo_power
 Wire Wire Line
-	12400 7250 12500 7250
-Text Label 12400 7750 2    50   ~ 0
+	12800 7850 12900 7850
+Text Label 12800 8350 2    50   ~ 0
 servo_power
 Wire Wire Line
-	12400 7750 12500 7750
-Text Label 12400 8250 2    50   ~ 0
+	12800 8350 12900 8350
+Text Label 12800 8850 2    50   ~ 0
 servo_power
 Wire Wire Line
-	12400 8250 12500 8250
-Text Label 13900 6750 2    50   ~ 0
+	12800 8850 12900 8850
+Text Label 14300 7350 2    50   ~ 0
 servo_power
 Wire Wire Line
-	13900 6750 14000 6750
-Text Label 13900 7250 2    50   ~ 0
+	14300 7350 14400 7350
+Text Label 14300 7850 2    50   ~ 0
 servo_power
 Wire Wire Line
-	13900 7250 14000 7250
-Text Label 13900 7750 2    50   ~ 0
+	14300 7850 14400 7850
+Text Label 14300 8350 2    50   ~ 0
 servo_power
 Wire Wire Line
-	13900 7750 14000 7750
-Text Label 13900 8250 2    50   ~ 0
+	14300 8350 14400 8350
+Text Label 14300 8850 2    50   ~ 0
 servo_power
 Wire Wire Line
-	13900 8250 14000 8250
+	14300 8850 14400 8850
 $Comp
 L power:GND #PWR0156
 U 1 1 5DD2D248
-P 9450 4950
-F 0 "#PWR0156" H 9450 4700 50  0001 C CNN
-F 1 "GND" H 9455 4777 50  0000 C CNN
-F 2 "" H 9450 4950 50  0001 C CNN
-F 3 "" H 9450 4950 50  0001 C CNN
-	1    9450 4950
+P 9850 5550
+F 0 "#PWR0156" H 9850 5300 50  0001 C CNN
+F 1 "GND" H 9855 5377 50  0000 C CNN
+F 2 "" H 9850 5550 50  0001 C CNN
+F 3 "" H 9850 5550 50  0001 C CNN
+	1    9850 5550
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	9450 4950 9550 4950
+	9850 5550 9950 5550
 $Comp
 L power:GND #PWR0157
 U 1 1 5DD40CD3
-P 9450 5450
-F 0 "#PWR0157" H 9450 5200 50  0001 C CNN
-F 1 "GND" H 9455 5277 50  0000 C CNN
-F 2 "" H 9450 5450 50  0001 C CNN
-F 3 "" H 9450 5450 50  0001 C CNN
-	1    9450 5450
+P 9850 6050
+F 0 "#PWR0157" H 9850 5800 50  0001 C CNN
+F 1 "GND" H 9855 5877 50  0000 C CNN
+F 2 "" H 9850 6050 50  0001 C CNN
+F 3 "" H 9850 6050 50  0001 C CNN
+	1    9850 6050
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	9450 5450 9550 5450
+	9850 6050 9950 6050
 $Comp
 L power:GND #PWR0158
 U 1 1 5DD5486D
-P 9450 5950
-F 0 "#PWR0158" H 9450 5700 50  0001 C CNN
-F 1 "GND" H 9455 5777 50  0000 C CNN
-F 2 "" H 9450 5950 50  0001 C CNN
-F 3 "" H 9450 5950 50  0001 C CNN
-	1    9450 5950
+P 9850 6550
+F 0 "#PWR0158" H 9850 6300 50  0001 C CNN
+F 1 "GND" H 9855 6377 50  0000 C CNN
+F 2 "" H 9850 6550 50  0001 C CNN
+F 3 "" H 9850 6550 50  0001 C CNN
+	1    9850 6550
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	9450 5950 9550 5950
+	9850 6550 9950 6550
 $Comp
 L power:GND #PWR0159
 U 1 1 5DD68698
-P 9450 6450
-F 0 "#PWR0159" H 9450 6200 50  0001 C CNN
-F 1 "GND" H 9455 6277 50  0000 C CNN
-F 2 "" H 9450 6450 50  0001 C CNN
-F 3 "" H 9450 6450 50  0001 C CNN
-	1    9450 6450
+P 9850 7050
+F 0 "#PWR0159" H 9850 6800 50  0001 C CNN
+F 1 "GND" H 9855 6877 50  0000 C CNN
+F 2 "" H 9850 7050 50  0001 C CNN
+F 3 "" H 9850 7050 50  0001 C CNN
+	1    9850 7050
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	9450 6450 9550 6450
+	9850 7050 9950 7050
 $Comp
 L power:GND #PWR0160
 U 1 1 5DD7C754
-P 9450 6950
-F 0 "#PWR0160" H 9450 6700 50  0001 C CNN
-F 1 "GND" H 9455 6777 50  0000 C CNN
-F 2 "" H 9450 6950 50  0001 C CNN
-F 3 "" H 9450 6950 50  0001 C CNN
-	1    9450 6950
+P 9850 7550
+F 0 "#PWR0160" H 9850 7300 50  0001 C CNN
+F 1 "GND" H 9855 7377 50  0000 C CNN
+F 2 "" H 9850 7550 50  0001 C CNN
+F 3 "" H 9850 7550 50  0001 C CNN
+	1    9850 7550
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	9450 6950 9550 6950
+	9850 7550 9950 7550
 $Comp
 L power:GND #PWR0161
 U 1 1 5DD90C0D
-P 9450 7450
-F 0 "#PWR0161" H 9450 7200 50  0001 C CNN
-F 1 "GND" H 9455 7277 50  0000 C CNN
-F 2 "" H 9450 7450 50  0001 C CNN
-F 3 "" H 9450 7450 50  0001 C CNN
-	1    9450 7450
+P 9850 8050
+F 0 "#PWR0161" H 9850 7800 50  0001 C CNN
+F 1 "GND" H 9855 7877 50  0000 C CNN
+F 2 "" H 9850 8050 50  0001 C CNN
+F 3 "" H 9850 8050 50  0001 C CNN
+	1    9850 8050
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	9450 7450 9550 7450
+	9850 8050 9950 8050
 $Comp
 L power:GND #PWR0162
 U 1 1 5DDCE3A6
-P 9450 7950
-F 0 "#PWR0162" H 9450 7700 50  0001 C CNN
-F 1 "GND" H 9455 7777 50  0000 C CNN
-F 2 "" H 9450 7950 50  0001 C CNN
-F 3 "" H 9450 7950 50  0001 C CNN
-	1    9450 7950
+P 9850 8550
+F 0 "#PWR0162" H 9850 8300 50  0001 C CNN
+F 1 "GND" H 9855 8377 50  0000 C CNN
+F 2 "" H 9850 8550 50  0001 C CNN
+F 3 "" H 9850 8550 50  0001 C CNN
+	1    9850 8550
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	9450 7950 9550 7950
+	9850 8550 9950 8550
 $Comp
 L power:GND #PWR0163
 U 1 1 5DDE2C15
-P 9450 8450
-F 0 "#PWR0163" H 9450 8200 50  0001 C CNN
-F 1 "GND" H 9455 8277 50  0000 C CNN
-F 2 "" H 9450 8450 50  0001 C CNN
-F 3 "" H 9450 8450 50  0001 C CNN
-	1    9450 8450
+P 9850 9050
+F 0 "#PWR0163" H 9850 8800 50  0001 C CNN
+F 1 "GND" H 9855 8877 50  0000 C CNN
+F 2 "" H 9850 9050 50  0001 C CNN
+F 3 "" H 9850 9050 50  0001 C CNN
+	1    9850 9050
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	9450 8450 9550 8450
+	9850 9050 9950 9050
 $Comp
 L power:GND #PWR0164
 U 1 1 5DDF7715
-P 10900 8450
-F 0 "#PWR0164" H 10900 8200 50  0001 C CNN
-F 1 "GND" H 10905 8277 50  0000 C CNN
-F 2 "" H 10900 8450 50  0001 C CNN
-F 3 "" H 10900 8450 50  0001 C CNN
-	1    10900 8450
+P 11300 9050
+F 0 "#PWR0164" H 11300 8800 50  0001 C CNN
+F 1 "GND" H 11305 8877 50  0000 C CNN
+F 2 "" H 11300 9050 50  0001 C CNN
+F 3 "" H 11300 9050 50  0001 C CNN
+	1    11300 9050
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	10900 8450 11000 8450
+	11300 9050 11400 9050
 $Comp
 L power:GND #PWR0165
 U 1 1 5DE0C473
-P 10900 7950
-F 0 "#PWR0165" H 10900 7700 50  0001 C CNN
-F 1 "GND" H 10905 7777 50  0000 C CNN
-F 2 "" H 10900 7950 50  0001 C CNN
-F 3 "" H 10900 7950 50  0001 C CNN
-	1    10900 7950
+P 11300 8550
+F 0 "#PWR0165" H 11300 8300 50  0001 C CNN
+F 1 "GND" H 11305 8377 50  0000 C CNN
+F 2 "" H 11300 8550 50  0001 C CNN
+F 3 "" H 11300 8550 50  0001 C CNN
+	1    11300 8550
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	10900 7950 11000 7950
+	11300 8550 11400 8550
 $Comp
 L power:GND #PWR0166
 U 1 1 5DE21438
-P 10900 7450
-F 0 "#PWR0166" H 10900 7200 50  0001 C CNN
-F 1 "GND" H 10905 7277 50  0000 C CNN
-F 2 "" H 10900 7450 50  0001 C CNN
-F 3 "" H 10900 7450 50  0001 C CNN
-	1    10900 7450
+P 11300 8050
+F 0 "#PWR0166" H 11300 7800 50  0001 C CNN
+F 1 "GND" H 11305 7877 50  0000 C CNN
+F 2 "" H 11300 8050 50  0001 C CNN
+F 3 "" H 11300 8050 50  0001 C CNN
+	1    11300 8050
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	10900 7450 11000 7450
+	11300 8050 11400 8050
 $Comp
 L power:GND #PWR0167
 U 1 1 5DE3666D
-P 10900 6950
-F 0 "#PWR0167" H 10900 6700 50  0001 C CNN
-F 1 "GND" H 10905 6777 50  0000 C CNN
-F 2 "" H 10900 6950 50  0001 C CNN
-F 3 "" H 10900 6950 50  0001 C CNN
-	1    10900 6950
+P 11300 7550
+F 0 "#PWR0167" H 11300 7300 50  0001 C CNN
+F 1 "GND" H 11305 7377 50  0000 C CNN
+F 2 "" H 11300 7550 50  0001 C CNN
+F 3 "" H 11300 7550 50  0001 C CNN
+	1    11300 7550
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	10900 6950 11000 6950
+	11300 7550 11400 7550
 $Comp
 L power:GND #PWR0168
 U 1 1 5DE4BB1B
-P 10900 6450
-F 0 "#PWR0168" H 10900 6200 50  0001 C CNN
-F 1 "GND" H 10905 6277 50  0000 C CNN
-F 2 "" H 10900 6450 50  0001 C CNN
-F 3 "" H 10900 6450 50  0001 C CNN
-	1    10900 6450
+P 11300 7050
+F 0 "#PWR0168" H 11300 6800 50  0001 C CNN
+F 1 "GND" H 11305 6877 50  0000 C CNN
+F 2 "" H 11300 7050 50  0001 C CNN
+F 3 "" H 11300 7050 50  0001 C CNN
+	1    11300 7050
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	10900 6450 11000 6450
+	11300 7050 11400 7050
 $Comp
 L power:GND #PWR0169
 U 1 1 5DE6124B
-P 12400 6450
-F 0 "#PWR0169" H 12400 6200 50  0001 C CNN
-F 1 "GND" H 12405 6277 50  0000 C CNN
-F 2 "" H 12400 6450 50  0001 C CNN
-F 3 "" H 12400 6450 50  0001 C CNN
-	1    12400 6450
+P 12800 7050
+F 0 "#PWR0169" H 12800 6800 50  0001 C CNN
+F 1 "GND" H 12805 6877 50  0000 C CNN
+F 2 "" H 12800 7050 50  0001 C CNN
+F 3 "" H 12800 7050 50  0001 C CNN
+	1    12800 7050
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	12400 6450 12500 6450
+	12800 7050 12900 7050
 $Comp
 L power:GND #PWR0170
 U 1 1 5DE76BA9
-P 12400 6950
-F 0 "#PWR0170" H 12400 6700 50  0001 C CNN
-F 1 "GND" H 12405 6777 50  0000 C CNN
-F 2 "" H 12400 6950 50  0001 C CNN
-F 3 "" H 12400 6950 50  0001 C CNN
-	1    12400 6950
+P 12800 7550
+F 0 "#PWR0170" H 12800 7300 50  0001 C CNN
+F 1 "GND" H 12805 7377 50  0000 C CNN
+F 2 "" H 12800 7550 50  0001 C CNN
+F 3 "" H 12800 7550 50  0001 C CNN
+	1    12800 7550
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	12400 6950 12500 6950
+	12800 7550 12900 7550
 $Comp
 L power:GND #PWR0171
 U 1 1 5DE8C735
-P 12400 7450
-F 0 "#PWR0171" H 12400 7200 50  0001 C CNN
-F 1 "GND" H 12405 7277 50  0000 C CNN
-F 2 "" H 12400 7450 50  0001 C CNN
-F 3 "" H 12400 7450 50  0001 C CNN
-	1    12400 7450
+P 12800 8050
+F 0 "#PWR0171" H 12800 7800 50  0001 C CNN
+F 1 "GND" H 12805 7877 50  0000 C CNN
+F 2 "" H 12800 8050 50  0001 C CNN
+F 3 "" H 12800 8050 50  0001 C CNN
+	1    12800 8050
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	12400 7450 12500 7450
+	12800 8050 12900 8050
 $Comp
 L power:GND #PWR0172
 U 1 1 5DEA24EF
-P 12400 7950
-F 0 "#PWR0172" H 12400 7700 50  0001 C CNN
-F 1 "GND" H 12405 7777 50  0000 C CNN
-F 2 "" H 12400 7950 50  0001 C CNN
-F 3 "" H 12400 7950 50  0001 C CNN
-	1    12400 7950
+P 12800 8550
+F 0 "#PWR0172" H 12800 8300 50  0001 C CNN
+F 1 "GND" H 12805 8377 50  0000 C CNN
+F 2 "" H 12800 8550 50  0001 C CNN
+F 3 "" H 12800 8550 50  0001 C CNN
+	1    12800 8550
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	12400 7950 12500 7950
+	12800 8550 12900 8550
 $Comp
 L power:GND #PWR0173
 U 1 1 5DEB84D7
-P 12400 8450
-F 0 "#PWR0173" H 12400 8200 50  0001 C CNN
-F 1 "GND" H 12405 8277 50  0000 C CNN
-F 2 "" H 12400 8450 50  0001 C CNN
-F 3 "" H 12400 8450 50  0001 C CNN
-	1    12400 8450
+P 12800 9050
+F 0 "#PWR0173" H 12800 8800 50  0001 C CNN
+F 1 "GND" H 12805 8877 50  0000 C CNN
+F 2 "" H 12800 9050 50  0001 C CNN
+F 3 "" H 12800 9050 50  0001 C CNN
+	1    12800 9050
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	12400 8450 12500 8450
+	12800 9050 12900 9050
 $Comp
 L power:GND #PWR0174
 U 1 1 5DEE5520
-P 13900 8450
-F 0 "#PWR0174" H 13900 8200 50  0001 C CNN
-F 1 "GND" H 13905 8277 50  0000 C CNN
-F 2 "" H 13900 8450 50  0001 C CNN
-F 3 "" H 13900 8450 50  0001 C CNN
-	1    13900 8450
+P 14300 9050
+F 0 "#PWR0174" H 14300 8800 50  0001 C CNN
+F 1 "GND" H 14305 8877 50  0000 C CNN
+F 2 "" H 14300 9050 50  0001 C CNN
+F 3 "" H 14300 9050 50  0001 C CNN
+	1    14300 9050
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	13900 8450 14000 8450
+	14300 9050 14400 9050
 $Comp
 L power:GND #PWR0175
 U 1 1 5DEFB946
-P 13900 7950
-F 0 "#PWR0175" H 13900 7700 50  0001 C CNN
-F 1 "GND" H 13905 7777 50  0000 C CNN
-F 2 "" H 13900 7950 50  0001 C CNN
-F 3 "" H 13900 7950 50  0001 C CNN
-	1    13900 7950
+P 14300 8550
+F 0 "#PWR0175" H 14300 8300 50  0001 C CNN
+F 1 "GND" H 14305 8377 50  0000 C CNN
+F 2 "" H 14300 8550 50  0001 C CNN
+F 3 "" H 14300 8550 50  0001 C CNN
+	1    14300 8550
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	13900 7950 14000 7950
+	14300 8550 14400 8550
 $Comp
 L power:GND #PWR0176
 U 1 1 5DF11F85
-P 13900 7450
-F 0 "#PWR0176" H 13900 7200 50  0001 C CNN
-F 1 "GND" H 13905 7277 50  0000 C CNN
-F 2 "" H 13900 7450 50  0001 C CNN
-F 3 "" H 13900 7450 50  0001 C CNN
-	1    13900 7450
+P 14300 8050
+F 0 "#PWR0176" H 14300 7800 50  0001 C CNN
+F 1 "GND" H 14305 7877 50  0000 C CNN
+F 2 "" H 14300 8050 50  0001 C CNN
+F 3 "" H 14300 8050 50  0001 C CNN
+	1    14300 8050
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	13900 7450 14000 7450
+	14300 8050 14400 8050
 $Comp
 L power:GND #PWR0177
 U 1 1 5DF287E6
-P 13900 6950
-F 0 "#PWR0177" H 13900 6700 50  0001 C CNN
-F 1 "GND" H 13905 6777 50  0000 C CNN
-F 2 "" H 13900 6950 50  0001 C CNN
-F 3 "" H 13900 6950 50  0001 C CNN
-	1    13900 6950
+P 14300 7550
+F 0 "#PWR0177" H 14300 7300 50  0001 C CNN
+F 1 "GND" H 14305 7377 50  0000 C CNN
+F 2 "" H 14300 7550 50  0001 C CNN
+F 3 "" H 14300 7550 50  0001 C CNN
+	1    14300 7550
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	13900 6950 14000 6950
+	14300 7550 14400 7550
 $Comp
 L power:GND #PWR0178
 U 1 1 5DF3F272
-P 13900 6450
-F 0 "#PWR0178" H 13900 6200 50  0001 C CNN
-F 1 "GND" H 13905 6277 50  0000 C CNN
-F 2 "" H 13900 6450 50  0001 C CNN
-F 3 "" H 13900 6450 50  0001 C CNN
-	1    13900 6450
+P 14300 7050
+F 0 "#PWR0178" H 14300 6800 50  0001 C CNN
+F 1 "GND" H 14305 6877 50  0000 C CNN
+F 2 "" H 14300 7050 50  0001 C CNN
+F 3 "" H 14300 7050 50  0001 C CNN
+	1    14300 7050
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	13900 6450 14000 6450
+	14300 7050 14400 7050
 $Comp
 L power:GND #PWR0179
 U 1 1 5DF56D0F
-P 10900 4950
-F 0 "#PWR0179" H 10900 4700 50  0001 C CNN
-F 1 "GND" H 10905 4777 50  0000 C CNN
-F 2 "" H 10900 4950 50  0001 C CNN
-F 3 "" H 10900 4950 50  0001 C CNN
-	1    10900 4950
+P 11300 5550
+F 0 "#PWR0179" H 11300 5300 50  0001 C CNN
+F 1 "GND" H 11305 5377 50  0000 C CNN
+F 2 "" H 11300 5550 50  0001 C CNN
+F 3 "" H 11300 5550 50  0001 C CNN
+	1    11300 5550
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	10900 4950 11000 4950
+	11300 5550 11400 5550
 $Comp
 L power:GND #PWR0180
 U 1 1 5DF6DC9C
-P 10900 5450
-F 0 "#PWR0180" H 10900 5200 50  0001 C CNN
-F 1 "GND" H 10905 5277 50  0000 C CNN
-F 2 "" H 10900 5450 50  0001 C CNN
-F 3 "" H 10900 5450 50  0001 C CNN
-	1    10900 5450
+P 11300 6050
+F 0 "#PWR0180" H 11300 5800 50  0001 C CNN
+F 1 "GND" H 11305 5877 50  0000 C CNN
+F 2 "" H 11300 6050 50  0001 C CNN
+F 3 "" H 11300 6050 50  0001 C CNN
+	1    11300 6050
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	10900 5450 11000 5450
+	11300 6050 11400 6050
 $Comp
 L power:GND #PWR0181
 U 1 1 5DF84EF6
-P 10900 5950
-F 0 "#PWR0181" H 10900 5700 50  0001 C CNN
-F 1 "GND" H 10905 5777 50  0000 C CNN
-F 2 "" H 10900 5950 50  0001 C CNN
-F 3 "" H 10900 5950 50  0001 C CNN
-	1    10900 5950
+P 11300 6550
+F 0 "#PWR0181" H 11300 6300 50  0001 C CNN
+F 1 "GND" H 11305 6377 50  0000 C CNN
+F 2 "" H 11300 6550 50  0001 C CNN
+F 3 "" H 11300 6550 50  0001 C CNN
+	1    11300 6550
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	10900 5950 11000 5950
+	11300 6550 11400 6550
 $Comp
 L power:GND #PWR0182
 U 1 1 5DF9C41D
-P 12400 5950
-F 0 "#PWR0182" H 12400 5700 50  0001 C CNN
-F 1 "GND" H 12405 5777 50  0000 C CNN
-F 2 "" H 12400 5950 50  0001 C CNN
-F 3 "" H 12400 5950 50  0001 C CNN
-	1    12400 5950
+P 12800 6550
+F 0 "#PWR0182" H 12800 6300 50  0001 C CNN
+F 1 "GND" H 12805 6377 50  0000 C CNN
+F 2 "" H 12800 6550 50  0001 C CNN
+F 3 "" H 12800 6550 50  0001 C CNN
+	1    12800 6550
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	12400 5950 12500 5950
+	12800 6550 12900 6550
 $Comp
 L power:GND #PWR0183
 U 1 1 5DFB3BBA
-P 12400 5450
-F 0 "#PWR0183" H 12400 5200 50  0001 C CNN
-F 1 "GND" H 12405 5277 50  0000 C CNN
-F 2 "" H 12400 5450 50  0001 C CNN
-F 3 "" H 12400 5450 50  0001 C CNN
-	1    12400 5450
+P 12800 6050
+F 0 "#PWR0183" H 12800 5800 50  0001 C CNN
+F 1 "GND" H 12805 5877 50  0000 C CNN
+F 2 "" H 12800 6050 50  0001 C CNN
+F 3 "" H 12800 6050 50  0001 C CNN
+	1    12800 6050
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	12400 5450 12500 5450
+	12800 6050 12900 6050
 $Comp
 L power:GND #PWR0184
 U 1 1 5DFCB5D6
-P 12400 4950
-F 0 "#PWR0184" H 12400 4700 50  0001 C CNN
-F 1 "GND" H 12405 4777 50  0000 C CNN
-F 2 "" H 12400 4950 50  0001 C CNN
-F 3 "" H 12400 4950 50  0001 C CNN
-	1    12400 4950
+P 12800 5550
+F 0 "#PWR0184" H 12800 5300 50  0001 C CNN
+F 1 "GND" H 12805 5377 50  0000 C CNN
+F 2 "" H 12800 5550 50  0001 C CNN
+F 3 "" H 12800 5550 50  0001 C CNN
+	1    12800 5550
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	12400 4950 12500 4950
+	12800 5550 12900 5550
 $Comp
 L power:GND #PWR0185
 U 1 1 5DFE327A
-P 13900 4950
-F 0 "#PWR0185" H 13900 4700 50  0001 C CNN
-F 1 "GND" H 13905 4777 50  0000 C CNN
-F 2 "" H 13900 4950 50  0001 C CNN
-F 3 "" H 13900 4950 50  0001 C CNN
-	1    13900 4950
+P 14300 5550
+F 0 "#PWR0185" H 14300 5300 50  0001 C CNN
+F 1 "GND" H 14305 5377 50  0000 C CNN
+F 2 "" H 14300 5550 50  0001 C CNN
+F 3 "" H 14300 5550 50  0001 C CNN
+	1    14300 5550
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	13900 4950 14000 4950
+	14300 5550 14400 5550
 $Comp
 L power:GND #PWR0186
 U 1 1 5DFFB173
-P 13900 5450
-F 0 "#PWR0186" H 13900 5200 50  0001 C CNN
-F 1 "GND" H 13905 5277 50  0000 C CNN
-F 2 "" H 13900 5450 50  0001 C CNN
-F 3 "" H 13900 5450 50  0001 C CNN
-	1    13900 5450
+P 14300 6050
+F 0 "#PWR0186" H 14300 5800 50  0001 C CNN
+F 1 "GND" H 14305 5877 50  0000 C CNN
+F 2 "" H 14300 6050 50  0001 C CNN
+F 3 "" H 14300 6050 50  0001 C CNN
+	1    14300 6050
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	13900 5450 14000 5450
+	14300 6050 14400 6050
 $Comp
 L power:GND #PWR0187
 U 1 1 5E0132C1
-P 13900 5950
-F 0 "#PWR0187" H 13900 5700 50  0001 C CNN
-F 1 "GND" H 13905 5777 50  0000 C CNN
-F 2 "" H 13900 5950 50  0001 C CNN
-F 3 "" H 13900 5950 50  0001 C CNN
-	1    13900 5950
+P 14300 6550
+F 0 "#PWR0187" H 14300 6300 50  0001 C CNN
+F 1 "GND" H 14305 6377 50  0000 C CNN
+F 2 "" H 14300 6550 50  0001 C CNN
+F 3 "" H 14300 6550 50  0001 C CNN
+	1    14300 6550
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	13900 5950 14000 5950
+	14300 6550 14400 6550
 Wire Wire Line
-	9450 4850 9550 4850
+	9850 5450 9950 5450
 Wire Wire Line
-	10900 4850 11000 4850
+	11300 5450 11400 5450
 Wire Wire Line
-	12400 4850 12500 4850
+	12800 5450 12900 5450
 Wire Wire Line
-	13900 4850 14000 4850
+	14300 5450 14400 5450
 Wire Wire Line
-	14000 5350 13900 5350
+	14400 5950 14300 5950
 Wire Wire Line
-	12500 5350 12400 5350
+	12900 5950 12800 5950
 Wire Wire Line
-	11000 5350 10900 5350
+	11400 5950 11300 5950
 Wire Wire Line
-	9550 5350 9450 5350
+	9950 5950 9850 5950
 Wire Wire Line
-	9450 5850 9550 5850
+	9850 6450 9950 6450
 Wire Wire Line
-	10900 5850 11000 5850
+	11300 6450 11400 6450
 Wire Wire Line
-	12400 5850 12500 5850
+	12800 6450 12900 6450
 Wire Wire Line
-	13900 5850 14000 5850
+	14300 6450 14400 6450
 Wire Wire Line
-	14000 6350 13900 6350
+	14400 6950 14300 6950
 Wire Wire Line
-	12500 6350 12400 6350
+	12900 6950 12800 6950
 Wire Wire Line
-	11000 6350 10900 6350
+	11400 6950 11300 6950
 Wire Wire Line
-	9550 6350 9450 6350
+	9950 6950 9850 6950
 Wire Wire Line
-	9450 6850 9550 6850
+	9850 7450 9950 7450
 Wire Wire Line
-	10900 6850 11000 6850
+	11300 7450 11400 7450
 Wire Wire Line
-	12400 6850 12500 6850
+	12800 7450 12900 7450
 Wire Wire Line
-	13900 6850 14000 6850
+	14300 7450 14400 7450
 Wire Wire Line
-	14000 7350 13900 7350
+	14400 7950 14300 7950
 Wire Wire Line
-	12500 7350 12400 7350
+	12900 7950 12800 7950
 Wire Wire Line
-	11000 7350 10900 7350
+	11400 7950 11300 7950
 Wire Wire Line
-	9550 7350 9450 7350
+	9950 7950 9850 7950
 Wire Wire Line
-	9450 7850 9550 7850
+	9850 8450 9950 8450
 Wire Wire Line
-	10900 7850 11000 7850
+	11300 8450 11400 8450
 Wire Wire Line
-	12400 7850 12500 7850
+	12800 8450 12900 8450
 Wire Wire Line
-	13900 7850 14000 7850
+	14300 8450 14400 8450
 Wire Wire Line
-	14000 8350 13900 8350
+	14400 8950 14300 8950
 Wire Wire Line
-	12500 8350 12400 8350
+	12900 8950 12800 8950
 Wire Wire Line
-	11000 8350 10900 8350
+	11400 8950 11300 8950
 Wire Wire Line
-	9550 8350 9450 8350
-Text Notes 9700 4350 0    138  ~ 0
+	9950 8950 9850 8950
+Text Notes 14300 4600 0    138  ~ 0
 Servo Ports\n
 $Comp
 L hex_master_sym:EXB-2HV221JV U10
@@ -3205,7 +3205,7 @@ U 1 1 5DB26DC7
 P 14050 2750
 F 0 "SW7" V 13750 2800 50  0000 L CNN
 F 1 "SW_DIP_x01" V 14095 2880 50  0000 L CNN
-F 2 "" H 14050 2750 50  0001 C CNN
+F 2 "hex_master_board:switch_ins" H 14050 2750 50  0001 C CNN
 F 3 "" H 14050 2750 50  0001 C CNN
 	1    14050 2750
 	0    1    1    0   
@@ -3216,7 +3216,7 @@ U 1 1 5DB26DCE
 P 14350 2750
 F 0 "SW8" V 14050 2800 50  0000 L CNN
 F 1 "SW_DIP_x01" V 14395 2880 50  0000 L CNN
-F 2 "" H 14350 2750 50  0001 C CNN
+F 2 "hex_master_board:switch_ins" H 14350 2750 50  0001 C CNN
 F 3 "" H 14350 2750 50  0001 C CNN
 	1    14350 2750
 	0    1    1    0   
@@ -3227,7 +3227,7 @@ U 1 1 5DB26DD5
 P 14650 2750
 F 0 "SW9" V 14350 2800 50  0000 L CNN
 F 1 "SW_DIP_x01" V 14695 2880 50  0000 L CNN
-F 2 "" H 14650 2750 50  0001 C CNN
+F 2 "hex_master_board:switch_ins" H 14650 2750 50  0001 C CNN
 F 3 "" H 14650 2750 50  0001 C CNN
 	1    14650 2750
 	0    1    1    0   
@@ -3238,7 +3238,7 @@ U 1 1 5DB26DDC
 P 14950 2750
 F 0 "SW10" V 14650 2800 50  0000 L CNN
 F 1 "SW_DIP_x01" V 14995 2880 50  0000 L CNN
-F 2 "" H 14950 2750 50  0001 C CNN
+F 2 "hex_master_board:switch_ins" H 14950 2750 50  0001 C CNN
 F 3 "" H 14950 2750 50  0001 C CNN
 	1    14950 2750
 	0    1    1    0   
@@ -3249,7 +3249,7 @@ U 1 1 5DB26DE3
 P 15250 2750
 F 0 "SW11" V 14950 2800 50  0000 L CNN
 F 1 "SW_DIP_x01" V 15295 2880 50  0000 L CNN
-F 2 "" H 15250 2750 50  0001 C CNN
+F 2 "hex_master_board:switch_ins" H 15250 2750 50  0001 C CNN
 F 3 "" H 15250 2750 50  0001 C CNN
 	1    15250 2750
 	0    1    1    0   
@@ -3260,7 +3260,7 @@ U 1 1 5DB26DEA
 P 15550 2750
 F 0 "SW12" V 15250 2800 50  0000 L CNN
 F 1 "SW_DIP_x01" V 15595 2880 50  0000 L CNN
-F 2 "" H 15550 2750 50  0001 C CNN
+F 2 "hex_master_board:switch_ins" H 15550 2750 50  0001 C CNN
 F 3 "" H 15550 2750 50  0001 C CNN
 	1    15550 2750
 	0    1    1    0   
@@ -3414,45 +3414,45 @@ Wire Wire Line
 Wire Wire Line
 	1750 9050 1350 9050
 $Comp
-L Device:C C?
+L Device:C C16
 U 1 1 5DB02CE4
-P 9350 4000
-F 0 "C?" H 9465 4046 50  0000 L CNN
-F 1 "10uF" H 9465 3955 50  0000 L CNN
-F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 9388 3850 50  0001 C CNN
-F 3 "~" H 9350 4000 50  0001 C CNN
-	1    9350 4000
+P 13950 4250
+F 0 "C16" H 14065 4296 50  0000 L CNN
+F 1 "10uF" H 14065 4205 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 13988 4100 50  0001 C CNN
+F 3 "~" H 13950 4250 50  0001 C CNN
+	1    13950 4250
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	9050 3800 9350 3800
+	13650 4050 13950 4050
 Wire Wire Line
-	9350 3800 9350 3850
-Connection ~ 9350 3800
+	13950 4050 13950 4100
+Connection ~ 13950 4050
 Wire Wire Line
-	9350 3800 9450 3800
+	13950 4050 14050 4050
 Wire Wire Line
-	9350 4150 9350 4250
+	13950 4400 13950 4500
 $Comp
 L power:GND #PWR0194
 U 1 1 5DBA7C91
-P 9350 4250
-F 0 "#PWR0194" H 9350 4000 50  0001 C CNN
-F 1 "GND" H 9355 4077 50  0000 C CNN
-F 2 "" H 9350 4250 50  0001 C CNN
-F 3 "" H 9350 4250 50  0001 C CNN
-	1    9350 4250
+P 13950 4500
+F 0 "#PWR0194" H 13950 4250 50  0001 C CNN
+F 1 "GND" H 13955 4327 50  0000 C CNN
+F 2 "" H 13950 4500 50  0001 C CNN
+F 3 "" H 13950 4500 50  0001 C CNN
+	1    13950 4500
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	9150 4000 9150 4250
+	13750 4250 13750 4500
 Text Notes 3200 5200 0    50   ~ 0
 FT232RQ
 $Comp
-L hex_master_sym:header_0.1_8 U?
+L hex_master_sym:header_0.1_8 U48
 U 1 1 5DD239EE
 P 5550 9600
-F 0 "U?" H 5545 9178 50  0000 C CNN
+F 0 "U48" H 5545 9178 50  0000 C CNN
 F 1 "header_0.1_8" H 5545 9087 50  0000 C CNN
 F 2 "hex_master_board:header_0.1_8x" H 5550 9200 50  0001 C CNN
 F 3 "" H 5550 9200 50  0001 C CNN
@@ -3534,10 +3534,10 @@ NoConn ~ 6400 6100
 NoConn ~ 6400 6200
 NoConn ~ 6400 6300
 $Comp
-L hex_master_sym:header_0.1_8 U?
+L hex_master_sym:header_0.1_8 U49
 U 1 1 5E0A6DBA
 P 6550 9600
-F 0 "U?" H 6545 9178 50  0000 C CNN
+F 0 "U49" H 6545 9178 50  0000 C CNN
 F 1 "header_0.1_8" H 6545 9087 50  0000 C CNN
 F 2 "hex_master_board:header_0.1_8x" H 6550 9200 50  0001 C CNN
 F 3 "" H 6550 9200 50  0001 C CNN
@@ -3545,10 +3545,10 @@ F 3 "" H 6550 9200 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L hex_master_sym:header_0.1_8 U?
+L hex_master_sym:header_0.1_8 U50
 U 1 1 5E0D1B6D
 P 7550 9600
-F 0 "U?" H 7545 9178 50  0000 C CNN
+F 0 "U50" H 7545 9178 50  0000 C CNN
 F 1 "header_0.1_8" H 7545 9087 50  0000 C CNN
 F 2 "hex_master_board:header_0.1_8x" H 7550 9200 50  0001 C CNN
 F 3 "" H 7550 9200 50  0001 C CNN
@@ -3593,10 +3593,10 @@ Wire Wire Line
 Wire Wire Line
 	7650 6100 7600 6100
 $Comp
-L hex_master_sym:ICSP_breakout U?
+L hex_master_sym:ICSP_breakout U47
 U 1 1 5DB051F0
 P 5150 8750
-F 0 "U?" H 5150 8975 50  0000 C CNN
+F 0 "U47" H 5150 8975 50  0000 C CNN
 F 1 "ICSP_breakout" H 5150 8884 50  0000 C CNN
 F 2 "" H 5150 8900 50  0001 C CNN
 F 3 "" H 5150 8900 50  0001 C CNN
@@ -3604,10 +3604,10 @@ F 3 "" H 5150 8900 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:+5V #PWR?
+L power:+5V #PWR0195
 U 1 1 5DB05A40
 P 5600 8650
-F 0 "#PWR?" H 5600 8500 50  0001 C CNN
+F 0 "#PWR0195" H 5600 8500 50  0001 C CNN
 F 1 "+5V" H 5615 8823 50  0000 C CNN
 F 2 "" H 5600 8650 50  0001 C CNN
 F 3 "" H 5600 8650 50  0001 C CNN
@@ -3619,10 +3619,10 @@ Wire Wire Line
 Wire Wire Line
 	5600 8750 5600 8650
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0196
 U 1 1 5DB32C63
 P 5600 9050
-F 0 "#PWR?" H 5600 8800 50  0001 C CNN
+F 0 "#PWR0196" H 5600 8800 50  0001 C CNN
 F 1 "GND" H 5605 8877 50  0000 C CNN
 F 2 "" H 5600 9050 50  0001 C CNN
 F 3 "" H 5600 9050 50  0001 C CNN
@@ -3651,4 +3651,6 @@ Wire Wire Line
 	5500 8850 5550 8850
 Text Notes 4550 8300 0    118  ~ 0
 ICSP Headers
+Text Notes 12050 10300 0    106  ~ 0
+Hexapod Control Board V0 --- DRAFT
 $EndSCHEMATC
