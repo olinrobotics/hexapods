@@ -3448,49 +3448,38 @@ Wire Wire Line
 	13750 4250 13750 4500
 Text Notes 3200 5200 0    50   ~ 0
 FT232RQ
-$Comp
-L hex_master_sym:header_0.1_8 U48
-U 1 1 5DD239EE
-P 5550 9600
-F 0 "U48" H 5545 9178 50  0000 C CNN
-F 1 "header_0.1_8" H 5545 9087 50  0000 C CNN
-F 2 "hex_master_board:header_0.1_8x" H 5550 9200 50  0001 C CNN
-F 3 "" H 5550 9200 50  0001 C CNN
-	1    5550 9600
-	1    0    0    -1  
-$EndComp
-Text Label 5900 9650 1    50   ~ 0
+Text Label 5600 9600 1    50   ~ 0
 A0
-Text Label 5800 9650 1    50   ~ 0
+Text Label 5500 9600 1    50   ~ 0
 A1
-Text Label 5700 9650 1    50   ~ 0
+Text Label 5400 9600 1    50   ~ 0
 A2
-Text Label 5600 9650 1    50   ~ 0
+Text Label 5300 9600 1    50   ~ 0
 A3
-Text Label 5500 9650 1    50   ~ 0
+Text Label 5200 9600 1    50   ~ 0
 A4
-Text Label 5400 9650 1    50   ~ 0
+Text Label 5100 9600 1    50   ~ 0
 A5
-Text Label 5300 9650 1    50   ~ 0
+Text Label 5000 9600 1    50   ~ 0
 A6
-Text Label 5200 9650 1    50   ~ 0
+Text Label 4900 9600 1    50   ~ 0
 A7
 Wire Wire Line
-	5200 9650 5200 9750
+	4900 9600 4900 9700
 Wire Wire Line
-	5300 9750 5300 9650
+	5000 9700 5000 9600
 Wire Wire Line
-	5400 9650 5400 9750
+	5100 9600 5100 9700
 Wire Wire Line
-	5500 9750 5500 9650
+	5200 9700 5200 9600
 Wire Wire Line
-	5600 9650 5600 9750
+	5300 9600 5300 9700
 Wire Wire Line
-	5700 9750 5700 9650
+	5400 9700 5400 9600
 Wire Wire Line
-	5800 9650 5800 9750
+	5500 9600 5500 9700
 Wire Wire Line
-	5900 9750 5900 9650
+	5600 9700 5600 9600
 Text Notes 5100 10600 0    118  ~ 0
 IO Breakouts
 Text Label 6400 7800 2    50   ~ 0
@@ -3653,4 +3642,45 @@ Text Notes 4550 8300 0    118  ~ 0
 ICSP Headers
 Text Notes 12050 10300 0    106  ~ 0
 Hexapod Control Board V0 --- DRAFT
+$Comp
+L hex_master_sym:header_0.1_8_powered U48
+U 1 1 5DBAE69B
+P 5250 9550
+F 0 "U48" H 5250 9028 50  0000 C CNN
+F 1 "header_0.1_8_powered" H 5250 8937 50  0000 C CNN
+F 2 "hex_master_board:header_0.1_8_power" H 5250 9150 50  0001 C CNN
+F 3 "" H 5250 9150 50  0001 C CNN
+	1    5250 9550
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0197
+U 1 1 5DBDC669
+P 5850 10000
+F 0 "#PWR0197" H 5850 9750 50  0001 C CNN
+F 1 "GND" H 5855 9827 50  0000 C CNN
+F 2 "" H 5850 10000 50  0001 C CNN
+F 3 "" H 5850 10000 50  0001 C CNN
+	1    5850 10000
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR0198
+U 1 1 5DBDC780
+P 4650 9850
+F 0 "#PWR0198" H 4650 9700 50  0001 C CNN
+F 1 "+5V" H 4665 10023 50  0000 C CNN
+F 2 "" H 4650 9850 50  0001 C CNN
+F 3 "" H 4650 9850 50  0001 C CNN
+	1    4650 9850
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4700 9950 4650 9950
+Wire Wire Line
+	4650 9950 4650 9850
+Wire Wire Line
+	5800 9950 5850 9950
+Wire Wire Line
+	5850 9950 5850 10000
 $EndSCHEMATC
