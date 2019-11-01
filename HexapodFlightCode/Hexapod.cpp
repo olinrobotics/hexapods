@@ -243,10 +243,10 @@ bool Hexapod::goTo(float x2, float y2, float theta2) {
     getAccel(a);
     roll = -asin(a[0]/9.81);
     pitch = asin(a[1]/9.81);
-    pitch = -10*M_PI/180; // TODO: this is here for testing the uphill climbing gait
     // TODO: add maximum limit to slope compensation
     // TODO: beyond max limit, consider leveling body?
   }
+  pitch = -15*M_PI/180; // TODO: this is here for testing the uphill climbing gait
   // DANCE MODE (accelerometer directly controls orientation):
   //levelBody(-pitch/3, -roll/3); evenStep = !evenStep; levelBody(-pitch/3, -roll/3); return;
   
@@ -269,6 +269,7 @@ bool Hexapod::goTo(float x2, float y2, float theta2) {
               (footHeights[4] <= ground || !digitalRead(feet[4]));
     raised = min(min(footHeights[1], footHeights[3]), footHeights[5]) >= ground + clearance;
   }
+  grounded = true; // TODO remove
 
   // Move feet during step transitions
   if (!lowered) { // Lowering legs

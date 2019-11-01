@@ -20,8 +20,8 @@ const int WAYPOINT_DESTINATION = -3; // Walk to given coordinates
 const int WAYPOINT_DELAY = -4; // Wait for a given time interval
 
 // Gait parameters
-const float ground = -8.25; // Height of ground relative to body (in)
-const float clearance = 2; // Height of raised leg relative to ground (in)
+const float ground = -7.75;//-8.25; // Height of ground relative to body (in)
+const float clearance = 1.5;//2; // Height of raised leg relative to ground (in)
 const float dx = 2/2; // Half of the forward step distance (in)
 const float dy = 2/2; // Half of the sideways step distance (in)
 const float roffset = 3.2; // Radial distance of feet from first joint (in)
