@@ -30,6 +30,7 @@ class LidarNode():
         self.vals[angle] = dist_mm
         self.points[angle,0] = np.cos(np.radians(angle))*self.vals[angle]
         self.points[angle,1] = np.sin(np.radians(angle))*self.vals[angle]
+        print(angle,dist_mm)
 
 if __name__ == '__main__':
     node = LidarNode()

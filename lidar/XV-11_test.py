@@ -84,7 +84,7 @@ def update_view( angle, x, x1, x2, x3):
     quality = x2 | (x3 << 8) # data on 10 bits or more ?
 
     # display the sample
-    if (x1 & 0x80): # flag for "bad data" ?
+    if (0 and x1 & 0x80): # flag for "bad data" ?
         # yes it's bad data
         point._pts[angle]['pos'] = vector( 0,0,0)
     else:
