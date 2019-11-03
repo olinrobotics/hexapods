@@ -3683,4 +3683,60 @@ Wire Wire Line
 	5800 9950 5850 9950
 Wire Wire Line
 	5850 9950 5850 10000
+$Comp
+L hex_master_sym:LIS3DH_breakout U51
+U 1 1 5DC27FDC
+P 9650 4150
+F 0 "U51" H 10078 3996 50  0000 L CNN
+F 1 "LIS3DH_breakout" H 10078 3905 50  0000 L CNN
+F 2 "hex_master_board:LIS3DH_IMU_BOARD" H 9350 4050 50  0001 C CNN
+F 3 "" H 9350 4050 50  0001 C CNN
+	1    9650 4150
+	1    0    0    -1  
+$EndComp
+Text Notes 10300 4000 0    138  ~ 0
+Accelerometer
+Text Notes 10300 4200 0    50   ~ 0
+Communicates with Atmega\nover I2C\n
+Text Label 9600 4650 3    50   ~ 0
+SCL
+Text Label 9700 4650 3    50   ~ 0
+SDA
+Wire Wire Line
+	9500 4650 9500 4900
+$Comp
+L power:GND #PWR0199
+U 1 1 5DC874A9
+P 9500 4900
+F 0 "#PWR0199" H 9500 4650 50  0001 C CNN
+F 1 "GND" H 9505 4727 50  0000 C CNN
+F 2 "" H 9500 4900 50  0001 C CNN
+F 3 "" H 9500 4900 50  0001 C CNN
+	1    9500 4900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9300 4650 9300 4700
+Wire Wire Line
+	9050 4700 9050 4500
+Wire Wire Line
+	9050 4700 9300 4700
+$Comp
+L power:+5V #PWR0200
+U 1 1 5DCB756C
+P 9050 4500
+F 0 "#PWR0200" H 9050 4350 50  0001 C CNN
+F 1 "+5V" H 9065 4673 50  0000 C CNN
+F 2 "" H 9050 4500 50  0001 C CNN
+F 3 "" H 9050 4500 50  0001 C CNN
+	1    9050 4500
+	1    0    0    -1  
+$EndComp
+NoConn ~ 9400 4650
+NoConn ~ 9800 4650
+NoConn ~ 9900 4650
+NoConn ~ 10000 4650
+NoConn ~ 9550 4050
+NoConn ~ 9650 4050
+NoConn ~ 9750 4050
 $EndSCHEMATC
