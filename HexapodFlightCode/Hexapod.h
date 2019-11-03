@@ -104,9 +104,12 @@ class Hexapod {
     // Determine current leg position (in) relative to hexapod center
     void getCurrentPosition(int leg, float* pos);
 
+    // Determine whether leg can move to a given position
+    bool isPositionValid(float x, float y, float z, int leg);
+    
     // Determine position (in) relative to hexapod center from servo angles (deg)
     void getPosition(float a, float b, float c, int leg, float* pos);
-
+    
     // Determine servo angles (deg) from position relative to hexapod center (in)
     void getAngles(float x, float y, float z, int leg, int* angles);
 

@@ -18,6 +18,8 @@ int waypointIndex = 0; // Current waypoint
 float evenTripodYaw = 0; // Current yaw of even leg tripod relative to body
 float oddTripodYaw = 0; // Current yaw of odd leg tripod relative to body
 float netSlopeOffset = 0;
+float ground = ground0;
+float clearance = clearance0;
 
 bool evenStep = true; // Whether the even-numbered legs are raised this step
 long lastUpdate = 0;
@@ -224,6 +226,9 @@ float increment(float targetVal, float currentVal, float delta) {
 // Called iteratively to move the hexapod to the given coordinates
 // Returns true if target position reached
 bool Hexapod::goTo(float x2, float y2, float theta2) {
+  // TODO: check for success
+  // TODO: remove unneeded print statements (or make debug mode only)
+  // TODO: remove old gait code and merge into master
   // Determine time increment
   long dt = millis() - lastUpdate;
   lastUpdate = millis();
@@ -243,13 +248,22 @@ bool Hexapod::goTo(float x2, float y2, float theta2) {
     getAccel(a);
     roll = -asin(a[0]/9.81);
     pitch = asin(a[1]/9.81);
-    // TODO: add maximum limit to slope compensation
-    // TODO: beyond max limit, consider leveling body?
   }
-  pitch = -15*M_PI/180; // TODO: this is here for testing the uphill climbing gait
   // DANCE MODE (accelerometer directly controls orientation):
   //levelBody(-pitch/3, -roll/3); evenStep = !evenStep; levelBody(-pitch/3, -roll/3); return;
   
+  pitch = 15*M_PI/180; // TODO: this is here for testing the uphill climbing gait without accel
+  if(abs(pitch) > 15*M_PI/180) {
+    pitch *= 15*M_PI/180 / pitch;
+  }
+  // TODO: narrow stance on steep slopes
+  if(abs(pitch) > 10*M_PI/180) { // TODO: linear variation in clearance with angle
+    ground = ground0 + 0.5;
+    clearance = clearance0 - 0.5;
+  } else {
+    ground = ground0;
+    clearance = clearance0;
+  }
   // Determine current state
   bool grounded = !digitalRead(feet[1]) && !digitalRead(feet[3]) && !digitalRead(feet[5]);
   if (digitalRead(feet[0]) && digitalRead(feet[2]) && digitalRead(feet[4])) {
@@ -269,7 +283,7 @@ bool Hexapod::goTo(float x2, float y2, float theta2) {
               (footHeights[4] <= ground || !digitalRead(feet[4]));
     raised = min(min(footHeights[1], footHeights[3]), footHeights[5]) >= ground + clearance;
   }
-  grounded = true; // TODO remove
+  grounded = true; // TODO: remove when bump sensors improve
 
   // Move feet during step transitions
   if (!lowered) { // Lowering legs
@@ -298,7 +312,6 @@ bool Hexapod::goTo(float x2, float y2, float theta2) {
   Serial.print(",");
   Serial.println(slopeOffset);
   netSlopeOffset += slopeOffset;
-  // TODO: adjust COM based on slope
   float dx = increment(x2, x, SPEED * dt);
   float dy = increment(y2, y, SPEED * dt);
   float dyaw = increment(theta2, theta, SPEED * dt / (R + roffset));
@@ -313,7 +326,6 @@ bool Hexapod::goTo(float x2, float y2, float theta2) {
   swap = swap || moveTripod(-dx-slopeOffset, -dy, 0, -dyaw, !evenStep, false);
   // Move raised feet to mirror of grounded feet
   swap = swap || moveTripod(dx-slopeOffset, dy, 0, dyaw, evenStep, false);
-  // TODO: check effect of adding slopeOffset to move
 
   // Determine if step transition is required
   float c1[3];
@@ -360,6 +372,9 @@ bool Hexapod::moveTripod(float dx, float dy, float dz, float dtheta, bool even, 
     }
     pos[0] = -pos[1] * sin(dtheta) + pos[0] * cos(dtheta);
     pos[1] = pos[1] * cos(dtheta) + pos[0] * sin(dtheta);
+    if (!isPositionValid(pos[0], pos[1], ground, leg)) { // check shadow is valid
+      return true;
+    }
     if (!moveLegToPosition(pos[0], pos[1], pos[2], leg)) {
       return true;
     }
@@ -529,7 +544,7 @@ void Hexapod::sit() {
   counter = 0;
 }
 
-// Stand with all 6 legs on the ground
+// gro with all 6 legs on the ground
 void Hexapod::stand() {
   for (int leg = 1; leg < 7; leg++) {
     moveLegToState(leg, 0, 0, 0, 0);
@@ -681,6 +696,18 @@ void Hexapod::getCurrentPosition(int leg, float* pos) {
   for (int i = 0; i < 3; i++) {
     pos[i] = footVals[leg - 1][i];
   }
+}
+
+// Determine whether leg can move to a given position
+bool Hexapod::isPositionValid(float x, float y, float z, int leg) {
+  int angles[3];
+  getAngles(x, y, z, leg, angles);
+  for (int i = 0; i < 3; i++) {
+    if(angles[i] < minLimits[i] || angles[i] > maxLimits[i]) {
+      return false;
+    }
+  }
+  return true;
 }
 
 // Determine position (in) relative to hexapod center from servo angles (deg)
