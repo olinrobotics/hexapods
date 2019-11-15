@@ -37,7 +37,8 @@ class Hexapod {
     // Set current position to new origin
     void resetPosition();
 
-/// BEGIN NEW GAIT CODE //////////////////////////////////////////////////////////
+    // Called iteratively to move the hexapod in the given direction
+    bool walk(float vx, float vy, float vtheta);
 
     // Called iteratively to move the hexapod to the given coordinates
     // Returns true if target position reached
@@ -57,18 +58,8 @@ class Hexapod {
     // Positive angle = space legs closer horizontally
     bool resizeTripod(float radius, float angle, bool even);
 
-/// END NEW GAIT CODE /////////////////////////////////////////////////////////////
-
-    // Called iteratively to walk with given x, y, and angular velocities (normalized)
-    // Returns 1 if step taken, -1 if obstacle encountered, 0 otherwise
-    int walk(float forward, float left, float turn);
-
-    // Called iteratively to lower feet to the ground and level out hexapod body
-    // Returns true if complete
-    bool balance();
-
-    // Move legs into the next configuration of a walking gait
-    void step(float forward, float left, float turn, int counter);
+    // Resets a tripod to default stance, centered at (x0, y0, z0)
+    void resetTripod(float x0, float y0, float z0, bool even);
 
     // Lower the hexapod to the ground
     void sit();
@@ -79,28 +70,10 @@ class Hexapod {
     // Move all servos to 90 degrees
     void testCalibration();
 
-    // Move a leg to a predefined state of the gait
-    void moveLegToState(int leg, int state, float forward, float left, float turn);
-
-    // Generate a position vector for a given state of a leg
-    void getLegPosition(int leg, int state, float forward, float turn, float left, float* output);
-
-    // States numbered 1-6 (up, forward, down, down, back, back)
-    int getLegState(int leg, int counter);
-
-    // Displaces the hexapod body by a set amount relative to the ground
-    void translateBody(float dx, float dy, float dz);
-
-    // Rotates the hexapod body by a set amount relative to the ground
-    void rotateBody(float droll, float dpitch, float dyaw);
-
     // Move all 3 servos of a leg to position the end effector
     // Return false if given position is out of range
     bool moveLegToPosition(float x, float y, float z, int leg);
-
-    // Incrementally move all 3 servos of a leg to position the end effector
-    void moveLegToPositionSmooth(float x, float y, float z, int leg);
-
+    
     // Determine current leg position (in) relative to hexapod center
     void getCurrentPosition(int leg, float* pos);
 
@@ -119,18 +92,6 @@ class Hexapod {
     // Move a specified servo to a given angle in degrees
     void moveServo(int value, int leg, int servo);
 
-    // Incrementally move a specified servo to a given angle in degrees
-    void moveServoSmooth(int value, int leg, int servo);
-
-    // Sets leg target position to its current position
-    void stopLeg(int leg);
-
-    // Directly move all servos to their target angles
-    void moveServosDirect();
-    
-    // Increments servos toward desired positions
-    bool updateServos();
-
     // Convert angle in degrees to PWM pulse length
     int pulseLength(int angle, int leg, int servo);
 
@@ -146,7 +107,7 @@ class Hexapod {
     Adafruit_PWMServoDriver pwm1 = Adafruit_PWMServoDriver();
     Adafruit_PWMServoDriver pwm2 = Adafruit_PWMServoDriver(0x41);
     Adafruit_LIS3DH accel = Adafruit_LIS3DH(LIS3DH_CS, LIS3DH_MOSI, LIS3DH_MISO, LIS3DH_CLK);
-//    Adafruit_LIS3DH accel = Adafruit_LIS3DH();
+//    Adafruit_LIS3DH accel = Adafruit_LIS3DH(); // I2C
     SharpIR IR_r = SharpIR(SharpIR::GP2Y0A21YK0F, irRpin);
 };
 

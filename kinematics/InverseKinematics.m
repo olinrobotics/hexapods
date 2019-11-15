@@ -75,7 +75,7 @@ function [a, b, c] = getAngles(x, y, z, L1, L2, L3, leg, R)
     c = -atan2(z-z1, r-r1) - b;
     
     minLimits = [0, 40, 0];
-    maxLimits = [180, 180, 130];
+    maxLimits = [180, 180, 120];
     output = [180/pi*a + 90, -180/pi*b + 90, 180/pi*c]
     if sum((output < minLimits) + (output > maxLimits))
         disp('Out of bounds: ');
