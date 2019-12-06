@@ -1956,8 +1956,6 @@ Wire Wire Line
 Connection ~ 4750 4900
 Wire Wire Line
 	4750 4900 4650 4900
-Text Notes 9100 10700 0    50   ~ 0
-TODOs are probably out of date, check Asana\n\nTODO spec and integrate an IMU that uses I2C\nTODO verify that serial mux won't break everything\nTODO power LIDAR (is this just raspi usb?)\n\nTODO actually spec connectors for foot limit switch wires\nTODO finish creating all footprints\nTODO make some high-level layout decisions\nTODO figure out arduino raspi communication\n
 Text Notes 750  1700 0    50   ~ 0
 Logic Power
 $Comp
@@ -3448,39 +3446,39 @@ Wire Wire Line
 	13750 4250 13750 4500
 Text Notes 3200 5200 0    50   ~ 0
 FT232RQ
-Text Label 5600 9600 1    50   ~ 0
+Text Label 5200 9750 1    50   ~ 0
 A0
-Text Label 5500 9600 1    50   ~ 0
+Text Label 5100 9750 1    50   ~ 0
 A1
-Text Label 5400 9600 1    50   ~ 0
+Text Label 5000 9750 1    50   ~ 0
 A2
-Text Label 5300 9600 1    50   ~ 0
+Text Label 4900 9750 1    50   ~ 0
 A3
-Text Label 5200 9600 1    50   ~ 0
+Text Label 4800 9750 1    50   ~ 0
 A4
-Text Label 5100 9600 1    50   ~ 0
+Text Label 4700 9750 1    50   ~ 0
 A5
-Text Label 5000 9600 1    50   ~ 0
+Text Label 4600 9750 1    50   ~ 0
 A6
-Text Label 4900 9600 1    50   ~ 0
+Text Label 4500 9750 1    50   ~ 0
 A7
 Wire Wire Line
-	4900 9600 4900 9700
+	4500 9750 4500 9850
 Wire Wire Line
-	5000 9700 5000 9600
+	4600 9850 4600 9750
 Wire Wire Line
-	5100 9600 5100 9700
+	4700 9750 4700 9850
 Wire Wire Line
-	5200 9700 5200 9600
+	4800 9850 4800 9750
 Wire Wire Line
-	5300 9600 5300 9700
+	4900 9750 4900 9850
 Wire Wire Line
-	5400 9700 5400 9600
+	5000 9850 5000 9750
 Wire Wire Line
-	5500 9600 5500 9700
+	5100 9750 5100 9850
 Wire Wire Line
-	5600 9700 5600 9600
-Text Notes 5100 10600 0    118  ~ 0
+	5200 9850 5200 9750
+Text Notes 4700 10750 0    118  ~ 0
 IO Breakouts
 Text Label 6400 7800 2    50   ~ 0
 D13
@@ -3525,55 +3523,55 @@ NoConn ~ 6400 6300
 $Comp
 L hex_master_sym:header_0.1_8 U49
 U 1 1 5E0A6DBA
-P 6550 9600
-F 0 "U49" H 6545 9178 50  0000 C CNN
-F 1 "header_0.1_8" H 6545 9087 50  0000 C CNN
-F 2 "hex_master_board:header_0.1_8x" H 6550 9200 50  0001 C CNN
-F 3 "" H 6550 9200 50  0001 C CNN
-	1    6550 9600
+P 6150 9750
+F 0 "U49" H 6145 9328 50  0000 C CNN
+F 1 "header_0.1_8" H 6145 9237 50  0000 C CNN
+F 2 "hex_master_board:header_0.1_8x" H 6150 9350 50  0001 C CNN
+F 3 "" H 6150 9350 50  0001 C CNN
+	1    6150 9750
 	1    0    0    -1  
 $EndComp
 $Comp
 L hex_master_sym:header_0.1_8 U50
 U 1 1 5E0D1B6D
-P 7550 9600
-F 0 "U50" H 7545 9178 50  0000 C CNN
-F 1 "header_0.1_8" H 7545 9087 50  0000 C CNN
-F 2 "hex_master_board:header_0.1_8x" H 7550 9200 50  0001 C CNN
-F 3 "" H 7550 9200 50  0001 C CNN
-	1    7550 9600
+P 7150 9750
+F 0 "U50" H 7145 9328 50  0000 C CNN
+F 1 "header_0.1_8" H 7145 9237 50  0000 C CNN
+F 2 "hex_master_board:header_0.1_8x" H 7150 9350 50  0001 C CNN
+F 3 "" H 7150 9350 50  0001 C CNN
+	1    7150 9750
 	1    0    0    -1  
 $EndComp
-Text Label 7900 9750 1    50   ~ 0
+Text Label 7500 9900 1    50   ~ 0
 D13
-Text Label 7800 9750 1    50   ~ 0
+Text Label 7400 9900 1    50   ~ 0
 D14
-Text Label 7700 9750 1    50   ~ 0
+Text Label 7300 9900 1    50   ~ 0
 D15
-Text Label 7600 9750 1    50   ~ 0
+Text Label 7200 9900 1    50   ~ 0
 D16
-Text Label 7500 9750 1    50   ~ 0
+Text Label 7100 9900 1    50   ~ 0
 D17
-Text Label 7400 9750 1    50   ~ 0
+Text Label 7000 9900 1    50   ~ 0
 D18
-Text Label 7300 9750 1    50   ~ 0
+Text Label 6900 9900 1    50   ~ 0
 D19
-Text Label 7200 9750 1    50   ~ 0
+Text Label 6800 9900 1    50   ~ 0
 D20
-Text Label 6900 9750 1    50   ~ 0
+Text Label 6500 9900 1    50   ~ 0
 D21
-Text Label 6800 9750 1    50   ~ 0
+Text Label 6400 9900 1    50   ~ 0
 D22
-Text Label 6700 9750 1    50   ~ 0
+Text Label 6300 9900 1    50   ~ 0
 D23
-Text Label 6600 9750 1    50   ~ 0
+Text Label 6200 9900 1    50   ~ 0
 D24
-Text Label 6500 9750 1    50   ~ 0
+Text Label 6100 9900 1    50   ~ 0
 D25
-Text Label 6400 9750 1    50   ~ 0
+Text Label 6000 9900 1    50   ~ 0
 D26
-NoConn ~ 6200 9750
-NoConn ~ 6300 9750
+NoConn ~ 5800 9900
+NoConn ~ 5900 9900
 NoConn ~ 7600 6500
 Wire Wire Line
 	7650 5900 7600 5900
@@ -3645,44 +3643,44 @@ Hexapod Control Board V0 --- DRAFT
 $Comp
 L hex_master_sym:header_0.1_8_powered U48
 U 1 1 5DBAE69B
-P 5250 9550
-F 0 "U48" H 5250 9028 50  0000 C CNN
-F 1 "header_0.1_8_powered" H 5250 8937 50  0000 C CNN
-F 2 "hex_master_board:header_0.1_8_power" H 5250 9150 50  0001 C CNN
-F 3 "" H 5250 9150 50  0001 C CNN
-	1    5250 9550
+P 4850 9700
+F 0 "U48" H 4850 9178 50  0000 C CNN
+F 1 "header_0.1_8_powered" H 4850 9087 50  0000 C CNN
+F 2 "hex_master_board:header_0.1_8_power" H 4850 9300 50  0001 C CNN
+F 3 "" H 4850 9300 50  0001 C CNN
+	1    4850 9700
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR0197
 U 1 1 5DBDC669
-P 5850 10000
-F 0 "#PWR0197" H 5850 9750 50  0001 C CNN
-F 1 "GND" H 5855 9827 50  0000 C CNN
-F 2 "" H 5850 10000 50  0001 C CNN
-F 3 "" H 5850 10000 50  0001 C CNN
-	1    5850 10000
+P 5450 10150
+F 0 "#PWR0197" H 5450 9900 50  0001 C CNN
+F 1 "GND" H 5455 9977 50  0000 C CNN
+F 2 "" H 5450 10150 50  0001 C CNN
+F 3 "" H 5450 10150 50  0001 C CNN
+	1    5450 10150
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:+5V #PWR0198
 U 1 1 5DBDC780
-P 4650 9850
-F 0 "#PWR0198" H 4650 9700 50  0001 C CNN
-F 1 "+5V" H 4665 10023 50  0000 C CNN
-F 2 "" H 4650 9850 50  0001 C CNN
-F 3 "" H 4650 9850 50  0001 C CNN
-	1    4650 9850
+P 4250 10000
+F 0 "#PWR0198" H 4250 9850 50  0001 C CNN
+F 1 "+5V" H 4265 10173 50  0000 C CNN
+F 2 "" H 4250 10000 50  0001 C CNN
+F 3 "" H 4250 10000 50  0001 C CNN
+	1    4250 10000
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	4700 9950 4650 9950
+	4300 10100 4250 10100
 Wire Wire Line
-	4650 9950 4650 9850
+	4250 10100 4250 10000
 Wire Wire Line
-	5800 9950 5850 9950
+	5400 10100 5450 10100
 Wire Wire Line
-	5850 9950 5850 10000
+	5450 10100 5450 10150
 $Comp
 L hex_master_sym:LIS3DH_breakout U51
 U 1 1 5DC27FDC
@@ -3739,4 +3737,49 @@ NoConn ~ 10000 4650
 NoConn ~ 9550 4050
 NoConn ~ 9650 4050
 NoConn ~ 9750 4050
+$Comp
+L hex_master_sym:header_0.1_I2C U52
+U 1 1 5DE9837B
+P 8600 9750
+F 0 "U52" H 8828 9628 50  0000 L CNN
+F 1 "header_0.1_I2C" H 8828 9537 50  0000 L CNN
+F 2 "hex_master_board:header_0.1_i2c_12" H 8600 9950 50  0001 C CNN
+F 3 "" H 8600 9950 50  0001 C CNN
+	1    8600 9750
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR0201
+U 1 1 5DE98A69
+P 8450 9500
+F 0 "#PWR0201" H 8450 9350 50  0001 C CNN
+F 1 "+5V" H 8465 9673 50  0000 C CNN
+F 2 "" H 8450 9500 50  0001 C CNN
+F 3 "" H 8450 9500 50  0001 C CNN
+	1    8450 9500
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0202
+U 1 1 5DE98B84
+P 8300 9900
+F 0 "#PWR0202" H 8300 9650 50  0001 C CNN
+F 1 "GND" H 8305 9727 50  0000 C CNN
+F 2 "" H 8300 9900 50  0001 C CNN
+F 3 "" H 8300 9900 50  0001 C CNN
+	1    8300 9900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8550 9750 8550 9650
+Wire Wire Line
+	8550 9650 8300 9650
+Wire Wire Line
+	8300 9650 8300 9900
+Wire Wire Line
+	8450 9750 8450 9500
+Text Label 8650 9750 1    50   ~ 0
+SDA
+Text Label 8750 9750 1    50   ~ 0
+SCL
 $EndSCHEMATC
