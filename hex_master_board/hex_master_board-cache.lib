@@ -557,6 +557,22 @@ X SCL 4 150 0 100 D 50 50 1 1 I
 ENDDRAW
 ENDDEF
 #
+# hex_master_sym:header_0.1_xbee
+#
+DEF hex_master_sym:header_0.1_xbee U 0 40 Y Y 1 F N
+F0 "U" 0 0 50 H V C CNN
+F1 "hex_master_sym:header_0.1_xbee" 0 0 50 H V C CNN
+F2 "" 0 0 50 H I C CNN
+F3 "" 0 0 50 H I C CNN
+DRAW
+S -250 -150 250 -450 0 1 0 N
+X GND 1 -150 -50 100 D 50 50 1 1 I
+X PWR 2 -50 -50 100 D 50 50 1 1 I
+X DOUT 3 50 -50 100 D 50 50 1 1 I
+X DIN 4 150 -50 100 D 50 50 1 1 I
+ENDDRAW
+ENDDEF
+#
 # power:+5V
 #
 DEF power:+5V #PWR 0 0 Y Y 1 F P
