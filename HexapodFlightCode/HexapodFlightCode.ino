@@ -1,7 +1,7 @@
 #include "Hexapod.h"
 
 Hexapod hex = Hexapod();
-enum State {NONE, STAND, SIT, WALK, TEST, PACE, WANDER, UPDATE};
+enum State {NONE, STAND, SIT, WALK, GOTO, TEST, PACE, WANDER, UPDATE, DANCE};
 State state = NONE;
 float forward = 0;
 float left = 0;
@@ -15,7 +15,6 @@ void setup() {
   Serial.println("Input values are scaled between -1 and 1");
   delay(10);
   hex.init();
-  int pos[3];
 }
 
 void loop() {
@@ -24,13 +23,13 @@ void loop() {
     if (STATE_VERBOSE) {Serial.println("Found a Serial Command!");}
     if (Serial.peek() == ' ') { // Stop
       if (STATE_VERBOSE) {Serial.println("Command: Stop");}
-      if (state == STAND) {
-        state = SIT;
-        Serial.println("Sit");
-      } else {
+//      if (state == STAND) {
+//        state = SIT;
+//        Serial.println("Sit");
+//      } else {
         state = STAND;
         Serial.println("Stand");
-      }
+//      }
       Serial.read();
     } else if (Serial.peek() == 't') { // Test calibration
       state = TEST;
@@ -98,32 +97,41 @@ void loop() {
     } else if (Serial.peek() == 'j') { // Twist left
       if (STATE_VERBOSE) {Serial.println("Twist: left");}
       state = UPDATE;
-      hex.rotateBody(0,0,-.05);
+//      hex.rotateBody(0,0,-.05);
       Serial.read(); 
     } else if (Serial.peek() == 'l') { // Twist right
       if (STATE_VERBOSE) {Serial.println("Twist: right");}
       state = UPDATE;
-      hex.rotateBody(0,0,.05);
+//      hex.rotateBody(0,0,.05);
       Serial.read(); 
     } else if (Serial.peek() == 'i') { // Pitch up
       if (STATE_VERBOSE) {Serial.println("Pitch: up");}
       state = UPDATE;
-      hex.rotateBody(0,-.05,0);
+//      hex.rotateBody(0,-.05,0);
       Serial.read(); 
     } else if (Serial.peek() == 'k') { // Pitch down
       if (STATE_VERBOSE) {Serial.println("Pitch: down");}
       state = UPDATE;
-      hex.rotateBody(0,.05,0);
+//      hex.rotateBody(0,.05,0);
       Serial.read();
     } else if (Serial.peek() == 'u') { // Roll left
       if (STATE_VERBOSE) {Serial.println("Roll: left");}
       state = UPDATE;
-      hex.rotateBody(.05,0,0);
+//      hex.rotateBody(.05,0,0);
+      Serial.read();
+    } else if (Serial.peek() == 'm') { // Raise lidar
+      hex.tiltLidar(0);
+      Serial.read();
+    } else if (Serial.peek() == 'n') { // Lower lidar
+      hex.tiltLidar(25);
+      Serial.read();
+    } else if (Serial.peek() == 'b') { // Dance!
+      state = DANCE;
       Serial.read();
     } else if (Serial.peek() == 'o') { // Roll right
       if (STATE_VERBOSE) {Serial.println("Roll: right");}
       state = UPDATE;
-      hex.rotateBody(-.05,0,0);
+//      hex.rotateBody(-.05,0,0);
       Serial.read();
     } /*else if (Serial.peek() == 'q') { // This is just a test
       state = FOLLOW;
@@ -138,12 +146,12 @@ void loop() {
       forward = Serial.parseFloat();
       turn = Serial.parseFloat();
       left = 0;
-      if (abs(forward) + abs(turn) <= 1) { // Walk
+      if (abs(forward) + abs(turn) <= 100000) { // Walk
         Serial.print("Walk: ");
         Serial.print(forward);
         Serial.print(", ");
         Serial.println(turn);
-        state = WALK;
+        state = GOTO;
       } else { // Invalid input
         Serial.println("Invalid velocity");
       }
@@ -156,9 +164,12 @@ void loop() {
         //hex.trynewpath(2, 2);
       //Act
   if (state == WALK) {
-    if(hex.walk(forward, left, turn) == -1) {
+    hex.walk(forward, left, turn);
+  } else if (state == GOTO) {
+    if(hex.goTo(forward, left, turn*M_PI/180) == 1) {
       Serial.println("Stopping");
-//      hex.stand();
+      hex.stand();
+      state = STAND;
     }
   } else if (state == STAND) {
     hex.stand();
@@ -170,6 +181,8 @@ void loop() {
     hex.sit();
   } else if (state == TEST) {
     hex.testCalibration();
+  } else if (state == DANCE) {
+    hex.dance();
   } else if (state == WANDER) {
       if(hex.followWaypoint() == -1) {
         hex.clearWaypoints();
@@ -178,7 +191,6 @@ void loop() {
         hex.addWalkSteps(1, 0, -1);
       }
   }  else if (state == UPDATE) {
-    hex.updateServos();
   } /*else if (state == FOLLOW) {
     hex.followWaypoint();
   } */

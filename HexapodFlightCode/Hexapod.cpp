@@ -2,29 +2,35 @@
 #include "Hexapod.h"
 
 long stepStartTime = 0; // Tracks elapsed time for walking
-long lastServoUpdate = 0; // Tracks elapsed time for servo updates
-int counter = 0; // Tracks current walking state
-bool feetDown = true; // Tracks if a step is currently in progress
 bool accelPresent = false; // Accelerometer initialized successfully
 float pastAccel[FILTER_LENGTH][3]; // Accelerometer moving average values
 float footVals[6][3]; // Current x-y-z position of each foot
-float footTargets[6][3]; // Current target position of each foot
-float footHeights[6]; // Current height of foot above the ground (in)
+float footHeights[6]; // Current height of ground under each foot (in)
 float *waypointsX; // Linear speed (-1 to 1), target x (in), delay (s)
 float *waypointsY; // Angular speed (-1 to 1), target y (in), delay flag
 int *waypointsN; // Waypoint type (N<=0), steps remaining (N>0)
 int waypointLen = 0; // Number of waypoints
 int waypointIndex = 0; // Current waypoint
+float evenTripodYaw = 0; // Current yaw of even leg tripod relative to body
+float oddTripodYaw = 0; // Current yaw of odd leg tripod relative to body
+float netSlopeOffset = 0;
+float ground = ground0;
+float clearance = clearance0;
+
+bool evenStep = true; // Whether the even-numbered legs are raised this step
+long lastUpdate = 0;
 
 // Initialize pin modes and servo shield
 void Hexapod::init() {
   pwm1.begin();
   pwm2.begin();
   if (accel.begin(0x18)) {
+    Serial.println("INIT");
     accelPresent = true;
     accel.setRange(LIS3DH_RANGE_4_G);
   }
   pinMode(relay, OUTPUT);
+  pinMode(LIDAR, OUTPUT);
   for (int leg = 0; leg < 6; leg++) {
     pinMode(feet[leg], INPUT);
   }
@@ -105,7 +111,7 @@ int Hexapod::followWaypoint() {
     waypointIndex++;
     return 1;
   } else if (waypointsN[waypointIndex] == WAYPOINT_INFINITE) {
-    if (walk(waypointsX[waypointIndex], 0, waypointsY[waypointIndex]) == -1) {
+    if (goTo(waypointsX[waypointIndex], 0, waypointsY[waypointIndex]) == -1) {
       return -1;
     }
     return 0;
@@ -113,15 +119,16 @@ int Hexapod::followWaypoint() {
     float deltaX = waypointsX[waypointIndex] - x;
     float deltaY = waypointsY[waypointIndex] - y;
     float deltaTheta = fmod(atan2(deltaY, deltaX) - theta + M_PI, 2 * M_PI) - M_PI;
-    if (abs(sqrt(deltaX * deltaX + deltaY * deltaY)) <= dx / 2) {
+    if (abs(sqrt(deltaX * deltaX + deltaY * deltaY)) <= DX / 2) {
       waypointIndex++;
       return 1;
     }
-    if (abs(deltaTheta) >= dtheta / 2) {
-      return (walk(0, 0, deltaTheta > 0 ? 1 : -1) == -1 ? -1 : 0);
-    } else {
-      return (walk(1, 0, 0) == -1 ? -1 : 0);
-    }
+    //    if (abs(deltaTheta) >= DTHETA / 2) {
+    //      return (walk(0, 0, deltaTheta > 0 ? 1 : -1) == -1 ? -1 : 0);
+    //    } else {
+    //      return (walk(1, 0, 0) == -1 ? -1 : 0);
+    //    }
+    return 0;
   } else if (waypointsN[waypointIndex] == WAYPOINT_DELAY) {
     if (waypointsY[waypointIndex] == 0) {
       waypointsY[waypointIndex] = 1; // Flag for timer start
@@ -133,7 +140,7 @@ int Hexapod::followWaypoint() {
     }
     return 0;
   } else if (waypointsN[waypointIndex] > 0) {
-    switch (walk(waypointsX[waypointIndex], 0, waypointsY[waypointIndex])) {
+    switch (goTo(waypointsX[waypointIndex], 0, waypointsY[waypointIndex])) {
       case -1: waypointsN[waypointIndex]++; return -1;
       case 0: return 0;
     }
@@ -147,139 +154,339 @@ int Hexapod::followWaypoint() {
   }
 }
 
-// Called iteratively to walk with given linear and angular velocities
-// Returns 1 if step taken, -1 if obstacle encountered, 0 otherwise
-int Hexapod::walk(float forward, float left, float turn) {
-  bool complete = true;
-  if (accelPresent) {
-    float a[3];
-    getAccel(a);
-  }
-  if (ROUGH_TERRAIN) {
-    if (!feetDown) { // Stop legs if they hit the ground
-      for (int leg = 1; leg <= 6; leg++) {
-        if (digitalRead(feet[leg - 1]) == LOW && counter % 4 == 2 * (leg % 2)) {
-          float pos[3];
-          getCurrentPosition(leg, pos);
-          footHeights[leg-1] = pos[2];
-          moveLegToPositionSmooth(footVals[leg-1][0], footVals[leg-1][1], footHeights[leg-1], leg);
-        }
-      }
-      feetDown = updateServos();
-      return 0;
-    } else if (counter % 2 == 0) { // Shift body up or down
-      if(!balance()) {
-        return false;
-      }
-    }
+// Increment a variable towards a setpoint, returning the displacement
+float increment(float targetVal, float currentVal, float delta) {
+  if (targetVal >= currentVal + delta) {
+    return delta;
+  } else if (targetVal <= currentVal - delta) {
+    return -delta;
   } else {
-    updateServos();
+    return targetVal - currentVal;
   }
-  if (millis() - stepStartTime > stepDuration) { // Take new step
-    stepStartTime = millis();
-    if (DETECT_WALLS && sampleIR() < 12 && forward > 0) {
-      Serial.println("Object is too close! Stopping!");
-      return -1;
-    }
-    if (DETECT_CLIFFS && ((counter % 4 == 2 && digitalRead(feet[0]) != LOW) ||
-                          (counter % 4 == 0 && digitalRead(feet[5]) != LOW))) {
-      step(forward, left, turn, counter - 2);
-      x -= 2 * forward * dx * cos(theta);
-      y -= 2 * forward * dx * sin(theta);
-      theta -= 2 * turn * dtheta;
-      counter--;
-      if (counter < 0) counter += 4;
-      Serial.println("My feet aren't on the ground!");
-      Serial.print("Foot 1 is: "); Serial.println(digitalRead(feet[0]));
-      Serial.print("Foot 6 is: "); Serial.println(digitalRead(feet[5]));
-      return -1;
-    }
-    step(forward, left, turn, counter);
-    counter++;
-    return 1;
-  }
-  return 0;
 }
 
-// Called iteratively to lower feet to the ground and level out hexapod body
-// Returns true if complete
-bool Hexapod::balance() {
-  int contacts = 0;
-  for (int leg = 1; leg <= 6; leg++) {
-    if (digitalRead(feet[leg - 1]) == LOW && counter % 4 == 2 * (leg % 2)) {
-      contacts++;
+// Called iteratively to moves in the given direction relative to current orientation
+bool Hexapod::walk(float vx, float vy, float vtheta) {
+  // TODO: vary speed
+  return goTo(x + hexToWorld(vx, vy, true), y + hexToWorld(vx, vy, false), theta + vtheta);
+}
+
+// Called iteratively to move the hexapod to the given world coordinates
+// Returns true if target position reached
+bool Hexapod::goTo(float x2, float y2, float theta2) {
+  // TODO: update waypoint code
+  // TODO: change position on stand command
+  
+  // Determine time increment
+  long dt = millis() - lastUpdate;
+  lastUpdate = millis();
+  if (dt > 200) { // time hasn't been updated recently
+    return false;
+  }
+  if (FEET_VERBOSE) {
+    Serial.print("Feet: ");
+    for (int i = 0; i < 6; i++) {
+      Serial.print(digitalRead(feet[i]));
+    }
+    Serial.println();
+  }
+
+  // Determine absolute orientation
+  float a[3];
+  float roll = 0;
+  float pitch = 0;
+  if (accelPresent) {
+    getAccel(a);
+    roll = -asin(a[1] / 9.81);
+    pitch = asin(a[0] / 9.81);
+    if (abs(pitch) > 15 * M_PI / 180) {
+      pitch *= 15 * M_PI / 180 / abs(pitch);
     }
   }
-  if (contacts==3) { // Raise body
-    translateBody(0, 0, 0.05);
-    float front[3];
-    float back[3];
-    float mid[3];
-    if ((counter%4)/2==1) {
-      getCurrentPosition(1, front);
-      getCurrentPosition(5, mid);
-      getCurrentPosition(3, back);
+  if(!DETECT_SLOPES) {
+    pitch = 0;
+    roll = 0;
+  }
+  
+  // Determine current state of feet
+  bool grounded = !digitalRead(feet[1]) && !digitalRead(feet[3]) && !digitalRead(feet[5]);
+  if (digitalRead(feet[0]) && digitalRead(feet[2]) && digitalRead(feet[4])) {
+    grounded = true;
+  }
+  bool lowered = (footHeights[1] <= ground || !digitalRead(feet[1])) &&
+                 (footHeights[3] <= ground || !digitalRead(feet[3])) &&
+                 (footHeights[5] <= ground || !digitalRead(feet[5]));
+  bool raised = min(min(footHeights[0], footHeights[2]), footHeights[4]) >= ground + clearance;
+  if (evenStep) {
+    grounded = !digitalRead(feet[0]) && !digitalRead(feet[2]) && !digitalRead(feet[4]);
+    if (digitalRead(feet[1]) && digitalRead(feet[3]) && digitalRead(feet[5])) {
+      grounded = true;
+    }
+    lowered = (footHeights[0] <= ground || !digitalRead(feet[0])) &&
+              (footHeights[2] <= ground || !digitalRead(feet[2])) &&
+              (footHeights[4] <= ground || !digitalRead(feet[4]));
+    raised = min(min(footHeights[1], footHeights[3]), footHeights[5]) >= ground + clearance;
+  }
+  grounded = true; // TODO: remove when bump sensors improve
+
+  // Move feet during step transitions
+  if (!lowered) { // Lowering legs
+    // Adjust body height on steep slopes
+    if (abs(pitch) > 10 * M_PI / 180) { // TODO: linear variation in clearance with angle
+      ground = ground0 + 0.5;
+      clearance = clearance0 - 0.5;
     } else {
-      getCurrentPosition(6, front);
-      getCurrentPosition(2, mid);
-      getCurrentPosition(4, back);
+      ground = ground0;
+      clearance = clearance0;
     }
-    float pitch = -atan2(front[2]-back[2], front[0]-back[0]) - .1;
-    float roll = atan2(back[2]+front[2]-2*mid[2], back[1]+front[1]-2*mid[1]);
-    if ((counter%4)/2==0) roll *= -1;
-    Serial.println(pitch);
-    Serial.println(roll);
-    if (pitch > 0.02) rotateBody(0, -0.01, 0);
-    else if (pitch < -0.02) rotateBody(0, 0.01, 0);
-    if (roll > 0.02) rotateBody(-0.01, 0, 0);
-    else if (roll < -0.02) rotateBody(0.01, 0, 0);
-  } else { // Lower body
-    translateBody(0, 0, -0.05);
+    if (!moveTripod(0, 0, -SPEED * dt, 0, !evenStep, true)) {
+      return false;
+    }
   }
-  return updateServos();
-}
+  if (!grounded) { // Limit switches not triggered
+    moveTripod(0, 0, SPEED * dt, 0, evenStep, false);
+    moveTripod(0, 0, SPEED * dt, 0, !evenStep, true);
+    return false;
+  }
+  if (!raised) { // Raising legs
+    if (!moveTripod(0, 0, SPEED * dt, 0, evenStep, false)) {
+      return false;
+    }
+  }
+  if (!levelBody(0, 0)) { // Leveling body
+    return false;
+  }
 
-// Move legs into the next configuration of a walking gait
-void Hexapod::step(float forward, float left, float turn, int counter) {
-  x += forward * dx * cos(theta) - left * dy * sin(theta);
-  y += forward * dx * sin(theta) + left * dy * cos(theta);
-  theta += turn * dtheta;
-  feetDown = false;
+  // Compute body displacement toward target state
+  float slopeOffset = tan(pitch) * ground - netSlopeOffset;
+  if (abs(slopeOffset) > SPEED * dt) {
+    slopeOffset = copysignf(SPEED * dt, slopeOffset);
+  }
+  netSlopeOffset += slopeOffset;
+  float dx = increment(worldToHex(x2, y2, true), worldToHex(x, y, true), SPEED * dt); // Global position change
+  float dy = increment(worldToHex(x2, y2, false), worldToHex(x, y, false), SPEED * dt);
+  //  fmod(theta2 - theta + M_PI, 2 * M_PI) - M_PI; //TODO: theta modulus
+  float dyaw = increment(theta2, theta, SPEED * dt / (R + roffset));
+  x += hexToWorld(dx, dy, true);
+  y += hexToWorld(dx, dy, false);
+  theta += dyaw;
   if (LOCATION_VERBOSE) {
+    Serial.print("x: ");
     Serial.print(x);
-    Serial.print(", ");
+    Serial.print(", y: ");
     Serial.print(y);
-    Serial.print(", ");
+    Serial.print(", theta: ");
     Serial.println(theta);
   }
-  for (int leg = 1; leg < 7; leg++) {
-    if (leg % 2 == 0) { // right side
-      moveLegToState(leg, counter % 4, forward, left, turn);
-    } else {
-      moveLegToState(leg, (counter + 2) % 4, forward, left, turn);
+  // Move feet during step
+  bool swap = false;
+  // Move grounded feet reverse of body motion
+  swap = swap || moveTripod(-dx - slopeOffset, -dy, 0, -dyaw, !evenStep, false);
+  // Move raised feet to mirror of grounded feet
+  swap = swap || moveTripod(dx - slopeOffset, dy, 0, dyaw, evenStep, false);
+
+  // Determine if step transition is required
+  float cRaised[3];
+  float cLowered[3];
+  getCentroid(evenStep, cRaised);
+  getCentroid(!evenStep, cLowered);
+  float xMargin = (cRaised[0] - cLowered[0] + dx) / (2 * roffset * sqrt(3)); // forward stability margin
+  float yMargin = (cRaised[1] - cLowered[1] + dy) / (2 * roffset * 0.5); // sideways stability margin
+  bool xStable = (dx == 0) || (xMargin < STABILITY_MARGIN && dx > 0) || (-xMargin < STABILITY_MARGIN && dx < 0);
+  bool yStable = (dy == 0) || (yMargin < STABILITY_MARGIN && dy > 0) || (-yMargin < STABILITY_MARGIN && dy < 0);
+  // TODO: adjust y margin for even vs odd steps
+  swap = swap || !xStable || !yStable; // exceed stability threshold
+  float yawSign = abs(dyaw) > .001 ? copysignf(1.0, dyaw) : 0;
+  swap = swap || evenStep && evenTripodYaw * yawSign > DTHETA || !evenStep && oddTripodYaw * yawSign > DTHETA;
+  if (swap) { // switch feet
+    evenStep = !evenStep;
+    delay(100); // TODO: this is awful, set a delay variable somewhere instead
+  }
+
+  // Check for success
+  if(abs(dx) < SPEED * dt && abs(dy) < SPEED * dt && abs(dyaw) < SPEED * dt / (R + roffset)) {
+    return true;
+  }
+  return false;
+}
+
+// Convert from hexapod to world frames
+float Hexapod::hexToWorld(float xval, float yval, bool returnx) {
+  float angle = theta;
+  if (returnx) return xval * cos(angle) + yval * sin(angle);
+  else return -xval * sin(angle) + yval * cos(angle);
+}
+
+// Convert from hexapod to world frames
+float Hexapod::worldToHex(float xval, float yval, bool returnx) {
+  float angle = -theta;
+  if (returnx) return xval * cos(angle) + yval * sin(angle);
+  else return -xval * sin(angle) + yval * cos(angle);
+}
+
+// Incrementally move a foot triangle by given displacement, true if limit reached
+// grounded prevents lowering a triggered foot or raising an untriggered foot
+bool Hexapod::moveTripod(float dx, float dy, float dz, float dtheta, bool even, bool grounded) {
+  if (even) evenTripodYaw += dtheta;
+  else oddTripodYaw += dtheta;
+  float pos[3];
+  for (int leg = even ? 2 : 1; leg <= 6; leg += 2) {
+    getCurrentPosition(leg, pos);
+    pos[0] += dx;
+    pos[1] += dy;
+    if (!grounded || dz > 0 || digitalRead(feet[leg - 1])) { // leg not contacting ground
+      if (!grounded || dz < 0 || !digitalRead(feet[leg - 1])) { // leg is in contact with ground
+        pos[2] += dz;
+      }
+    }
+    if (pos[2] > ground + clearance) { // leg raised too high
+      pos[2] = ground + clearance;
+    }
+    if (pos[2] < ground) { // leg lowered too far
+      pos[2] = ground;
+    }
+    pos[0] = -pos[1] * sin(dtheta) + pos[0] * cos(dtheta);
+    pos[1] = pos[1] * cos(dtheta) + pos[0] * sin(dtheta);
+    if (!isPositionValid(pos[0], pos[1], ground, leg)) { // check shadow is valid
+      return true;
+    }
+    if (!moveLegToPosition(pos[0], pos[1], pos[2], leg)) {
+      return true;
+    }
+    footHeights[leg - 1] = pos[2];
+  }
+  return false;
+}
+
+// Levels the hexapod body relative to the ground
+// Returns true if level or position is unreachable
+bool Hexapod::levelBody(float pitch, float roll) {
+  float dx = footVals[0][0] - footVals[2][0]; // leg 1 to 3
+  float dy = (footVals[0][1] + footVals[2][1]) / 2 - footVals[4][1]; // legs 1&3 to 5
+  float p = atan2(footVals[0][2] - footVals[2][2], dx);
+  float r = atan2((footVals[0][2] + footVals[2][2]) / 2 - footVals[4][2], dy);
+  if (!evenStep) {
+    dx = footVals[5][0] - footVals[3][0]; // leg 6 to 4
+    dy = footVals[1][1] - (footVals[5][1] + footVals[3][1]) / 2; // leg 6&4 to 2
+    p = atan2(footVals[5][2] - footVals[3][2], dx);
+    r = atan2(footVals[1][2] - (footVals[5][2] + footVals[3][2]) / 2, dy);
+  }
+  float dzp = (tan(pitch) - tan(p)) * dx / 2;
+  float dzr = (tan(roll) - tan(r)) * dy / 2;
+  float dz[3];
+  if (evenStep) { // odd legs grounded
+    dz[0] = footVals[0][2] + dzp + dzr; // foot 1
+    dz[1] = footVals[2][2] - dzp + dzr; // foot 3
+    dz[2] = footVals[4][2] - dzr; // foot 5
+  } else { // even legs grounded
+    dz[0] = footVals[1][2] + dzr; // foot 2
+    dz[1] = footVals[3][2] - dzp - dzr; // foot 4
+    dz[2] = footVals[5][2] + dzp - dzr; // foot 6
+  }
+  float z0 = ground - min(min(dz[0], dz[1]), dz[2]);
+
+  if (abs(dzp) + abs(dzr) < 0.1) {
+    return true;
+  }
+  for (int i = 0; i < 3; i++) {
+    int leg = !evenStep ? 2 * i + 2 : 2 * i + 1;
+    if (!moveLegToPosition(footVals[leg - 1][0], footVals[leg - 1][1], z0 + dz[i], leg)) {
+      Serial.println("Failed to level body");
+      return true;
     }
   }
+//  delay(100); // TODO: this is awful, set a delay variable somewhere instead
+  return false;
+}
+
+// Determine centroid of tripod
+void Hexapod::getCentroid(bool even, float* centroid) {
+  centroid[0] = centroid[1] = centroid[2] = 0;
+  float pos[3];
+  for (int leg = even ? 2 : 1; leg <= 6; leg += 2) {
+    getCurrentPosition(leg, pos);
+    for (int i = 0; i < 3; i++) {
+      centroid[i] += pos[i] / 3;
+    }
+  }
+}
+
+// Adjust radius and angle offset of a raised foot triangle, 0 radius for no change
+bool Hexapod::resizeTripod(float radius, float angle, bool even) {
+  float centroid[3];
+  getCentroid(even, centroid);
+  float pos[3];
+  for (int leg = even ? 2 : 1; leg <= 6; leg += 2) {
+    getCurrentPosition(leg, pos);
+    // Scale radius of tripod
+    float r = sqrt((pos[0] - centroid[0]) * (pos[0] - centroid[0]) + (pos[1] - centroid[1]) * (pos[1] - centroid[1]));
+    if (radius != 0) {
+      pos[0] = (pos[0] - centroid[0]) * radius / r + centroid[0];
+      pos[1] = (pos[1] - centroid[1]) * radius / r + centroid[1];
+    }
+    // Adjust angular spacing of tripod
+    float theta = atan2(pos[1] - centroid[1], pos[0] - centroid[0]);
+    float target = leg * M_PI / 3 - M_PI / 6;
+    if (leg % 3 == 0) { // Legs 3 and 6 CCW
+      target += angle;
+    } else if (leg % 3 == 1) { // Legs 1 and 4 CW
+      target -= angle;
+    }
+    float dtheta = target - theta;
+    pos[0] = -pos[1] * sin(dtheta) + pos[0] * cos(dtheta);
+    pos[1] = pos[1] * cos(dtheta) + pos[0] * sin(dtheta);
+
+    // Move leg to new position
+    if (!moveLegToPosition(pos[0], pos[1], pos[2], leg)) {
+      return false;
+    }
+  }
+}
+
+// Resets a tripod to default stance, centered at (x0, y0, z0)
+void Hexapod::resetTripod(float x0, float y0, float z0, bool even) {
+  float r0 = R + roffset;
+  for (int leg = even ? 2 : 1; leg <= 6; leg += 2) {
+    float pos[] = {r0 * cos(leg*M_PI / 3 - M_PI / 6) + x0, r0 * sin(leg*M_PI / 3 - M_PI / 6) + y0, z0};
+    moveLegToPosition(pos[0], pos[1], pos[2], leg);
+  }
+}
+
+int mirrorLeg(int leg) {
+  return (leg + 2) % 6 + 1;
+}
+
+// Mimic accelerometer motion
+void Hexapod::dance() {
+  float a[3];
+  float roll = 0;
+  float pitch = 0;
+  if (accelPresent) {
+    getAccel(a);
+    roll = -asin(a[1] / 9.81);
+    pitch = asin(a[0] / 9.81);
+    if (abs(pitch) > 15 * M_PI / 180) {
+      pitch *= 15 * M_PI / 180 / abs(pitch);
+    }
+  }
+  levelBody(-pitch/3, -roll/3); evenStep = !evenStep; levelBody(-pitch/3, -roll/3); return;  
 }
 
 // Lower the hexapod to the ground
 void Hexapod::sit() {
+  float dR = 7.2;
+  float z0 = -1.26;
   for (int leg = 1; leg < 7; leg++) {
-    float dR = 5.3;
-    float z0 = -0.6;
-    float pos[3] = {(R + dR)*cos(leg*M_PI / 3 - M_PI / 6), (R + dR)*sin(leg*M_PI / 3 - M_PI / 6), z0};
-    moveLegToPositionSmooth(pos[0], pos[1], pos[2], leg);
+    float pos[] = {(R + dR)*cos(leg*M_PI / 3 - M_PI / 6), (R + dR)*sin(leg*M_PI / 3 - M_PI / 6), z0};
+    moveLegToPosition(pos[0], pos[1], pos[2], leg);
   }
-  moveServosDirect();
-  counter = 0;
 }
 
 // Stand with all 6 legs on the ground
 void Hexapod::stand() {
-  for (int leg = 1; leg < 7; leg++) {
-    moveLegToState(leg, 0, 0, 0, 0);
-  }
-  moveServosDirect();
-  counter = 0;
+  resetTripod(0, 0, ground, false);
+  resetTripod(0, 0, ground, true);
+  netSlopeOffset = 0;
 }
 
 // Move all servos to 90 degrees
@@ -288,126 +495,39 @@ void Hexapod::testCalibration() {
   for (int leg = 1; leg < 7; leg++) {
     moveLeg(angles, leg);
   }
-  counter = 0;
-}
-
-// Move a leg to a predefined state of the gait
-void Hexapod::moveLegToState(int leg, int state, float forward, float left, float turn) {
-  float pos[3];
-  getLegPosition(leg, state, forward, left, turn, pos);
-  moveLegToPositionSmooth(pos[0], pos[1], pos[2], leg);
-}
-
-// Generate a position vector for a given state of a leg
-// Legs numbered 1-6 CCW from front left
-// States numbered 1-4 back-up-forward-down
-// forward and turn specify movement direction between -1 and 1
-// Resulting position is stored in output
-void Hexapod::getLegPosition(int leg, int state, float forward, float left, float turn, float* output) {
-  float pos[] = {R * cos(leg*M_PI / 3 - M_PI / 6), R * sin(leg*M_PI / 3 - M_PI / 6), ground};
-  if (state == 2) { // leg lifted
-    pos[2] += clearance;
-  }
-  if (ROUGH_TERRAIN) {
-    if (state == 3) { // leg forward
-      footHeights[leg - 1] = pos[2];
-    } else if (state != 2 && footHeights[leg - 1] != 0) {
-      pos[2] = footHeights[leg - 1];
-    }
-  }
-  if (leg <= 3) { // left side
-    pos[1] += yoffset;
-  } else {
-    pos[1] -= yoffset;
-  }
-  float w = 0;
-  if (state == 1) { // leg back
-    pos[0] -= dx * forward;
-    pos[1] -= dy * left;
-    w = -turn * dtheta;
-  }
-  else if (state == 3) { // leg forward
-    pos[0] += dx * forward;
-    pos[1] += dy * left;
-    w = turn * dtheta;
-  }
-  // turn
-  float x = pos[0] * cos(w) - pos[1] * sin(w);
-  float y = pos[0] * sin(w) + pos[1] * cos(w);
-  pos[0] = x;
-  pos[1] = y;
-  for (int i = 0; i < 3; i++) {
-    output[i] = pos[i];
-  }
-}
-
-// Displaces the hexapod body by a set amount relative to the ground
-void Hexapod::translateBody(float dx, float dy, float dz) {
-  float minHeight = ground+clearance;
-  float maxHeight = ground;
-  for (int leg = 1; leg <= 6; leg++) {
-    if (counter % 4 == 2 * (leg % 2)) {
-      minHeight = min(footHeights[leg-1], minHeight);
-      maxHeight = max(footHeights[leg-1], maxHeight);
-      if(footHeights[leg-1] == 0) {
-        return;
-      }
-    }
-  }
-  dz = min(minHeight-ground, dz); // Apply lower limit
-  dz = max(maxHeight-(ground+clearance/2), dz); // Apply upper limit
-  float pos[3];
-  for (int leg = 1; leg <= 6; leg++) {
-    if (digitalRead(feet[leg-1]) == LOW && counter % 2 == 0) {
-      getCurrentPosition(leg, pos);
-      moveLegToPositionSmooth(pos[0]-dx, pos[1]-dy, pos[2]-dz, leg);
-      footHeights[leg-1] = pos[2]-dz;
-    }
-  }
-}
-
-// Rotates the hexapod body by a set amount relative to the ground
-void Hexapod::rotateBody(float droll, float dpitch, float dyaw) {
-  float pos[3];
-  for (int leg = 1; leg <= 6; leg++) {
-    if (!ROUGH_TERRAIN || digitalRead(feet[leg-1]) == LOW) {
-      getCurrentPosition(leg, pos);
-      pos[1] = -pos[2]*sin(droll) + pos[1]*cos(droll);
-      pos[2] = pos[2]*cos(droll) + pos[1]*sin(droll);
-      pos[2] = -pos[0]*sin(dpitch) + pos[2]*cos(dpitch);
-      pos[0] = pos[0]*cos(dpitch) + pos[2]*sin(dpitch);
-      pos[0] = -pos[1]*sin(dyaw) + pos[0]*cos(dyaw);
-      pos[1] = pos[1]*cos(dyaw) + pos[0]*sin(dyaw);
-      moveLegToPositionSmooth(pos[0], pos[1], pos[2], leg);
-      footHeights[leg-1] = pos[2];
-    }
-  }
 }
 
 // Move all 3 servos of a leg to position the end effector
-void Hexapod::moveLegToPositionSmooth(float x, float y, float z, int leg) {
-  footTargets[leg - 1][0] = x;
-  footTargets[leg - 1][1] = y;
-  footTargets[leg - 1][2] = z;
-}
-
-// Move all 3 servos of a leg to position the end effector
-void Hexapod::moveLegToPosition(float x, float y, float z, int leg) {
+bool Hexapod::moveLegToPosition(float x, float y, float z, int leg) {
   int angles[3];
   getAngles(x, y, z, leg, angles);
-  if (angles[0] != -1) {
-    moveLeg(angles, leg);
-    footVals[leg-1][0] = x;
-    footVals[leg-1][1] = y;
-    footVals[leg-1][2] = z;
+  if (angles[0] == -1) {
+    return false;
   }
+  moveLeg(angles, leg);
+  footVals[leg - 1][0] = x;
+  footVals[leg - 1][1] = y;
+  footVals[leg - 1][2] = z;
+  return true;
 }
 
 // Determine current leg position (in) relative to hexapod center
 void Hexapod::getCurrentPosition(int leg, float* pos) {
-  for (int i=0; i<3; i++) {
-    pos[i] = footVals[leg-1][i];
+  for (int i = 0; i < 3; i++) {
+    pos[i] = footVals[leg - 1][i];
   }
+}
+
+// Determine whether leg can move to a given position
+bool Hexapod::isPositionValid(float x, float y, float z, int leg) {
+  int angles[3];
+  getAngles(x, y, z, leg, angles);
+  for (int i = 0; i < 3; i++) {
+    if (angles[i] < minLimits[i] || angles[i] > maxLimits[i]) {
+      return false;
+    }
+  }
+  return true;
 }
 
 // Determine position (in) relative to hexapod center from servo angles (deg)
@@ -507,69 +627,6 @@ void Hexapod::moveServo(int value, int leg, int servo) {
   }
 }
 
-// Incrementally move a specified servo to a given angle in degrees
-void Hexapod::moveServoSmooth(int value, int leg, int servo) {
-//  if (value >= minLimits[servo] && value <= maxLimits[servo]) {
-//    if (footVals[leg - 1][servo] == 0) servoVals[leg - 1][servo] = value;
-//    footTargets[leg - 1][servo] = value;
-//  } else if (value != -1) {
-//    Serial.print("Servo ");
-//    Serial.print(labels[servo]);
-//    Serial.print(" out of bounds: please enter a value between ");
-//    Serial.print(minLimits[servo]);
-//    Serial.print(" and ");
-//    Serial.println(maxLimits[servo]);
-//  }
-}
-
-// Sets leg target position to its current position
-void Hexapod::stopLeg(int leg) {
-  for (int i=0; i<3; i++) {
-    footTargets[leg - 1][i] = footVals[leg - 1][i];
-  }
-}
-
-// Directly move all servos to their target angles
-void Hexapod::moveServosDirect() {
-  for (int leg = 0; leg < 6; leg++) {
-    for (int i = 0; i < 3; i++) {
-      if (footTargets[leg][i] != 0) { // target exists
-        footVals[leg][i] = footTargets[leg][i];
-      }
-    }
-    moveLegToPosition(footVals[leg][0], footVals[leg][1], footVals[leg][2], leg+1);
-  }
-}
-
-// Increments servos toward desired positions
-bool Hexapod::updateServos() {
-  long dt = millis() - lastServoUpdate;
-  bool complete = true;
-  lastServoUpdate += dt;
-  for (int leg = 0; leg < 6; leg++) {
-    for (int i = 0; i < 3; i++) {
-      float error = footTargets[leg][i] - footVals[leg][i];
-      if (footVals[leg][i] == 0) {
-        footVals[leg][i] = footTargets[leg][i];
-      }
-      if (footTargets[leg][i] != 0) { // target exists
-        if (abs(error) < servoSpeed*dt / 1000) { // reached target
-          footVals[leg][i] = footTargets[leg][i];
-        } else {
-          complete = false;
-          if (error > 0) {
-            footVals[leg][i] += servoSpeed * dt / 1000;
-          } else {
-            footVals[leg][i] -= servoSpeed * dt / 1000;
-          }
-        }
-      }
-    }
-    moveLegToPosition(footVals[leg][0], footVals[leg][1], footVals[leg][2], leg+1);
-  }
-  return complete;
-}
-
 // Convert angle in degrees to PWM pulse length
 int Hexapod::pulseLength(int angle, int leg, int servo) {
   int len = map(angle, ANGLEMIN, ANGLEMAX, SERVOMIN, SERVOMAX);
@@ -577,6 +634,16 @@ int Hexapod::pulseLength(int angle, int leg, int servo) {
     len = map(180 - angle, ANGLEMIN, ANGLEMAX, SERVOMIN, SERVOMAX);
   }
   return (len);
+}
+
+// Rotate lidar servo to angle in degrees below horizontal
+int Hexapod::tiltLidar(int angle) {
+  int pulse = pulseLength(angle-LIDAR_TILT_OFFSET, 0, 0);
+  if (angle < LIDAR_MAX_ANGLE) {
+    pwm1.setPWM(LIDAR, 0, pulse);
+  } else {
+    Serial.println("Error: LIDAR angle out of bounds");
+  }
 }
 
 // Determine {x,y,z} acceleration in m/s^2
