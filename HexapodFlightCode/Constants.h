@@ -7,8 +7,8 @@ const bool LOCATION_VERBOSE = true; // Use for debugging hexapod location
 const bool FEET_VERBOSE = false; // Use for debugging foot sensors
 const bool IR_VERBOSE = false; // Use for debugging IR sensor data
 const bool ACCEL_VERBOSE = false; // Use for debugging accelerometer data
-
 const bool STATE_VERBOSE = true; // Debug main states in flight code
+
 const bool DETECT_WALLS = false; // Use IRs to avoid walls
 const bool DETECT_SLOPES = false; // Use accelerometer to adjust CoM
 const bool DETECT_CLIFFS = false; // Use foot sensor to avoid falling
@@ -33,6 +33,8 @@ const int stepDuration = 1000; // Time duration of a step (ms)
 const int TILT_THRESHOLD = 3; // Max allowed horizontal acceleration (m/s^2)
 const int FILTER_LENGTH = 10; // Number of accelerometer values to average
 const int IR_THRESHOLD = 28; // Distance seen by IR sensor to make it stop (cm)
+const int LIDAR_TILT_OFFSET = -95;
+const int LIDAR_MAX_ANGLE = 60;
 
 const float SPEED = .003; // Max linear speed (in/ms)
 const float STABILITY_MARGIN = 0.25; // Normalized distance between CoM and center of tripod
@@ -49,7 +51,7 @@ const int servos[6][3] = {{0, 1, 2},
                           {16, 17, 18},
                           {19, 20, 21},
                           {22, 23, 24}}; // [leg 1-6][servo A-C]
-
+const int LIDAR = 9;
 const int LIS3DH_CLK = 13;
 const int LIS3DH_MISO = 12;
 const int LIS3DH_MOSI = 11;

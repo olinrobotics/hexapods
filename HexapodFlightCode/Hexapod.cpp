@@ -30,6 +30,7 @@ void Hexapod::init() {
     accel.setRange(LIS3DH_RANGE_4_G);
   }
   pinMode(relay, OUTPUT);
+  pinMode(LIDAR, OUTPUT);
   for (int leg = 0; leg < 6; leg++) {
     pinMode(feet[leg], INPUT);
   }
@@ -164,29 +165,18 @@ float increment(float targetVal, float currentVal, float delta) {
   }
 }
 
-// Called iteratively to move the hexapod in the given direction
+// Called iteratively to moves in the given direction relative to current orientation
 bool Hexapod::walk(float vx, float vy, float vtheta) {
   // TODO: vary speed
-  return goTo(x + vx, y + vy, theta + vtheta);
+  return goTo(x + hexToWorld(vx, vy, true), y + hexToWorld(vx, vy, false), theta + vtheta);
 }
 
-// Called iteratively to move the hexapod to the given coordinates
+// Called iteratively to move the hexapod to the given world coordinates
 // Returns true if target position reached
 bool Hexapod::goTo(float x2, float y2, float theta2) {
   // TODO: update waypoint code
   // TODO: change position on stand command
   
-  Serial.print(x2);
-  Serial.print(", ");
-  Serial.print(y2);
-  Serial.print(", ");
-  Serial.print(theta2);
-  Serial.print(";    ");
-  Serial.print(x);
-  Serial.print(", ");
-  Serial.print(y);
-  Serial.print(", ");
-  Serial.println(theta);
   // Determine time increment
   long dt = millis() - lastUpdate;
   lastUpdate = millis();
@@ -217,9 +207,7 @@ bool Hexapod::goTo(float x2, float y2, float theta2) {
     pitch = 0;
     roll = 0;
   }
-  // DANCE MODE (accelerometer directly controls orientation):
-  //levelBody(-pitch/3, -roll/3); evenStep = !evenStep; levelBody(-pitch/3, -roll/3); return;
-
+  
   // Determine current state of feet
   bool grounded = !digitalRead(feet[1]) && !digitalRead(feet[3]) && !digitalRead(feet[5]);
   if (digitalRead(feet[0]) && digitalRead(feet[2]) && digitalRead(feet[4])) {
@@ -275,12 +263,12 @@ bool Hexapod::goTo(float x2, float y2, float theta2) {
     slopeOffset = copysignf(SPEED * dt, slopeOffset);
   }
   netSlopeOffset += slopeOffset;
-  float dx = increment(x2, x, SPEED * dt);
-  float dy = increment(y2, y, SPEED * dt);
+  float dx = increment(worldToHex(x2, y2, true), worldToHex(x, y, true), SPEED * dt); // Global position change
+  float dy = increment(worldToHex(x2, y2, false), worldToHex(x, y, false), SPEED * dt);
   //  fmod(theta2 - theta + M_PI, 2 * M_PI) - M_PI; //TODO: theta modulus
   float dyaw = increment(theta2, theta, SPEED * dt / (R + roffset));
-  x += dx * cos(theta) - dy * sin(theta);
-  y += dx * sin(theta) + dy * cos(theta);
+  x += hexToWorld(dx, dy, true);
+  y += hexToWorld(dx, dy, false);
   theta += dyaw;
   if (LOCATION_VERBOSE) {
     Serial.print("x: ");
@@ -308,7 +296,8 @@ bool Hexapod::goTo(float x2, float y2, float theta2) {
   bool yStable = (dy == 0) || (yMargin < STABILITY_MARGIN && dy > 0) || (-yMargin < STABILITY_MARGIN && dy < 0);
   // TODO: adjust y margin for even vs odd steps
   swap = swap || !xStable || !yStable; // exceed stability threshold
-  swap = swap || evenStep && evenTripodYaw * copysignf(1.0, dyaw) > DTHETA || !evenStep && oddTripodYaw * copysignf(1.0, dyaw) > DTHETA;
+  float yawSign = abs(dyaw) > .001 ? copysignf(1.0, dyaw) : 0;
+  swap = swap || evenStep && evenTripodYaw * yawSign > DTHETA || !evenStep && oddTripodYaw * yawSign > DTHETA;
   if (swap) { // switch feet
     evenStep = !evenStep;
     delay(100); // TODO: this is awful, set a delay variable somewhere instead
@@ -319,6 +308,20 @@ bool Hexapod::goTo(float x2, float y2, float theta2) {
     return true;
   }
   return false;
+}
+
+// Convert from hexapod to world frames
+float Hexapod::hexToWorld(float xval, float yval, bool returnx) {
+  float angle = theta;
+  if (returnx) return xval * cos(angle) + yval * sin(angle);
+  else return -xval * sin(angle) + yval * cos(angle);
+}
+
+// Convert from hexapod to world frames
+float Hexapod::worldToHex(float xval, float yval, bool returnx) {
+  float angle = -theta;
+  if (returnx) return xval * cos(angle) + yval * sin(angle);
+  else return -xval * sin(angle) + yval * cos(angle);
 }
 
 // Incrementally move a foot triangle by given displacement, true if limit reached
@@ -392,7 +395,7 @@ bool Hexapod::levelBody(float pitch, float roll) {
       return true;
     }
   }
-  delay(100); // TODO: this is awful, set a delay variable somewhere instead
+//  delay(100); // TODO: this is awful, set a delay variable somewhere instead
   return false;
 }
 
@@ -451,6 +454,22 @@ void Hexapod::resetTripod(float x0, float y0, float z0, bool even) {
 
 int mirrorLeg(int leg) {
   return (leg + 2) % 6 + 1;
+}
+
+// Mimic accelerometer motion
+void Hexapod::dance() {
+  float a[3];
+  float roll = 0;
+  float pitch = 0;
+  if (accelPresent) {
+    getAccel(a);
+    roll = -asin(a[1] / 9.81);
+    pitch = asin(a[0] / 9.81);
+    if (abs(pitch) > 15 * M_PI / 180) {
+      pitch *= 15 * M_PI / 180 / abs(pitch);
+    }
+  }
+  levelBody(-pitch/3, -roll/3); evenStep = !evenStep; levelBody(-pitch/3, -roll/3); return;  
 }
 
 // Lower the hexapod to the ground
@@ -615,6 +634,16 @@ int Hexapod::pulseLength(int angle, int leg, int servo) {
     len = map(180 - angle, ANGLEMIN, ANGLEMAX, SERVOMIN, SERVOMAX);
   }
   return (len);
+}
+
+// Rotate lidar servo to angle in degrees below horizontal
+int Hexapod::tiltLidar(int angle) {
+  int pulse = pulseLength(angle-LIDAR_TILT_OFFSET, 0, 0);
+  if (angle < LIDAR_MAX_ANGLE) {
+    pwm1.setPWM(LIDAR, 0, pulse);
+  } else {
+    Serial.println("Error: LIDAR angle out of bounds");
+  }
 }
 
 // Determine {x,y,z} acceleration in m/s^2

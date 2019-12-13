@@ -1,7 +1,7 @@
 #include "Hexapod.h"
 
 Hexapod hex = Hexapod();
-enum State {NONE, STAND, SIT, WALK, GOTO, TEST, PACE, WANDER, UPDATE};
+enum State {NONE, STAND, SIT, WALK, GOTO, TEST, PACE, WANDER, UPDATE, DANCE};
 State state = NONE;
 float forward = 0;
 float left = 0;
@@ -23,13 +23,13 @@ void loop() {
     if (STATE_VERBOSE) {Serial.println("Found a Serial Command!");}
     if (Serial.peek() == ' ') { // Stop
       if (STATE_VERBOSE) {Serial.println("Command: Stop");}
-      if (state == STAND) {
-        state = SIT;
-        Serial.println("Sit");
-      } else {
+//      if (state == STAND) {
+//        state = SIT;
+//        Serial.println("Sit");
+//      } else {
         state = STAND;
         Serial.println("Stand");
-      }
+//      }
       Serial.read();
     } else if (Serial.peek() == 't') { // Test calibration
       state = TEST;
@@ -119,6 +119,15 @@ void loop() {
       state = UPDATE;
 //      hex.rotateBody(.05,0,0);
       Serial.read();
+    } else if (Serial.peek() == 'm') { // Raise lidar
+      hex.tiltLidar(0);
+      Serial.read();
+    } else if (Serial.peek() == 'n') { // Lower lidar
+      hex.tiltLidar(25);
+      Serial.read();
+    } else if (Serial.peek() == 'b') { // Dance!
+      state = DANCE;
+      Serial.read();
     } else if (Serial.peek() == 'o') { // Roll right
       if (STATE_VERBOSE) {Serial.println("Roll: right");}
       state = UPDATE;
@@ -172,6 +181,8 @@ void loop() {
     hex.sit();
   } else if (state == TEST) {
     hex.testCalibration();
+  } else if (state == DANCE) {
+    hex.dance();
   } else if (state == WANDER) {
       if(hex.followWaypoint() == -1) {
         hex.clearWaypoints();

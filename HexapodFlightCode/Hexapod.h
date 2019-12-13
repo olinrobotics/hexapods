@@ -44,6 +44,12 @@ class Hexapod {
     // Returns true if target position reached
     bool goTo(float x2, float y2, float theta2);
 
+    // Convert from hexapod to world frames
+    float hexToWorld(float xval, float yval, bool returnx);
+
+    // Convert from world to hexapod frames
+    float worldToHex(float xval, float yval, bool returnx);
+
     // Incrementally move a foot triangle by given displacement
     bool moveTripod(float dx, float dy, float dz, float dtheta, bool even, bool ignoreLimits);
 
@@ -60,6 +66,9 @@ class Hexapod {
 
     // Resets a tripod to default stance, centered at (x0, y0, z0)
     void resetTripod(float x0, float y0, float z0, bool even);
+
+    // Mimic accelerometer motion
+    void dance();
 
     // Lower the hexapod to the ground
     void sit();
@@ -94,6 +103,9 @@ class Hexapod {
 
     // Convert angle in degrees to PWM pulse length
     int pulseLength(int angle, int leg, int servo);
+
+    // Rotate lidar servo to angle in degrees below horizontal
+    int tiltLidar(int angle);
 
     // Determine {x,y,z} acceleration in m/s^2
     void getAccel(float *acceleration);
