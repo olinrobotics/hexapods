@@ -213,18 +213,18 @@ bool Hexapod::goTo(float x2, float y2, float theta2) {
   if (digitalRead(feet[0]) && digitalRead(feet[2]) && digitalRead(feet[4])) {
     grounded = true;
   }
-  bool lowered = (footHeights[1] <= ground || !digitalRead(feet[1])) &&
-                 (footHeights[3] <= ground || !digitalRead(feet[3])) &&
-                 (footHeights[5] <= ground || !digitalRead(feet[5]));
+  bool lowered = (footHeights[1] <= ground || (ROUGH_TERRAIN && !digitalRead(feet[1]))) &&
+                 (footHeights[3] <= ground || (ROUGH_TERRAIN && !digitalRead(feet[3]))) &&
+                 (footHeights[5] <= ground || (ROUGH_TERRAIN && !digitalRead(feet[5])));
   bool raised = min(min(footHeights[0], footHeights[2]), footHeights[4]) >= ground + clearance;
   if (evenStep) {
     grounded = !digitalRead(feet[0]) && !digitalRead(feet[2]) && !digitalRead(feet[4]);
     if (digitalRead(feet[1]) && digitalRead(feet[3]) && digitalRead(feet[5])) {
       grounded = true;
     }
-    lowered = (footHeights[0] <= ground || !digitalRead(feet[0])) &&
-              (footHeights[2] <= ground || !digitalRead(feet[2])) &&
-              (footHeights[4] <= ground || !digitalRead(feet[4]));
+    lowered = (footHeights[0] <= ground || (ROUGH_TERRAIN && !digitalRead(feet[0]))) &&
+              (footHeights[2] <= ground || (ROUGH_TERRAIN && !digitalRead(feet[2]))) &&
+              (footHeights[4] <= ground || (ROUGH_TERRAIN && !digitalRead(feet[4])));
     raised = min(min(footHeights[1], footHeights[3]), footHeights[5]) >= ground + clearance;
   }
   grounded = true; // TODO: remove when bump sensors improve
@@ -243,7 +243,7 @@ bool Hexapod::goTo(float x2, float y2, float theta2) {
       return false;
     }
   }
-  if (!grounded) { // Limit switches not triggered
+  if (ROUGH_TERRAIN && !grounded) { // Limit switches not triggered
     moveTripod(0, 0, SPEED * dt, 0, evenStep, false);
     moveTripod(0, 0, SPEED * dt, 0, !evenStep, true);
     return false;
@@ -334,8 +334,8 @@ bool Hexapod::moveTripod(float dx, float dy, float dz, float dtheta, bool even, 
     getCurrentPosition(leg, pos);
     pos[0] += dx;
     pos[1] += dy;
-    if (!grounded || dz > 0 || digitalRead(feet[leg - 1])) { // leg not contacting ground
-      if (!grounded || dz < 0 || !digitalRead(feet[leg - 1])) { // leg is in contact with ground
+    if (!ROUGH_TERRAIN || !grounded || dz > 0 || digitalRead(feet[leg - 1])) { // leg not contacting ground
+      if (!ROUGH_TERRAIN || !grounded || dz < 0 || !digitalRead(feet[leg - 1])) { // leg is in contact with ground
         pos[2] += dz;
       }
     }

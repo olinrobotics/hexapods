@@ -10,7 +10,7 @@ const bool ACCEL_VERBOSE = false; // Use for debugging accelerometer data
 const bool STATE_VERBOSE = true; // Debug main states in flight code
 
 const bool DETECT_WALLS = false; // Use IRs to avoid walls
-const bool DETECT_SLOPES = false; // Use accelerometer to adjust CoM
+const bool DETECT_SLOPES = true; // Use accelerometer to adjust CoM
 const bool DETECT_CLIFFS = false; // Use foot sensor to avoid falling
 const bool ROUGH_TERRAIN = false; // Use foot sensor to cross rough terrain
 
@@ -22,7 +22,7 @@ const int WAYPOINT_DESTINATION = -3; // Walk to given coordinates
 const int WAYPOINT_DELAY = -4; // Wait for a given time interval
 
 // Gait parameters
-const float ground0 = -8.25; // Height of ground relative to body (in)
+const float ground0 = -6.75; //-8.25; // Height of ground relative to body (in)
 const float clearance0 = 2; // Height of raised leg relative to ground (in)
 const float DX = 2/2; // Half of the forward step distance (in)
 const float DY = 2/2; // Half of the sideways step distance (in)
@@ -82,6 +82,6 @@ const int SERVOMAX = 520; // maximum pwm pulse length count (out of 4096)
 const float R = 5.35; // Distance from center to Servo A (in)
 const float L1 = 1.12; // Distance from Servo A to Servo B (in)
 const float L2 = 2.24; // Distance from Servo B to Servo C (in)
-const float L3 = 7;//5;//4.84; // Distance from Servo C to end effector (in)
+const float L3 = 5.44; //7;//5;//4.84; // Distance from Servo C to end effector (in)
 
 #endif
